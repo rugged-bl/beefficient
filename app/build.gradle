@@ -21,34 +21,45 @@ ext {
 }
 
 android {
-    compileSdkVersion "${project.compileSdkVersion}" as int
-    buildToolsVersion "${project.buildToolsVersion}"
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
-        applicationId "${project.applicationId}"
-        minSdkVersion "${project.minSdkVersion}" as int
-        targetSdkVersion "${project.targetSdkVersion}" as int
-        versionCode "${project.versionCode}" as int
-        versionName "${project.versionName}"
+        applicationId project.applicationId
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.versionCode
+        versionName project.versionName
 
-        buildConfigField()
+        vectorDrawables.useSupportLibrary = true
+
+//        buildConfigField("boolean", "TEST_FIELD", "false")
     }
 
     buildTypes {
         debug {
             debuggable true
             minifyEnabled false
+
+//            buildConfigField("boolean", "TEST_FIELD", "true")
         }
         release {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+//            buildConfigField("String", "TEST_FIELD", ";kk")
         }
     }
 
     packagingOptions {
         exclude 'LICENSE'
         exclude 'LICENSE.txt'
+    }
+
+    lintOptions {
+        lintConfig project.file('lint.xml')
+        abortOnError false
     }
 
     compileOptions {
