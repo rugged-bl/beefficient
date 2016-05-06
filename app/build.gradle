@@ -81,4 +81,6 @@ dependencies {
     // Rx
     compile "io.reactivex:rxjava:${rxJavaVersion}"
     compile "io.reactivex:rxandroid:${rxAndroidVersion}"
+
+    compile 'com.squareup.sqlbrite:sqlbrite:0.6.3'
 }
