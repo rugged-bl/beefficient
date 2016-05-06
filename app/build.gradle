@@ -47,8 +47,6 @@ android {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-//            buildConfigField("String", "TEST_FIELD", ";kk")
         }
     }
 
