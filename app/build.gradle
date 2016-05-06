@@ -38,9 +38,9 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix '.d'
             debuggable true
             minifyEnabled false
-
 //            buildConfigField("boolean", "TEST_FIELD", "true")
         }
         release {
