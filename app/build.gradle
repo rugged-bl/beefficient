@@ -3,33 +3,26 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
 ext {
-    compileSdkVersion = 23
-    buildToolsVersion = '23.0.3'
-
-    // Application info
-    applicationId = "com.beefficient"
-    versionCode = 1
-    versionName = '0.0.1'
-    minSdkVersion = 16
-    targetSdkVersion = 23
-
     // Versions of dependencies
     supportVersion = '23.3.0'
     retrofitVersion = '2.0.2'
     rxJavaVersion = '1.1.3'
     rxAndroidVersion = '1.1.0'
+    sqlbriteVersion = '0.6.3'
+    jodaTimeVersion = '2.9.2'
+    prettyTimeNlpVersion = '4.0.0.Final'
 }
 
 android {
-    compileSdkVersion project.compileSdkVersion
-    buildToolsVersion project.buildToolsVersion
+    compileSdkVersion 23
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
-        applicationId project.applicationId
-        minSdkVersion project.minSdkVersion
-        targetSdkVersion project.targetSdkVersion
-        versionCode project.versionCode
-        versionName project.versionName
+        applicationId "com.beefficient"
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName '0.0.1'
 
         vectorDrawables.useSupportLibrary = true
 
@@ -70,17 +63,20 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
 
-    // Android Support
-    compile "com.android.support:appcompat-v7:${supportVersion}"
-    compile "com.android.support:design:${supportVersion}"
-    compile "com.android.support:support-v4:${supportVersion}"
-    // Retrofit
-    compile "com.squareup.retrofit2:retrofit:${retrofitVersion}"
-    compile "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
-    compile "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
-    // Rx
-    compile "io.reactivex:rxjava:${rxJavaVersion}"
-    compile "io.reactivex:rxandroid:${rxAndroidVersion}"
 
-    compile 'com.squareup.sqlbrite:sqlbrite:0.6.3'
+    // Android Support
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:support-v4:$supportVersion"
+    // Retrofit
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+    // Rx
+    compile "io.reactivex:rxjava:$rxJavaVersion"
+    compile "io.reactivex:rxandroid:$rxAndroidVersion"
+
+    compile "com.squareup.sqlbrite:sqlbrite:$sqlbriteVersion"
+    compile "joda-time:joda-time:$jodaTimeVersion"
+    compile "org.ocpsoft.prettytime:prettytime-nlp:$prettyTimeNlpVersion"
 }

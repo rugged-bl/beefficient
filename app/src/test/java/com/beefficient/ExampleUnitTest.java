@@ -12,4 +12,19 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void taskBuilder() {
+        Task.Builder taskBuilder = new Task.Builder("Title")
+                .setPriority(Task.Priority.HIGH)
+                .setCompleted(true)
+                .setTime(System.currentTimeMillis())
+                .setDescription("Desc");
+
+        Task task = taskBuilder.build();
+
+        System.out.println("title: " + task.getTitle() + "\ndescription: " + task.getDescription() +
+                "\npriority: " + task.getPriority().name() + "\ntime: " + task.getTime() +
+                "\nonlyDate: " + task.isOnlyDate() + "\ncompleted: " + task.isCompleted());
+    }
 }
