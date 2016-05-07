@@ -1,7 +1,8 @@
-package com.beefficient;
+package com.beefficient.data;
 
 import android.support.annotation.Nullable;
 
+import com.beefficient.R;
 import com.beefficient.util.ObjectUtils;
 
 import java.util.ArrayList;

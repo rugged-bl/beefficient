@@ -1,10 +1,10 @@
-package com.beefficient;
+package com.beefficient.data;
 
 // TODO: add color
-public class Label {
+public class Project {
     private String name;
 
-    public Label(String name) {
+    public Project(String name) {
         this.name = name;
     }
 
