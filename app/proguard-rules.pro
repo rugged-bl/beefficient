@@ -20,3 +20,4 @@
 -dontwarn rx.internal.util.unsafe.**
 -dontwarn org.joda.convert.**
 -dontwarn org.ocpsoft.prettytime.**
+-dontwarn java.lang.invoke.**
