@@ -9,31 +9,30 @@ import java.lang.ref.WeakReference;
 
 import static org.junit.Assert.*;
 
-/**
- * To work on unit tests, switch the Test Artifact in the Build Variants view.
- */
-public class ExampleUnitTest {
-    @Test
-    public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
-    }
+public class TaskUnitTest {
 
     @Test
     public void taskBuilder() {
         Project project = new Project("Project");
 
+		long time = System.currentTimeMillis()
         Task.Builder taskBuilder = new Task.Builder("Task")
                 .setTitle("Title")
                 .setPriority(Task.Priority.HIGH)
                 .setCompleted(true)
-                .setTime(System.currentTimeMillis())
+                .setTime(time)
                 .setDescription("Desc")
                 .setProject(new WeakReference<>(project));
 
         Task task = taskBuilder.build();
 
-        System.out.println("title: " + task.getTitle() + "\ndescription: " + task.getDescription() +
-                "\npriority: " + task.getPriority().name() + "\ntime: " + task.getTime() +
-                "\nonlyDate: " + task.isOnlyDate() + "\ncompleted: " + task.isCompleted());
+		aasertEquals(task.getTitle(), "Title");
+		assertEquals(task.getPriority(), Task.Priority.HIGH);
+		aasertTrue(task.isCompleted());
+		assertEquals(task.getDescription(), "Desc");
+		assertEquals(task.getTime(), time);
+        // System.out.println("title: " + task.getTitle() + "\ndescription: " + task.getDescription() +
+        //         "\npriority: " + task.getPriority().name() + "\ntime: " + task.getTime() +
+        //         "\nonlyDate: " + task.isOnlyDate() + "\ncompleted: " + task.isCompleted());
     }
 }
