@@ -28,7 +28,7 @@ public class TaskUnitTest {
 
 		aasertEquals(task.getTitle(), "Title");
 		assertEquals(task.getPriority(), Task.Priority.HIGH);
-		aasertTrue(task.isCompleted());
+		assertTrue(task.isCompleted());
 		assertEquals(task.getDescription(), "Desc");
 		assertEquals(task.getTime(), time);
         // System.out.println("title: " + task.getTitle() + "\ndescription: " + task.getDescription() +
