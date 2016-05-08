@@ -26,7 +26,7 @@ public class TaskUnitTest {
 
         Task task = taskBuilder.build();
 
-		aasertEquals(task.getTitle(), "Title");
+		assertEquals(task.getTitle(), "Title");
 		assertEquals(task.getPriority(), Task.Priority.HIGH);
 		assertTrue(task.isCompleted());
 		assertEquals(task.getDescription(), "Desc");
