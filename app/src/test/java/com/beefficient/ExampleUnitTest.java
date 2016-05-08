@@ -1,8 +1,11 @@
 package com.beefficient;
 
+import com.beefficient.data.Project;
 import com.beefficient.data.Task;
 
 import org.junit.Test;
+
+import java.lang.ref.WeakReference;
 
 import static org.junit.Assert.*;
 
@@ -17,11 +20,15 @@ public class ExampleUnitTest {
 
     @Test
     public void taskBuilder() {
-        Task.Builder taskBuilder = new Task.Builder("Title")
+        Project project = new Project("Project");
+
+        Task.Builder taskBuilder = new Task.Builder("Task")
+                .setTitle("Title")
                 .setPriority(Task.Priority.HIGH)
                 .setCompleted(true)
                 .setTime(System.currentTimeMillis())
-                .setDescription("Desc");
+                .setDescription("Desc")
+                .setProject(new WeakReference<>(project));
 
         Task task = taskBuilder.build();
 

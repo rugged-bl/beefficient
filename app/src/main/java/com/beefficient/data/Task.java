@@ -1,14 +1,18 @@
 package com.beefficient.data;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.beefficient.R;
 import com.beefficient.util.ObjectUtils;
 
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
+    private WeakReference<Project> project;
     private String title;
 
     @Nullable
@@ -27,6 +31,7 @@ public class Task {
     }
 
     public static class Builder {
+        private WeakReference<Project> project;
         private String title;
 
         @Nullable
@@ -78,6 +83,11 @@ public class Task {
             return this;
         }
 
+        public Builder setProject(@NonNull WeakReference<Project> project) {
+            this.project = project;
+            return this;
+        }
+
         public Task build() {
             Task task = new Task(title);
             task.description = description;
@@ -86,6 +96,9 @@ public class Task {
             task.onlyDate = onlyDate;
             task.time = time;
             task.labelList = labelList;
+            task.project = project;
+            if (project != null)
+                project.get().addTask(new SoftReference<>(task));
 
             return task;
         }
