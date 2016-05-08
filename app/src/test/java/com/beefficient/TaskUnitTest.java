@@ -15,7 +15,7 @@ public class TaskUnitTest {
     public void taskBuilder() {
         Project project = new Project("Project");
 
-		long time = System.currentTimeMillis()
+		long time = System.currentTimeMillis();
         Task.Builder taskBuilder = new Task.Builder("Task")
                 .setTitle("Title")
                 .setPriority(Task.Priority.HIGH)
