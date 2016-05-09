@@ -7,13 +7,12 @@ import com.beefficient.R;
 import com.beefficient.util.ObjectUtils;
 
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class Task {
-    private WeakReference<Project> project;
+    private Project project;
 
     private String id;
 
@@ -33,7 +32,7 @@ public class Task {
     }
 
     public static class Builder {
-        private WeakReference<Project> project;
+        private Project project;
 
         private String id;
 
@@ -105,7 +104,7 @@ public class Task {
             return this;
         }
 
-        public Builder setProject(@NonNull WeakReference<Project> project) {
+        public Builder setProject(@NonNull Project project) {
             this.project = project;
             return this;
         }
@@ -121,7 +120,7 @@ public class Task {
             task.labelList = labelList;
             task.project = project;
             if (project != null)
-                project.get().addTask(new SoftReference<>(task));
+                project.addTask(new SoftReference<>(task));
 
             return task;
         }
@@ -133,6 +132,10 @@ public class Task {
 
     public String getTitle() {
         return title;
+    }
+
+    public Project getProject() {
+        return project;
     }
 
     @Nullable
@@ -158,6 +161,10 @@ public class Task {
 
     public boolean hasLabel(Label label) {
         return labelList.contains(label);
+    }
+
+    public List<Label> getLabelList() {
+        return labelList;
     }
 
     @Override

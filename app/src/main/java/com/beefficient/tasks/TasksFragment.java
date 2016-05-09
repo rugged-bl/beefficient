@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.beefficient.R;
+import com.beefficient.data.Project;
 import com.beefficient.data.Task;
+
+import org.ocpsoft.prettytime.shade.org.apache.commons.lang.math.RandomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +50,14 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         if (view instanceof RecyclerView) {
             RecyclerView recyclerView = (RecyclerView) view;
             List<Task> taskList = new ArrayList<>();
-            taskList.add(new Task("Title"));
+            Task.Builder task = new Task.Builder("Title")
+                    .setProject(new Project("Project"))
+                    .setTime(System.currentTimeMillis());
+
+            for (int i = 0; i < 50; i++) {
+                taskList.add(task.setCompleted(RandomUtils.nextBoolean())
+                        .setPriority(Task.Priority.values()[RandomUtils.nextInt(3)]).build());
+            }
             recyclerView.setAdapter(new TasksAdapter(taskList));
         }
         return view;

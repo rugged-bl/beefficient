@@ -8,20 +8,24 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.beefficient.R;
+import com.beefficient.tasks.TasksFragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
 public class MainActivity extends AppCompatActivity implements
         MainContract.View, NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final String TAG = "MainActivity";
 
     private MainContract.Presenter presenter;
 
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements
     private CoordinatorLayout coordinatorLayout;
 
     private BottomBar bottomBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements
         initAppBar();
         initDrawer();
         initNavigationView();
+
+        initSwipeRefreshLayout();
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
 
@@ -74,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private void initBottomBar(Bundle savedInstanceState) {
         bottomBar = BottomBar.attachShy(coordinatorLayout,
-                findViewById(R.id.scroll_view), savedInstanceState);
+                findViewById(R.id.container), savedInstanceState);
 
         bottomBar.noTopOffset();
         bottomBar.setItemsFromMenu(R.menu.menu_bottombar, new OnMenuTabClickListener() {
@@ -82,6 +89,10 @@ public class MainActivity extends AppCompatActivity implements
             public void onMenuTabSelected(@IdRes int menuItemId) {
                 switch (menuItemId) {
                     case R.id.menu_item_today: {
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.container, TasksFragment.newInstance())
+                                .commit();
+
                         break;
                     }
                     case R.id.menu_item_next_week: {
@@ -131,6 +142,13 @@ public class MainActivity extends AppCompatActivity implements
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
+    }
+
+
+    private void initSwipeRefreshLayout() {
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.orange_400),
+                ContextCompat.getColor(this, R.color.light_blue_a700));
     }
 
     @Override

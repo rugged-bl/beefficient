@@ -27,41 +27,24 @@
                 android:layout_height="?actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:contentInsetStart="@dimen/toolbar_inset_start"
-                app:layout_scrollFlags="scroll|enterAlways"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
-            android:id="@+id/scroll_view"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd
-                awdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawdawd"/>
+            <FrameLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-        </android.support.v4.widget.NestedScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
 
     </android.support.design.widget.CoordinatorLayout>
 
