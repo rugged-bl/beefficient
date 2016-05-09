@@ -16,7 +16,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="AppTheme.LoginScreen" parent="AppTheme.NoActionBar">
-    </style>
+    <style name="AppTheme.LoginScreen" parent="AppTheme.NoActionBar"/>
 
+    <style name="NavigationView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginRight">@dimen/nav_drawer_margin_end</item>
+    </style>
 </resources>

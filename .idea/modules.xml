@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beefficient.iml" filepath="$PROJECT_DIR$/beefficient.iml" />
       <module fileurl="file://$PROJECT_DIR$/beefficient-new.iml" filepath="$PROJECT_DIR$/beefficient-new.iml" />
-      <module fileurl="file://$PROJECT_DIR$/todoapp.iml" filepath="$PROJECT_DIR$/todoapp.iml" />
     </modules>
   </component>
 </project>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/nav_group_main"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_overview"
+            android:checked="true"
+            android:icon="@drawable/ic_list_black_24dp"
+            android:title="@string/all_tasks"/>
+
+        <!--<item-->
+            <!--android:id="@+id/nav_today"-->
+            <!--android:icon="@drawable/ic_today"-->
+            <!--android:title="@string/today"/>-->
+
+        <!--<item-->
+            <!--android:id="@+id/nav_next_week"-->
+            <!--android:icon="@drawable/ic_today"-->
+            <!--android:title="@string/next_week"/>-->
+
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/ic_date_range"
+            android:title="@string/calendar"/>
+
+<!--        <item
+            android:id="@+id/nav_task_inbox"
+            android:icon="@drawable/ic_inbox"
+            android:title="@string/inbox"/>-->
+
+        <item
+            android:id="@+id/nav_projects"
+            android:icon="@drawable/ic_project"
+            android:title="@string/projects"/>
+
+        <item
+            android:id="@+id/nav_labels"
+            android:icon="@drawable/ic_label"
+            android:title="@string/labels"/>
+
+    </group>
+
+    <group>
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/action_settings"/>
+    </group>
+</menu>

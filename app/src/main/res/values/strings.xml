@@ -6,4 +6,14 @@
     <string name="username">Username</string>
     <string name="app_logo">App logo</string>
     <string name="login">Login</string>
+    <string name="profile_photo">Profile photo</string>
+    <string name="all_tasks">All tasks</string>
+    <string name="today">Today</string>
+    <string name="next_week">Next week</string>
+    <string name="calendar">Calendar</string>
+    <string name="inbox">Inbox</string>
+    <string name="projects">Projects</string>
+    <string name="labels">Labels</string>
+    <string name="navigation_drawer_open">Open drawer</string>
+    <string name="navigation_drawer_close">Close drawer</string>
 </resources>
