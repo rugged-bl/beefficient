@@ -10,14 +10,16 @@ import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Task {
     private WeakReference<Project> project;
-    private String title;
 
+    private String id;
+
+    private String title;
     @Nullable
     private String description;
-
     private Priority priority;
     private boolean completed;
     private boolean onlyDate;
@@ -32,11 +34,12 @@ public class Task {
 
     public static class Builder {
         private WeakReference<Project> project;
-        private String title;
 
+        private String id;
+
+        private String title;
         @Nullable
         private String description;
-
         private Priority priority = Priority.LOW;
         private boolean completed;
         private boolean onlyDate;
@@ -44,7 +47,26 @@ public class Task {
 
         private List<Label> labelList = new ArrayList<>();
 
+        /**
+         * Use this constructor to create a new active Task.
+         *
+         * @param title title
+         */
         public Builder(String title) {
+            id = UUID.randomUUID().toString();
+
+            this.title = title;
+        }
+        /**
+         * Use this builder to specify a Task if the Task already has an id (copy of
+         * another Task).
+         *
+         * @param title title
+         * @param id unique id
+         */
+        public Builder(String title, String id) {
+            this.id = id;
+
             this.title = title;
         }
 
@@ -90,6 +112,7 @@ public class Task {
 
         public Task build() {
             Task task = new Task(title);
+            task.id = id;
             task.description = description;
             task.priority = priority;
             task.completed = completed;
@@ -102,6 +125,10 @@ public class Task {
 
             return task;
         }
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getTitle() {
