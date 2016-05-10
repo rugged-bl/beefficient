@@ -1,6 +1,5 @@
 package com.beefficient.tasks;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -21,12 +20,10 @@ import java.util.List;
 public class TasksFragment extends Fragment implements TasksContract.View {
 
     private TasksContract.Presenter presenter;
-//    private OnListFragmentInteractionListener listener;
 
     public TasksFragment() {
     }
 
-    @SuppressWarnings("unused")
     public static TasksFragment newInstance() {
         TasksFragment fragment = new TasksFragment();
         Bundle args = new Bundle();
@@ -37,9 +34,6 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        if (getArguments() != null) {
-//        }
     }
 
     @Override
@@ -63,31 +57,8 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         return view;
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnListFragmentInteractionListener) {
-//            listener = (OnListFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnListFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-//        listener = null;
-    }
-
     @Override
     public void setPresenter(@NonNull TasksContract.Presenter presenter) {
         this.presenter = presenter;
     }
-
-//    public interface OnListFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onListFragmentInteraction(Task item);
-//    }
 }
