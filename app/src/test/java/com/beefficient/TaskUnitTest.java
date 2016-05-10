@@ -30,8 +30,5 @@ public class TaskUnitTest {
 		assertTrue(task.isCompleted());
 		assertEquals(task.getDescription(), "Desc");
 		assertEquals(task.getTime(), time);
-        // System.out.println("title: " + task.getTitle() + "\ndescription: " + task.getDescription() +
-        //         "\npriority: " + task.getPriority().name() + "\ntime: " + task.getTime() +
-        //         "\nonlyDate: " + task.isOnlyDate() + "\ncompleted: " + task.isCompleted());
     }
 }

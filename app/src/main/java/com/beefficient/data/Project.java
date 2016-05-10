@@ -26,4 +26,8 @@ public class Project {
     public void setName(String name) {
         this.name = name;
     }
+
+    public ArrayList<SoftReference<Task>> getTaskList() {
+        return taskList;
+    }
 }

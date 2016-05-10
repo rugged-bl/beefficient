@@ -87,7 +87,7 @@ dependencies {
     compile "org.ocpsoft.prettytime:prettytime-nlp:$prettyTimeNlpVersion"
 
     compile 'de.hdodenhof:circleimageview:2.0.0'
-    compile 'com.roughike:bottom-bar:1.3.3'
+    compile 'com.github.StrixG:BottomBar:ac6a0639ef1920cdf4ff5c59a57bc94232028ced'
 }
 
 apply plugin: 'com.google.gms.google-services'

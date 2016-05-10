@@ -119,8 +119,9 @@ public class Task {
             task.time = time;
             task.labelList = labelList;
             task.project = project;
-            if (project != null)
+            if (project != null) {
                 project.addTask(new SoftReference<>(task));
+            }
 
             return task;
         }

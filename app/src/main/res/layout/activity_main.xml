@@ -27,7 +27,7 @@
                 android:layout_height="?actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:contentInsetStart="@dimen/toolbar_inset_start"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </android.support.design.widget.AppBarLayout>
