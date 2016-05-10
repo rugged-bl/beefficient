@@ -9,16 +9,17 @@ public final class TasksPersistenceContract {
 
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
-    public TasksPersistenceContract() {
+    private TasksPersistenceContract() {
     }
 
-    /* Inner class that defines the table contents */
-    public static abstract class TaskEntry implements BaseColumns {
-        public static final String PROJECTS_TABLE_NAME = "projects";
-        public static final String COLUMN_NAME_PROJECT_NAME = "project_name";
-        public static final String COLUMN_NAME_PROJECT_COLOR = "project_color";
+    public static abstract class ProjectEntry implements BaseColumns {
+        public static final String TABLE_NAME = "project";
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_COLOR = "color";
+    }
 
-        public static final String TASKS_TABLE_NAME = "tasks";
+    public static abstract class TaskEntry implements BaseColumns {
+        public static final String TABLE_NAME = "task";
         public static final String COLUMN_NAME_ENTRY_ID = "entry_id";
         public static final String COLUMN_NAME_PROJECT_ID = "project_id";
         public static final String COLUMN_NAME_TITLE = "title";
@@ -26,15 +27,18 @@ public final class TasksPersistenceContract {
         public static final String COLUMN_NAME_PRIORITY = "priority";
         public static final String COLUMN_NAME_COMPLETED = "completed";
         public static final String COLUMN_NAME_DUE_DATE = "due_date";
-        public static final String COLUMN_NAME_ONLY_DATE = "only_date";
+        public static final String COLUMN_NAME_WITH_TIME = "with_time";
+    }
 
-        public static final String TASKS_LABELS_TABLE_NAME = "task_labels";
+    public static abstract class TaskLabelEntry implements BaseColumns {
+        public static final String TABLE_NAME = "task_label";
         public static final String COLUMN_NAME_TASK_ID = "task_id";
         public static final String COLUMN_NAME_LABEL_ID = "label_id";
+    }
 
-        public static final String LABELS_TABLE_NAME = "labels";
-        public static final String COLUMN_NAME_LABEL_NAME = "label_name";
-        public static final String COLUMN_NAME_LABEL_COLOR = "label_color";
-
+    public static abstract class LabelEntry implements BaseColumns {
+        public static final String TABLE_NAME = "label";
+        public static final String COLUMN_NAME_NAME = "name";
+        public static final String COLUMN_NAME_COLOR = "color";
     }
 }

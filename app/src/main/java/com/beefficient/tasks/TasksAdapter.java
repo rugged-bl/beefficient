@@ -2,6 +2,7 @@ package com.beefficient.tasks;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.beefficient.R;
 import com.beefficient.data.Label;
+import com.beefficient.data.Project;
 import com.beefficient.data.Task;
 
 import java.util.Date;
@@ -17,7 +19,7 @@ import java.util.List;
 
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> {
 
-    private final List<Task> values;
+    private List<Task> values;
 //    private final OnListFragmentInteractionListener listener;
 
     public TasksAdapter(List<Task> items) {
@@ -37,9 +39,12 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
         holder.item = values.get(position);
 
         Task t = holder.item;
+        Project project = t.getProject();
 
+        if (project != null) {
+            holder.project.setText(project.getName());
+        }
         holder.title.setText(t.getTitle());
-        holder.project.setText(t.getProject().getName());
         holder.done.setChecked(t.isCompleted());
         holder.priority.setBackgroundResource(t.getPriority().colorRes());
 
@@ -77,6 +82,12 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return values.size();
+    }
+
+    public void replaceData(List<Task> tasks) {
+        Log.d("TasksAdapter", "replaceData");
+        values = tasks;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

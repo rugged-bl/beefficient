@@ -21,7 +21,7 @@ public class Task {
     private String description;
     private Priority priority;
     private boolean completed;
-    private boolean onlyDate;
+    private boolean withTime;
     private long time;
 
     private List<Label> labelList;
@@ -41,7 +41,7 @@ public class Task {
         private String description;
         private Priority priority = Priority.LOW;
         private boolean completed;
-        private boolean onlyDate;
+        private boolean withTime;
         private long time;
 
         private List<Label> labelList = new ArrayList<>();
@@ -94,8 +94,8 @@ public class Task {
             return this;
         }
 
-        public Builder setOnlyDate(boolean onlyDate) {
-            this.onlyDate = onlyDate;
+        public Builder setWithTime(boolean withTime) {
+            this.withTime = withTime;
             return this;
         }
 
@@ -115,10 +115,11 @@ public class Task {
             task.description = description;
             task.priority = priority;
             task.completed = completed;
-            task.onlyDate = onlyDate;
+            task.withTime = withTime;
             task.time = time;
             task.labelList = labelList;
             task.project = project;
+
             if (project != null) {
                 project.addTask(new SoftReference<>(task));
             }
@@ -156,8 +157,8 @@ public class Task {
         return time;
     }
 
-    public boolean isOnlyDate() {
-        return onlyDate;
+    public boolean isWithTime() {
+        return withTime;
     }
 
     public boolean hasLabel(Label label) {

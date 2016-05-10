@@ -2,6 +2,7 @@ package com.beefficient.data.source;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.beefficient.data.Task;
 
@@ -87,6 +88,7 @@ public class TasksRepository implements TasksDataSource {
                 .getTasks()
                 .flatMap(Observable::from)
                 .doOnNext(task -> {
+                    Log.d("TasksRepository", "doOnNext");
                     mTasksLocalDataSource.saveTask(task);
                     mCachedTasks.put(task.getId(), task);
                 })

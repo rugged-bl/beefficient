@@ -27,25 +27,35 @@ import static com.beefficient.util.ObjectUtils.requireNonNull;
 public class TasksLocalDataSource implements TasksDataSource {
 
     private static TasksLocalDataSource INSTANCE;
-    private final BriteDatabase mDatabaseHelper;
-    private Func1<Cursor, Task> mTaskMapperFunction;
+    private final BriteDatabase databaseHelper;
+    private Func1<Cursor, Task> taskMapperFunction;
 
     // Prevent direct instantiation.
     private TasksLocalDataSource(@NonNull Context context) {
         requireNonNull(context);
         TasksDbHelper dbHelper = new TasksDbHelper(context);
         SqlBrite sqlBrite = SqlBrite.create();
-        mDatabaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
-        mTaskMapperFunction = c -> {
+        databaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
+        taskMapperFunction = c -> {
             String itemId = c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_ENTRY_ID));
             String title = c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_TITLE));
             String description =
                     c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_DESCRIPTION));
             boolean completed =
                     c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
+            boolean withTime =
+                    c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_WITH_TIME)) == 1;
+            long time = c.getLong(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_DUE_DATE));
+
+            Task.Priority priority = Task.Priority.values()[
+                            c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_PRIORITY))];
+
             return new Task.Builder(title, itemId)
                     .setDescription(description)
                     .setCompleted(completed)
+                    .setTime(time)
+                    .setWithTime(withTime)
+                    .setPriority(priority)
                     .build();
         };
     }
@@ -65,9 +75,9 @@ public class TasksLocalDataSource implements TasksDataSource {
                 TaskEntry.COLUMN_NAME_DESCRIPTION,
                 TaskEntry.COLUMN_NAME_COMPLETED
         };
-        String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", projection), TaskEntry.TASKS_TABLE_NAME);
-        return mDatabaseHelper.createQuery(TaskEntry.TASKS_TABLE_NAME, sql)
-                .mapToList(mTaskMapperFunction);
+        String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", projection), TaskEntry.TABLE_NAME);
+        return databaseHelper.createQuery(TaskEntry.TABLE_NAME, sql)
+                .mapToList(taskMapperFunction);
     }
 
     @Override
@@ -79,9 +89,9 @@ public class TasksLocalDataSource implements TasksDataSource {
                 TaskEntry.COLUMN_NAME_COMPLETED
         };
         String sql = String.format("SELECT %s FROM %s WHERE %s LIKE ?",
-                TextUtils.join(",", projection), TaskEntry.TASKS_TABLE_NAME, TaskEntry.COLUMN_NAME_ENTRY_ID);
-        return mDatabaseHelper.createQuery(TaskEntry.TASKS_TABLE_NAME, sql, taskId)
-                .mapToOneOrDefault(mTaskMapperFunction, null);
+                TextUtils.join(",", projection), TaskEntry.TABLE_NAME, TaskEntry.COLUMN_NAME_ENTRY_ID);
+        return databaseHelper.createQuery(TaskEntry.TABLE_NAME, sql, taskId)
+                .mapToOneOrDefault(taskMapperFunction, null);
     }
 
     @Override
@@ -92,7 +102,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         values.put(TaskEntry.COLUMN_NAME_TITLE, task.getTitle());
         values.put(TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
         values.put(TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
-        mDatabaseHelper.insert(TaskEntry.TASKS_TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+        databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     @Override
@@ -107,7 +117,7 @@ public class TasksLocalDataSource implements TasksDataSource {
 
         String selection = TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
         String[] selectionArgs = {taskId};
-        mDatabaseHelper.update(TaskEntry.TASKS_TABLE_NAME, values, selection, selectionArgs);
+        databaseHelper.update(TaskEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     @Override
@@ -122,14 +132,14 @@ public class TasksLocalDataSource implements TasksDataSource {
 
         String selection = TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
         String[] selectionArgs = {taskId};
-        mDatabaseHelper.update(TaskEntry.TASKS_TABLE_NAME, values, selection, selectionArgs);
+        databaseHelper.update(TaskEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     @Override
     public void clearCompletedTasks() {
         String selection = TaskEntry.COLUMN_NAME_COMPLETED + " LIKE ?";
         String[] selectionArgs = {"1"};
-        mDatabaseHelper.delete(TaskEntry.TASKS_TABLE_NAME, selection, selectionArgs);
+        databaseHelper.delete(TaskEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     @Override
@@ -140,13 +150,13 @@ public class TasksLocalDataSource implements TasksDataSource {
 
     @Override
     public void deleteAllTasks() {
-        mDatabaseHelper.delete(TaskEntry.TASKS_TABLE_NAME, null);
+        databaseHelper.delete(TaskEntry.TABLE_NAME, null);
     }
 
     @Override
     public void deleteTask(@NonNull String taskId) {
         String selection = TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
         String[] selectionArgs = {taskId};
-        mDatabaseHelper.delete(TaskEntry.TASKS_TABLE_NAME, selection, selectionArgs);
+        databaseHelper.delete(TaskEntry.TABLE_NAME, selection, selectionArgs);
     }
 }
