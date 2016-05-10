@@ -22,7 +22,7 @@ public class TaskUnitTest {
                 .setCompleted(true)
                 .setTime(time)
                 .setDescription("Desc")
-                .setProject(new WeakReference<>(project));
+                .setProject(project);
 
         Task task = taskBuilder.build();
 
