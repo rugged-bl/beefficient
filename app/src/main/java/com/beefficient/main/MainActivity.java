@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements
         // TODO: сделать так, чтобы bottombar был под navigationbar
         bottomBar = BottomBar.attachShy(coordinatorLayout,
                 findViewById(R.id.container), savedInstanceState);
+        bottomBar.useFixedMode();
         bottomBar.setItemsFromMenu(R.menu.menu_bottombar, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements
 //        Log.d("MainActivity", String.valueOf(bottomBar.getFitsSystemWindows()));
 //        Log.d("MainActivity", String.valueOf(bottomBar.getBar().getFitsSystemWindows()));
 
-        bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.bb_darkBackgroundColor));
+//        bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.bb_darkBackgroundColor));
     }
 
     private void initAppBar() {

@@ -57,17 +57,4 @@
         app:headerLayout="@layout/nav_header_overview"
         app:menu="@menu/menu_drawer"/>
 
-    <!--    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:orientation="vertical"
-            android:background="@android:color/white">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="test"/>
-        </LinearLayout>-->
-
 </android.support.v4.widget.DrawerLayout>
