@@ -19,7 +19,7 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import static com.beefficient.util.ObjectUtils.requireNonNull;
+import static com.beefficient.util.Objects.requireNonNull;
 
 /**
  * Concrete implementation of a data source as a db.

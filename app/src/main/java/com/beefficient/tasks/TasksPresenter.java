@@ -2,6 +2,7 @@ package com.beefficient.tasks;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.beefficient.data.Task;
 import com.beefficient.data.source.TasksDataSource;
@@ -17,7 +18,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.beefficient.util.ObjectUtils.requireNonNull;
+import static com.beefficient.util.Objects.requireNonNull;
 
 public class TasksPresenter implements TasksContract.Presenter {
     private final TasksRepository tasksRepository;
@@ -31,9 +32,9 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     public TasksPresenter(@NonNull TasksRepository tasksRepository, @NonNull TasksContract.View tasksView) {
         this.tasksRepository = requireNonNull(tasksRepository, "tasksRepository cannot be null");
-        this.tasksView = requireNonNull(tasksView, "tasksView cannot be null!");
-        subscriptions = new CompositeSubscription();
-        this.tasksView.setPresenter(this);
+        this.tasksView = requireNonNull(tasksView, "tasksView cannot be null");
+        this.subscriptions = new CompositeSubscription();
+        tasksView.setPresenter(this);
     }
 
     @Override
@@ -105,14 +106,18 @@ public class TasksPresenter implements TasksContract.Presenter {
                     @Override
                     public void onError(Throwable e) {
                         tasksView.showLoadingTasksError();
+                        tasksView.setLoadingIndicator(false);
+                        e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(List<Task> tasks) {
+                        Log.d("TasksPresenter", "next");
                         processTasks(tasks);
                     }
                 });
-        this.subscriptions.add(subscription);
+        
+        subscriptions.add(subscription);
     }
 
     private void processTasks(List<Task> tasks) {

@@ -8,8 +8,8 @@ import java.util.Comparator;
 /**
  * Backport of Java 7 {@link java.util.Objects} class
  */
-public final class ObjectUtils {
-    private ObjectUtils() {}
+public final class Objects {
+    private Objects() {}
 
     /**
      * Returns 0 if {@code a == b}, or {@code c.compare(a, b)} otherwise.

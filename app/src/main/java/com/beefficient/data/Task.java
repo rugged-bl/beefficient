@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.beefficient.R;
-import com.beefficient.util.ObjectUtils;
+import com.beefficient.util.Objects;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -174,12 +174,12 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return ObjectUtils.equals(task, task.title) && ObjectUtils.equals(task, task.description);
+        return Objects.equals(task, task.title) && Objects.equals(task, task.description);
     }
 
     @Override
     public int hashCode() {
-        return ObjectUtils.hashCode(title, description);
+        return Objects.hashCode(title, description);
     }
 
     @Override

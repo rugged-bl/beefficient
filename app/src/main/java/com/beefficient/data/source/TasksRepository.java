@@ -13,7 +13,7 @@ import java.util.Map;
 
 import rx.Observable;
 
-import static com.beefficient.util.ObjectUtils.requireNonNull;
+import static com.beefficient.util.Objects.requireNonNull;
 
 /**
  * Concrete implementation to load tasks from the data sources into a cache.
