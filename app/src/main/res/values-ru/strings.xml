@@ -6,4 +6,14 @@
     <string name="action_settings">Настройки</string>
     <string name="login">Вход</string>
     <string name="app_logo">Логотип приложения</string>
+    <string name="all_tasks">Все задачи</string>
+    <string name="calendar">Календарь</string>
+    <string name="inbox">Входящие</string>
+    <string name="labels">Метки</string>
+    <string name="navigation_drawer_close">Закрыть навигацию</string>
+    <string name="navigation_drawer_open">Открыть навигацию</string>
+    <string name="next_week">Неделя</string>
+    <string name="profile_photo">Фото профиля</string>
+    <string name="projects">Проекты</string>
+    <string name="today">Сегодня</string>
 </resources>

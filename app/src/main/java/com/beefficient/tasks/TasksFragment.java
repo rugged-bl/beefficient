@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import com.beefficient.R;
 import com.beefficient.data.Task;
 import com.beefficient.data.source.TasksRepository;
-import com.beefficient.data.source.local.TasksLocalDataSource;
-import com.beefficient.data.source.remote.TasksRemoteDataSource;
+import com.beefficient.data.source.local.LocalDataSource;
+import com.beefficient.data.source.remote.RemoteDataSource;
 
+import java.util.ArrayList;
 import java.util.List;
-import android.widget.TextView.*;
 
 public class TasksFragment extends Fragment implements TasksContract.View {
 
@@ -40,9 +40,9 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new TasksPresenter(TasksRepository.getInstance(TasksRemoteDataSource.getInstance(),
-                TasksLocalDataSource.getInstance(getContext().getApplicationContext())), this);
-        tasksAdapter = new TasksAdapter(presenter.getDummyTaskList());
+        presenter = new TasksPresenter(TasksRepository.getInstance(RemoteDataSource.getInstance(),
+                LocalDataSource.getInstance(getContext().getApplicationContext())), this);
+        tasksAdapter = new TasksAdapter(new ArrayList<>(0));
     }
 
     @Override
@@ -63,11 +63,13 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 	
 	@Override
 	public void onResume() {
+        super.onResume();
 		presenter.subscribe();
 	}
 	
 	@Override
 	public void onPause() {
+        super.onPause();
 		presenter.unsubscribe();
 	}
 	

@@ -19,7 +19,5 @@ public interface TasksContract {
 
     interface Presenter extends BasePresenter {
         void loadTasks();
-
-        List<Task> getDummyTaskList();
     }
 }

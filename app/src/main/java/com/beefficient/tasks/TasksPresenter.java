@@ -3,13 +3,9 @@ package com.beefficient.tasks;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.beefficient.data.Project;
 import com.beefficient.data.Task;
 import com.beefficient.data.source.TasksRepository;
 
-import org.ocpsoft.prettytime.shade.org.apache.commons.lang.math.RandomUtils;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -34,21 +30,6 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     @Override
-    public List<Task> getDummyTaskList() {
-        List<Task> taskList = new ArrayList<>();
-        Task.Builder task = new Task.Builder("Title")
-                .setProject(new Project("Project"))
-                .setTime(System.currentTimeMillis());
-
-        for (int i = 0; i < 50; i++) {
-            taskList.add(task.setCompleted(RandomUtils.nextBoolean())
-                    .setPriority(Task.Priority.values()[RandomUtils.nextInt(3)]).build());
-        }
-
-        return taskList;
-    }
-
-    @Override
     public void subscribe() {
         loadTasks();
     }
@@ -67,6 +48,7 @@ public class TasksPresenter implements TasksContract.Presenter {
         // that the app is busy until the response is handled.
 //        EspressoIdlingResource.increment(); // App is busy until further notice
 
+        tasksView.setLoadingIndicator(true);
         tasksRepository.refreshTasks();
         subscriptions.clear();
         Subscription subscription = tasksRepository.getTasks()

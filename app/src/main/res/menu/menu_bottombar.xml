@@ -18,8 +18,8 @@
         android:icon="@drawable/ic_inbox"
         android:title="@string/inbox"/>
 
-    <!--<item-->
-        <!--android:id="@+id/nav_projects"-->
-        <!--android:icon="@drawable/ic_project"-->
-        <!--android:title="@string/projects"/>-->
+    <item
+        android:id="@+id/menu_item_orijects"
+        android:icon="@drawable/ic_project"
+        android:title="@string/projects"/>
 </menu>

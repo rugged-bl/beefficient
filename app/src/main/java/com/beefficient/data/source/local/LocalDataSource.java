@@ -9,7 +9,7 @@ import android.text.TextUtils;
 
 import com.beefficient.data.Task;
 import com.beefficient.data.source.TasksDataSource;
-import com.beefficient.data.source.local.TasksPersistenceContract.TaskEntry;
+import com.beefficient.data.source.local.PersistenceContract.TaskEntry;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 
@@ -24,16 +24,16 @@ import static com.beefficient.util.ObjectUtils.requireNonNull;
 /**
  * Concrete implementation of a data source as a db.
  */
-public class TasksLocalDataSource implements TasksDataSource {
+public class LocalDataSource implements TasksDataSource {
 
-    private static TasksLocalDataSource INSTANCE;
+    private static LocalDataSource INSTANCE;
     private final BriteDatabase databaseHelper;
     private Func1<Cursor, Task> taskMapperFunction;
 
     // Prevent direct instantiation.
-    private TasksLocalDataSource(@NonNull Context context) {
+    private LocalDataSource(@NonNull Context context) {
         requireNonNull(context);
-        TasksDbHelper dbHelper = new TasksDbHelper(context);
+        DbHelper dbHelper = new DbHelper(context);
         SqlBrite sqlBrite = SqlBrite.create();
         databaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
         taskMapperFunction = c -> {
@@ -60,9 +60,9 @@ public class TasksLocalDataSource implements TasksDataSource {
         };
     }
 
-    public static TasksLocalDataSource getInstance(@NonNull Context context) {
+    public static LocalDataSource getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
-            INSTANCE = new TasksLocalDataSource(context);
+            INSTANCE = new LocalDataSource(context);
         }
         return INSTANCE;
     }

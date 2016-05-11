@@ -16,9 +16,9 @@ import rx.Observable;
 /**
  * Implementation of the data source that adds a latency simulating network.
  */
-public class TasksRemoteDataSource implements TasksDataSource {
+public class RemoteDataSource implements TasksDataSource {
 
-    private static TasksRemoteDataSource INSTANCE;
+    private static RemoteDataSource INSTANCE;
 
     private static final int SERVICE_LATENCY_IN_MILLIS = 5000;
 
@@ -26,19 +26,21 @@ public class TasksRemoteDataSource implements TasksDataSource {
 
     static {
         TASKS_SERVICE_DATA = new LinkedHashMap<>(2);
-        addTask("Build tower in Pisa", "Ground looks good, no foundation work required.");
-        addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!");
+        for (int i = 0; i < 10; i++) {
+            addTask("Build tower in Pisa", "Ground looks good, no foundation work required.");
+            addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!");
+        }
     }
 
-    public static TasksRemoteDataSource getInstance() {
+    public static RemoteDataSource getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new TasksRemoteDataSource();
+            INSTANCE = new RemoteDataSource();
         }
         return INSTANCE;
     }
 
     // Prevent direct instantiation.
-    private TasksRemoteDataSource() {
+    private RemoteDataSource() {
     }
 
     private static void addTask(String title, String description) {

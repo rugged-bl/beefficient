@@ -4,12 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static com.beefficient.data.source.local.TasksPersistenceContract.ProjectEntry;
-import static com.beefficient.data.source.local.TasksPersistenceContract.TaskEntry;
-import static com.beefficient.data.source.local.TasksPersistenceContract.TaskLabelEntry;
-import static com.beefficient.data.source.local.TasksPersistenceContract.LabelEntry;
+import static com.beefficient.data.source.local.PersistenceContract.ProjectEntry;
+import static com.beefficient.data.source.local.PersistenceContract.TaskEntry;
+import static com.beefficient.data.source.local.PersistenceContract.TaskLabelEntry;
+import static com.beefficient.data.source.local.PersistenceContract.LabelEntry;
 
-public class TasksDbHelper extends SQLiteOpenHelper {
+public class DbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
 
     public static final String DATABASE_NAME = "Tasks.db";
@@ -58,7 +58,7 @@ public class TasksDbHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(" + TaskLabelEntry.COLUMN_NAME_LABEL_ID + ") REFERENCES " + LabelEntry.TABLE_NAME +
             "(" + LabelEntry._ID + ") ON DELETE CASCADE)";
 
-    public TasksDbHelper(Context context) {
+    public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

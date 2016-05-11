@@ -5,11 +5,11 @@ import android.provider.BaseColumns;
 /**
  * The contract used for the db to save the tasks locally.
  */
-public final class TasksPersistenceContract {
+public final class PersistenceContract {
 
     // To prevent someone from accidentally instantiating the contract class,
     // give it an empty constructor.
-    private TasksPersistenceContract() {
+    private PersistenceContract() {
     }
 
     public static abstract class ProjectEntry implements BaseColumns {
