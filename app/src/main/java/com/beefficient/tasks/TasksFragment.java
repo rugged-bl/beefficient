@@ -56,23 +56,23 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         }
 
         swipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setOnRefreshListener(() -> presenter.loadTasks());
+        swipeRefreshLayout.setOnRefreshListener(() -> presenter.loadTasks(true));
 
         return view;
     }
-	
-	@Override
-	public void onResume() {
+
+    @Override
+    public void onResume() {
         super.onResume();
-		presenter.subscribe();
-	}
-	
-	@Override
-	public void onPause() {
+        presenter.subscribe();
+    }
+
+    @Override
+    public void onPause() {
         super.onPause();
-		presenter.unsubscribe();
-	}
-	
+        presenter.unsubscribe();
+    }
+
     @Override
     public void setPresenter(@NonNull TasksContract.Presenter presenter) {
         this.presenter = presenter;
@@ -88,6 +88,46 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
+    public void showAddTask() {
+    }
+
+    @Override
+    public void showTaskDetailsUi(String taskId) {
+    }
+
+    @Override
+    public void showTaskMarkedComplete() {
+    }
+
+    @Override
+    public void showTaskMarkedActive() {
+    }
+
+    @Override
+    public void showCompletedTasksCleared() {
+    }
+
+    @Override
+    public void showActiveFilterLabel() {
+    }
+
+    @Override
+    public void showCompletedFilterLabel() {
+    }
+
+    @Override
+    public void showAllFilterLabel() {
+    }
+
+    @Override
+    public void showNoActiveTasks() {
+    }
+
+    @Override
+    public void showNoCompletedTasks() {
+    }
+
+    @Override
     public void showNoTasks() {
         Log.d("TasksFragment", "showNoTasks");
     }
@@ -96,5 +136,18 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     public void showTasks(List<Task> tasks) {
         Log.d("TasksFragment", "showTasks");
         tasksAdapter.replaceData(tasks);
+    }
+
+    @Override
+    public void showSuccessfullySavedMessage() {
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
+    }
+
+    @Override
+    public void showFilteringPopUpMenu() {
     }
 }
