@@ -17,6 +17,7 @@ import com.beefficient.data.source.local.TasksLocalDataSource;
 import com.beefficient.data.source.remote.TasksRemoteDataSource;
 
 import java.util.List;
+import android.widget.TextView.*;
 
 public class TasksFragment extends Fragment implements TasksContract.View {
 
@@ -59,7 +60,17 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
         return view;
     }
-
+	
+	@Override
+	public void onResume() {
+		presenter.subscribe();
+	}
+	
+	@Override
+	public void onPause() {
+		presenter.unsubscribe();
+	}
+	
     @Override
     public void setPresenter(@NonNull TasksContract.Presenter presenter) {
         this.presenter = presenter;
