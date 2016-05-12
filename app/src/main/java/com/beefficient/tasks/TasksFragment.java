@@ -1,7 +1,10 @@
 package com.beefficient.tasks;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +18,9 @@ import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.TasksRepository;
 import com.beefficient.data.source.local.LocalDataSource;
 import com.beefficient.data.source.remote.RemoteDataSource;
+import com.beefficient.main.MainContract;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TasksFragment extends Fragment implements TasksContract.View {
@@ -38,11 +42,12 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new TasksPresenter(TasksRepository.getInstance(RemoteDataSource.getInstance(),
                 LocalDataSource.getInstance(getContext().getApplicationContext())), this);
-        tasksAdapter = new TasksAdapter(new ArrayList<>(0));
+        tasksAdapter = new TasksAdapter(Collections.EMPTY_LIST);
     }
 
     @Override
@@ -55,8 +60,17 @@ public class TasksFragment extends Fragment implements TasksContract.View {
             recyclerView.setAdapter(tasksAdapter);
         }
 
-        swipeRefreshLayout = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipe_refresh_layout);
+        Activity activity = getActivity();
+        swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(() -> presenter.loadTasks(true));
+
+        FloatingActionButton addTaskButton = (FloatingActionButton) activity.findViewById(R.id.fab_add);
+        addTaskButton.setOnClickListener(v -> {
+            // TODO: start EditTaskActivity
+            if (activity instanceof MainContract.View) {
+                ((MainContract.View) activity).showSnackbar("Add task", Snackbar.LENGTH_SHORT);
+            }
+        });
 
         return view;
     }

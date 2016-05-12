@@ -7,6 +7,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -49,9 +50,7 @@ public class MainActivity extends AppCompatActivity implements
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, TasksFragment.newInstance())
-                .commit();
+        loadTasksFragment();
     }
 
     @Override
@@ -105,9 +104,50 @@ public class MainActivity extends AppCompatActivity implements
                 ContextCompat.getColor(this, R.color.light_blue_a700));
     }
 
+    private void setFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        switch (id) {
+            case R.id.nav_overview: {
+                loadTasksFragment();
+                break;
+            }
+            case R.id.nav_today: {
+                // TODO: set TasksFragment with today tasks
+                break;
+            }
+            case R.id.nav_next_week: {
+                // TODO: set TasksFragment with next week tasks
+                break;
+            }
+            case R.id.nav_calendar: {
+                // TODO: set calendar fragment (TasksFragment?)
+                break;
+            }
+            case R.id.nav_task_inbox: {
+                // TODO: set TasksFragment with Inbox project tasks
+                break;
+            }
+            case R.id.nav_projects: {
+                // TODO: set ProjectsFragment (dialog?)
+                break;
+            }
+            case R.id.nav_labels: {
+                // TODO: set LabelsFragment (dialog?)
+                break;
+            }
+            case R.id.nav_settings: {
+                // TODO: start SettingsActivity
+                break;
+            }
+        }
 
         appBarLayout.setExpanded(true);
         drawer.closeDrawer(GravityCompat.START);
@@ -117,6 +157,26 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void showSnackbar(CharSequence text, int duration) {
         Snackbar.make(coordinatorLayout, text, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void loadTasksFragment() {
+        setFragment(TasksFragment.newInstance());
+    }
+
+    @Override
+    public void loadProjectsFragment() {
+
+    }
+
+    @Override
+    public void loadLabelsFragment() {
+
+    }
+
+    @Override
+    public void loadTaskDetailsFragment() {
+
     }
 
     @Override

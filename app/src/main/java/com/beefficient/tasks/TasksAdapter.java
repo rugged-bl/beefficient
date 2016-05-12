@@ -52,16 +52,21 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.task = tasks.get(position);
 
-        Task t = holder.task;
-        Project project = t.getProject();
+        Task task = holder.task;
+        Project project = task.getProject();
 
-        holder.project.setText(project != null ? project.getName() : "");
-        holder.title.setText(t.getTitle());
-        holder.done.setChecked(t.isCompleted());
-        holder.priority.setBackgroundResource(t.getPriority().colorRes());
+        if (project != null) {
+            holder.project.setText(project.getName());
+            holder.project.setVisibility(View.VISIBLE);
+        } else {
+            holder.project.setVisibility(View.GONE);
+        }
+        holder.title.setText(task.getTitle());
+        holder.done.setChecked(task.isCompleted());
+        holder.priority.setBackgroundResource(task.getPriority().colorRes());
 
-        Date dueDate = new Date(t.getTime());
-        if (t.getTime() != 0) {
+        Date dueDate = new Date(task.getTime());
+        if (task.getTime() != 0) {
             holder.dueDate.setText(DateUtils.getRelativeDateTimeString(
                     holder.itemView.getContext(), dueDate.getTime(), DateUtils.DAY_IN_MILLIS,
                     DateUtils.DAY_IN_MILLIS, 0));
@@ -71,11 +76,11 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
             holder.dueDate.setVisibility(View.GONE);
         }
 
-        if (t.getLabelList().isEmpty()) {
+        if (task.getLabelList().isEmpty()) {
             holder.labels.setVisibility(View.GONE);
         } else {
             StringBuilder labelBuilder = new StringBuilder();
-            for (Label label : t.getLabelList()) {
+            for (Label label : task.getLabelList()) {
                 labelBuilder.append(label.getName()).append(" ");
             }
             holder.labels.setText(labelBuilder);
