@@ -1,7 +1,6 @@
 package com.beefficient.main;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -19,8 +18,6 @@ import android.view.MenuItem;
 
 import com.beefficient.R;
 import com.beefficient.tasks.TasksFragment;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnMenuTabClickListener;
 
 public class MainActivity extends AppCompatActivity implements
         MainContract.View, NavigationView.OnNavigationItemSelectedListener {
@@ -35,13 +32,14 @@ public class MainActivity extends AppCompatActivity implements
     private ActionBarDrawerToggle drawerToggle;
     private CoordinatorLayout coordinatorLayout;
 
-    private BottomBar bottomBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        presenter = new MainPresenter(this);
 
         initAppBar();
         initDrawer();
@@ -51,7 +49,9 @@ public class MainActivity extends AppCompatActivity implements
 
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
 
-        initBottomBar(savedInstanceState);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, TasksFragment.newInstance())
+                .commit();
     }
 
     @Override
@@ -63,10 +63,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        // Necessary to restore the BottomBar's state, otherwise we would
-        // lose the current tab on orientation change.
-        bottomBar.onSaveInstanceState(outState);
     }
 
     @Override
@@ -77,53 +73,6 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
-    }
-
-    private void initBottomBar(Bundle savedInstanceState) {
-        // TODO: сделать так, чтобы bottombar был под navigationbar
-        bottomBar = BottomBar.attachShy(coordinatorLayout,
-                findViewById(R.id.container), savedInstanceState);
-        bottomBar.useFixedMode();
-        bottomBar.setItemsFromMenu(R.menu.menu_bottombar, new OnMenuTabClickListener() {
-            @Override
-            public void onMenuTabSelected(@IdRes int menuItemId) {
-                switch (menuItemId) {
-                    case R.id.menu_item_today: {
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.container, TasksFragment.newInstance())
-                                .commit();
-
-                        break;
-                    }
-                    case R.id.menu_item_next_week: {
-                        break;
-                    }
-                    case R.id.menu_item_inbox: {
-                        break;
-                    }
-                }
-            }
-
-            @Override
-            public void onMenuTabReSelected(@IdRes int menuItemId) {
-                switch (menuItemId) {
-                    case R.id.menu_item_today: {
-                        break;
-                    }
-                    case R.id.menu_item_next_week: {
-                        break;
-                    }
-                    case R.id.menu_item_inbox: {
-                        break;
-                    }
-                }
-            }
-        });
-
-//        Log.d("MainActivity", String.valueOf(bottomBar.getFitsSystemWindows()));
-//        Log.d("MainActivity", String.valueOf(bottomBar.getBar().getFitsSystemWindows()));
-
-//        bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.bb_darkBackgroundColor));
     }
 
     private void initAppBar() {
