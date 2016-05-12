@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.beefficient.data.Project;
 import com.beefficient.data.Task;
 import com.beefficient.data.source.TasksDataSource;
 import com.beefficient.data.source.local.PersistenceContract.TaskEntry;
@@ -158,5 +159,30 @@ public class LocalDataSource implements TasksDataSource {
         String selection = TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
         String[] selectionArgs = {taskId};
         databaseHelper.delete(TaskEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    @Override
+    public Observable<List<Project>> getProjects() {
+        return null;
+    }
+
+    @Override
+    public Observable<Project> getProject(@NonNull String projectId) {
+        return null;
+    }
+
+    @Override
+    public void saveProject(@NonNull Project project) {
+
+    }
+
+    @Override
+    public void refreshProjects() {
+
+    }
+
+    @Override
+    public void deleteProject(@NonNull String projectId) {
+
     }
 }

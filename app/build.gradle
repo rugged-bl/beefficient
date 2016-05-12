@@ -6,14 +6,17 @@ ext {
     // Versions of dependencies
     supportVersion = '23.4.0'
     playServicesAuthVersion = '8.4.0'
+
     retrofitVersion = '2.0.2'
+
     rxJavaVersion = '1.1.5'
     rxAndroidVersion = '1.2.0'
     rxPermissionsVersion = '0.7.0'
     rxBindingVersion = '0.4.0'
     sqlbriteVersion = '0.6.3'
+
     jodaTimeVersion = '2.9.3'
-    prettyTimeNlpVersion = '4.0.0.Final'
+//    prettyTimeNlpVersion = '4.0.0.Final'
 }
 
 android {

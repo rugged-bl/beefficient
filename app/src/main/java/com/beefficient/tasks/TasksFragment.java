@@ -92,7 +92,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showTaskDetailsUi(String taskId) {
+    public void showTaskDetails(String taskId) {
     }
 
     @Override

@@ -2,8 +2,8 @@ package com.beefficient.data.source;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
+import com.beefficient.data.Project;
 import com.beefficient.data.Task;
 
 import java.util.Iterator;
@@ -17,31 +17,24 @@ import static com.beefficient.util.Objects.requireNonNull;
 
 /**
  * Concrete implementation to load tasks from the data sources into a cache.
- * <p>
- * For simplicity, this implements a dumb synchronisation between locally persisted data and data
- * obtained from the server, by using the remote data source only if the local database doesn't
- * exist or is empty.
  */
+// TODO: придумать, куда засунуть проекты и метки
 public class TasksRepository implements TasksDataSource {
 
     private static TasksRepository INSTANCE = null;
 
     private final TasksDataSource remoteDataSource;
-
     private final TasksDataSource localDataSource;
 
-    /**
-     * This variable has package local visibility so it can be accessed from tests.
-     */
+    Map<String, Project> cachedProjects;
     Map<String, Task> cachedTasks;
 
     /**
-     * Marks the cache as invalid, to force an update the next time data is requested. This variable
-     * has package local visibility so it can be accessed from tests.
+     * Marks the cache as invalid, to force an update the next time data is requested.
      */
     boolean cacheIsDirty = false;
 
-    // Prevent direct instantiation.
+    // Prevent direct instantiation
     private TasksRepository(@NonNull TasksDataSource tasksRemoteDataSource,
                             @NonNull TasksDataSource tasksLocalDataSource) {
         remoteDataSource = requireNonNull(tasksRemoteDataSource);
@@ -88,7 +81,6 @@ public class TasksRepository implements TasksDataSource {
                 .getTasks()
                 .flatMap(Observable::from)
                 .doOnNext(task -> {
-                    Log.d("TasksRepository", "doOnNext");
                     localDataSource.saveTask(task);
                     cachedTasks.put(task.getId(), task);
                 })
@@ -101,6 +93,86 @@ public class TasksRepository implements TasksDataSource {
             Observable<List<Task>> localTasks = localDataSource.getTasks();
             return Observable.concat(localTasks, remoteTasks).first();
         }
+    }
+
+    @Override
+    public Observable<List<Project>> getProjects() {
+        // Respond immediately with cache if available and not dirty
+        if (cachedProjects != null && !cacheIsDirty) {
+            return Observable.from(cachedProjects.values()).toList();
+        } else if (cachedProjects == null) {
+            cachedProjects = new LinkedHashMap<>();
+        }
+
+        Observable<List<Project>> remoteProjects = remoteDataSource
+                .getProjects()
+                .flatMap(Observable::from)
+                .doOnNext(project -> {
+                    localDataSource.saveProject(project);
+                    cachedProjects.put(project.getId(), project);
+                })
+                .toList()
+                .doOnCompleted(() -> cacheIsDirty = false);
+        if (cacheIsDirty) {
+            return remoteProjects;
+        } else {
+            // Query the local storage if available. If not, query the network.
+            Observable<List<Project>> localProjects = localDataSource.getProjects();
+            return Observable.concat(localProjects, remoteProjects).first();
+        }
+    }
+
+    @Override
+    public Observable<Project> getProject(@NonNull String projectId) {
+        requireNonNull(projectId);
+
+        final Project cachedProject = getProjectWithId(projectId);
+
+        // Respond immediately with cache if available
+        if (cachedProject != null) {
+            return Observable.just(cachedProject);
+        }
+
+        // Load from server/persisted if needed.
+        // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
+        // Is the task in the local data source? If not, query the network.
+        Observable<Project> localProject = localDataSource
+                .getProject(projectId)
+                .doOnNext(project -> cachedProjects.put(projectId, project));
+        Observable<Project> remoteProject = remoteDataSource
+                .getProject(projectId)
+                .doOnNext(project -> {
+                    localDataSource.saveProject(project);
+                    cachedProjects.put(project.getId(), project);
+                });
+
+        return Observable.concat(localProject, remoteProject).first();
+    }
+
+    @Override
+    public void saveProject(@NonNull Project project) {
+        requireNonNull(project);
+        remoteDataSource.saveProject(project);
+        localDataSource.saveProject(project);
+
+        // Do in memory cache update to keep the app UI up to date
+        if (cachedProjects == null) {
+            cachedProjects = new LinkedHashMap<>();
+        }
+        cachedProjects.put(project.getId(), project);
+    }
+
+    @Override
+    public void refreshProjects() {
+        cacheIsDirty = true;
+    }
+
+    @Override
+    public void deleteProject(@NonNull String projectId) {
+        remoteDataSource.deleteProject(requireNonNull(projectId));
+        localDataSource.deleteProject(requireNonNull(projectId));
+
+        cachedProjects.remove(projectId);
     }
 
     @Override
@@ -203,7 +275,7 @@ public class TasksRepository implements TasksDataSource {
         }
 
         // Load from server/persisted if needed.
-//http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
+        // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
         // Is the task in the local data source? If not, query the network.
         Observable<Task> localTask = localDataSource
                 .getTask(taskId)
@@ -249,6 +321,16 @@ public class TasksRepository implements TasksDataSource {
             return null;
         } else {
             return cachedTasks.get(id);
+        }
+    }
+
+    @Nullable
+    private Project getProjectWithId(@NonNull String id) {
+        requireNonNull(id);
+        if (cachedProjects == null || cachedProjects.isEmpty()) {
+            return null;
+        } else {
+            return cachedProjects.get(id);
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.beefficient.tasks;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -14,7 +13,6 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -168,7 +166,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void openTaskDetails(@NonNull Task requestedTask) {
         requireNonNull(requestedTask, "requestedTask cannot be null!");
-        tasksView.showTaskDetailsUi(requestedTask.getId());
+        tasksView.showTaskDetails(requestedTask.getId());
     }
 
     @Override

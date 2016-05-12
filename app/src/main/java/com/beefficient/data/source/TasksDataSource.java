@@ -2,9 +2,8 @@ package com.beefficient.data.source;
 
 import android.support.annotation.NonNull;
 
+import com.beefficient.data.Project;
 import com.beefficient.data.Task;
-
-import static com.beefficient.util.Objects.requireNonNull;
 
 import java.util.List;
 
@@ -37,4 +36,14 @@ public interface TasksDataSource {
     void deleteAllTasks();
 
     void deleteTask(@NonNull String taskId);
+
+    Observable<List<Project>> getProjects();
+
+    Observable<Project> getProject(@NonNull String projectId);
+
+    void saveProject(@NonNull Project project);
+
+    void refreshProjects();
+
+    void deleteProject(@NonNull String projectId);
 }

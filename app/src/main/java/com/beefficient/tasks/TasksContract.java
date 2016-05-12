@@ -10,13 +10,14 @@ import java.util.List;
 
 public interface TasksContract {
     interface View extends BaseView<Presenter> {
+
         void setLoadingIndicator(boolean active);
 
         void showTasks(List<Task> tasks);
 
         void showAddTask();
 
-        void showTaskDetailsUi(String taskId);
+        void showTaskDetails(String taskId);
 
         void showTaskMarkedComplete();
 
@@ -40,12 +41,14 @@ public interface TasksContract {
 
         void showSuccessfullySavedMessage();
 
+        // TODO: для чего это?
         boolean isActive();
 
         void showFilteringPopUpMenu();
     }
 
     interface Presenter extends BasePresenter {
+
         void result(int requestCode, int resultCode);
 
         void loadTasks(boolean forceUpdate);

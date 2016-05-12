@@ -2,6 +2,7 @@ package com.beefficient.data.source.remote;
 
 import android.support.annotation.NonNull;
 
+import com.beefficient.data.Project;
 import com.beefficient.data.Task;
 import com.beefficient.data.source.TasksDataSource;
 
@@ -127,5 +128,30 @@ public class RemoteDataSource implements TasksDataSource {
     @Override
     public void deleteTask(@NonNull String taskId) {
         TASKS_SERVICE_DATA.remove(taskId);
+    }
+
+    @Override
+    public Observable<List<Project>> getProjects() {
+        return null;
+    }
+
+    @Override
+    public Observable<Project> getProject(@NonNull String projectId) {
+        return null;
+    }
+
+    @Override
+    public void saveProject(@NonNull Project project) {
+
+    }
+
+    @Override
+    public void refreshProjects() {
+
+    }
+
+    @Override
+    public void deleteProject(@NonNull String projectId) {
+
     }
 }

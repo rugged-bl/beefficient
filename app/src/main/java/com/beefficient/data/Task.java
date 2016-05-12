@@ -53,7 +53,6 @@ public class Task {
          */
         public Builder(String title) {
             id = UUID.randomUUID().toString();
-
             this.title = title;
         }
         /**
@@ -65,7 +64,6 @@ public class Task {
          */
         public Builder(String title, String id) {
             this.id = id;
-
             this.title = title;
         }
 
