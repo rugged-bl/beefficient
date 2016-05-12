@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import com.beefficient.data.Project;
-import com.beefficient.data.Task;
+import com.beefficient.data.entity.Project;
+import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.TasksDataSource;
 import com.beefficient.data.source.local.PersistenceContract.TaskEntry;
 import com.squareup.sqlbrite.BriteDatabase;

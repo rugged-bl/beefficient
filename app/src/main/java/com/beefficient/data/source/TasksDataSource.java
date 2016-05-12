@@ -2,8 +2,8 @@ package com.beefficient.data.source;
 
 import android.support.annotation.NonNull;
 
-import com.beefficient.data.Project;
-import com.beefficient.data.Task;
+import com.beefficient.data.entity.Project;
+import com.beefficient.data.entity.Task;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.beefficient.data;
+package com.beefficient.data.entity;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

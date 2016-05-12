@@ -3,7 +3,7 @@ package com.beefficient.tasks;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.beefficient.data.Task;
+import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.TasksDataSource;
 import com.beefficient.data.source.TasksRepository;
 

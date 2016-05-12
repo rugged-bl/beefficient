@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.beefficient.R;
-import com.beefficient.data.Task;
+import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.TasksRepository;
 import com.beefficient.data.source.local.LocalDataSource;
 import com.beefficient.data.source.remote.RemoteDataSource;
@@ -135,7 +135,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showTasks(List<Task> tasks) {
         Log.d("TasksFragment", "showTasks");
-        tasksAdapter.replaceData(tasks);
+        tasksAdapter.setTasks(tasks);
     }
 
     @Override

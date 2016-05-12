@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.beefficient.BasePresenter;
 import com.beefficient.BaseView;
-import com.beefficient.data.Task;
+import com.beefficient.data.entity.Task;
 
 import java.util.List;
 

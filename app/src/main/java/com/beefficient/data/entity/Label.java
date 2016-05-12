@@ -1,4 +1,4 @@
-package com.beefficient.data;
+package com.beefficient.data.entity;
 
 // TODO: add color
 public class Label {

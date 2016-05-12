@@ -1,4 +1,4 @@
-package com.beefficient.data;
+package com.beefficient.data.entity;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
