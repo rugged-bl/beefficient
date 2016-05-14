@@ -20,17 +20,64 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 	private static final int VIEW_TYPE_ITEM = 0;
 	private static final int VIEW_TYPE_SECTION = 1;
-	
-    private List<Task> tasks;
-    private OnItemClickListener listener;
 
-    public TasksAdapter(List<Task> tasks) {
-        this.tasks = tasks;
+    public static class SectionItem {
+        CharSequence title;
+
+        public SectionItem(CharSequence title) {
+            this.title = title;
+        }
+
+        public CharSequence getTitle() {
+            return title;
+        }
+
+        public void setTitle(CharSequence title) {
+            this.title = title;
+        }
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public static class TaskItem {
+        private SectionItem section;
+        private Task task;
+
+        public TaskItem(Task task, SectionItem section) {
+            this.section = section;
+            this.task = task;
+        }
+
+        public SectionItem getSection() {
+            return section;
+        }
+
+        public void setSection(SectionItem section) {
+            this.section = section;
+        }
+
+        public Task getTask() {
+            return task;
+        }
+
+        public void setTask(Task task) {
+            this.task = task;
+        }
+    }
+
+    private List<TaskItem> taskItems;
+    private List<SectionItem> sectionItems;
+    private OnItemClickListener listener;
+
+    public TasksAdapter(List<TaskItem> taskItems) {
+        this.taskItems = taskItems;
+    }
+
+    public void setTaskItems(List<TaskItem> taskItems) {
+        this.taskItems = taskItems;
         notifyDataSetChanged();
+    }
+
+    public void setSectionItems(List<SectionItem> sectionItems) {
+        this.sectionItems = sectionItems;
     }
 
     public void setListener(OnItemClickListener listener) {
@@ -43,13 +90,15 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 		RecyclerView.ViewHolder viewHolder = null;
 		if (viewType == VIEW_TYPE_ITEM) {
 			final View view = inflater.inflate(R.layout.item_task, parent, false);
-			
-        	viewHolder = new ViewHolder(view);
-			viewHolder.itemView.setOnClickListener(v -> {
+
+        	TaskViewHolder taskViewHolder = new TaskViewHolder(view);
+            taskViewHolder.itemView.setOnClickListener(v -> {
 				if (listener != null) {
-					listener.onItemClick(((ViewHolder) viewHolder).task);
+					listener.onItemClick(taskViewHolder.item.getTask());
 				}
 			});
+
+            viewHolder = taskViewHolder;
 		} else if (viewType == VIEW_TYPE_SECTION) {
 			final View view = inflater.inflate(R.layout.item_task_section, parent, false);
         	viewHolder = new SectionViewHolder(view);
@@ -59,12 +108,12 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-		int itemViewType = holder.getItemViewType();
-		if (holder instanceof ViewHolder) {
-			ViewHolder taskHolder = (ViewHolder) holder;
-        	taskHolder.task = tasks.get(position);
+//		int itemViewType = holder.getItemViewType();
+		if (holder instanceof TaskViewHolder) {
+			TaskViewHolder taskHolder = (TaskViewHolder) holder;
+            taskHolder.item = taskItems.get(position);
 
-        	Task task = taskHolder.task;
+        	Task task = taskHolder.item.getTask();
         	Project project = task.getProject();
 
         	if (project != null) {
@@ -100,22 +149,23 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         	}
 		} else if (holder instanceof SectionViewHolder) {
 			SectionViewHolder sectionHolder = (SectionViewHolder) holder;
-			sectionHolder.title.setText("test"); // TODO
+            sectionHolder.item = sectionItems.get(0); // TODO
+			sectionHolder.title.setText(sectionHolder.item.getTitle());
 		}
     }
 
 	@Override
 	public int getItemViewType(int position) {
-		return VIEW_TYPE_ITEM; // TODO
+		return (position == 0) ? VIEW_TYPE_SECTION : VIEW_TYPE_ITEM; // TODO
 	}
-	
+
     @Override
     public int getItemCount() {
-        return tasks.size();
+        return taskItems.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public Task task;
+    public class TaskViewHolder extends RecyclerView.ViewHolder {
+        public TaskItem item;
         public View priority;
         public CheckBox done;
         public TextView title;
@@ -123,7 +173,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public TextView dueDate;
         public TextView project;
 
-        public ViewHolder(View itemView) {
+        public TaskViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
             project = (TextView) itemView.findViewById(R.id.project);
@@ -133,10 +183,11 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             priority = itemView.findViewById(R.id.priority_indicator);
         }
     }
-	
+
 	public class SectionViewHolder extends RecyclerView.ViewHolder {
+        public SectionItem item;
 		public TextView title;
-		
+
 		public SectionViewHolder(View itemView) {
 			super(itemView);
 			title = (TextView) itemView.findViewById(R.id.title);

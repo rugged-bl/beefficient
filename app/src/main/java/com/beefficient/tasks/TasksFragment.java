@@ -20,6 +20,7 @@ import com.beefficient.data.source.local.LocalDataSource;
 import com.beefficient.data.source.remote.RemoteDataSource;
 import com.beefficient.main.MainContract;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,6 +49,16 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         presenter = new TasksPresenter(TasksRepository.getInstance(RemoteDataSource.getInstance(),
                 LocalDataSource.getInstance(getContext().getApplicationContext())), this);
         tasksAdapter = new TasksAdapter(Collections.EMPTY_LIST);
+        tasksAdapter.setListener(new TasksAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Task task) {
+                Activity activity = getActivity();
+                if (activity instanceof MainContract.View) {
+                    ((MainContract.View) activity).showSnackbar("Clicked task: " + task.getTitle(),
+                            Snackbar.LENGTH_SHORT);
+                }
+            }
+        });
     }
 
     @Override
@@ -149,7 +160,15 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showTasks(List<Task> tasks) {
         Log.d("TasksFragment", "showTasks");
-        tasksAdapter.setTasks(tasks);
+        ArrayList<TasksAdapter.SectionItem> testSectionItems = new ArrayList<>();
+        TasksAdapter.SectionItem testSectionItem = new TasksAdapter.SectionItem("Section"); // TODO
+        testSectionItems.add(testSectionItem);
+        ArrayList<TasksAdapter.TaskItem> taskItems = new ArrayList<>();
+        for (Task task : tasks) {
+            taskItems.add(new TasksAdapter.TaskItem(task, testSectionItem));
+        }
+        tasksAdapter.setSectionItems(testSectionItems);
+        tasksAdapter.setTaskItems(taskItems);
     }
 
     @Override
