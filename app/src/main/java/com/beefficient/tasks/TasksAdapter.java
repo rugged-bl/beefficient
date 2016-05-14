@@ -47,7 +47,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         	viewHolder = new ViewHolder(view);
 			viewHolder.itemView.setOnClickListener(v -> {
 				if (listener != null) {
-					listener.onItemClick(viewHolder.task);
+					listener.onItemClick((ViewHolder) viewHolder).task);
 				}
 			});
 		} else if (viewType == VIEW_TYPE_SECTION) {
