@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import rx.Observable;
 
@@ -32,7 +33,7 @@ public class TasksRepository implements TasksDataSource {
     /**
      * Marks the cache as invalid, to force an update the next time data is requested.
      */
-    boolean cacheIsDirty = false;
+    AtomicBoolean cacheIsDirty = new AtomicBoolean(false);
 
     // Prevent direct instantiation
     private TasksRepository(@NonNull TasksDataSource tasksRemoteDataSource,
@@ -71,7 +72,7 @@ public class TasksRepository implements TasksDataSource {
     @Override
     public Observable<List<Task>> getTasks() {
         // Respond immediately with cache if available and not dirty
-        if (cachedTasks != null && !cacheIsDirty) {
+        if (cachedTasks != null && !cacheIsDirty.get()) {
             return Observable.from(cachedTasks.values()).toList();
         } else if (cachedTasks == null) {
             cachedTasks = new LinkedHashMap<>();
@@ -85,8 +86,8 @@ public class TasksRepository implements TasksDataSource {
                     cachedTasks.put(task.getId(), task);
                 })
                 .toList()
-                .doOnCompleted(() -> cacheIsDirty = false);
-        if (cacheIsDirty) {
+                .doOnCompleted(() -> cacheIsDirty.set(false));
+        if (cacheIsDirty.get()) {
             return remoteTasks;
         } else {
             // Query the local storage if available. If not, query the network.
@@ -98,7 +99,7 @@ public class TasksRepository implements TasksDataSource {
     @Override
     public Observable<List<Project>> getProjects() {
         // Respond immediately with cache if available and not dirty
-        if (cachedProjects != null && !cacheIsDirty) {
+        if (cachedProjects != null && !cacheIsDirty.get()) {
             return Observable.from(cachedProjects.values()).toList();
         } else if (cachedProjects == null) {
             cachedProjects = new LinkedHashMap<>();
@@ -112,8 +113,8 @@ public class TasksRepository implements TasksDataSource {
                     cachedProjects.put(project.getId(), project);
                 })
                 .toList()
-                .doOnCompleted(() -> cacheIsDirty = false);
-        if (cacheIsDirty) {
+                .doOnCompleted(() -> cacheIsDirty.set(false));
+        if (cacheIsDirty.get()) {
             return remoteProjects;
         } else {
             // Query the local storage if available. If not, query the network.
@@ -164,7 +165,7 @@ public class TasksRepository implements TasksDataSource {
 
     @Override
     public void refreshProjects() {
-        cacheIsDirty = true;
+        cacheIsDirty.set(true);
     }
 
     @Override
@@ -292,7 +293,7 @@ public class TasksRepository implements TasksDataSource {
 
     @Override
     public void refreshTasks() {
-        cacheIsDirty = true;
+        cacheIsDirty.set(true);
     }
 
     @Override

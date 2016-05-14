@@ -1,16 +1,19 @@
 package com.beefficient.tasks;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.util.Log;
 
+import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.TasksDataSource;
 import com.beefficient.data.source.TasksRepository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import rx.Observable;
-import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -76,8 +79,7 @@ public class TasksPresenter implements TasksContract.Presenter {
         // that the app is busy until the response is handled.
         //EspressoIdlingResource.increment(); // App is busy until further notice
 
-        subscriptions.clear();
-        Subscription subscription = tasksRepository
+        Observable<List<Task>> ttt = tasksRepository
                 .getTasks()
                 .flatMap(Observable::from)
                 .filter(task -> {
@@ -92,10 +94,35 @@ public class TasksPresenter implements TasksContract.Presenter {
                             return true;
                     }
                 })
-                .toList()
+                .toList();
+        Observable<List<Project>> ppp = tasksRepository
+                .getProjects()
+                .flatMap(Observable::from)
+                .filter(project -> {
+                    switch (mCurrentFiltering) {
+                        default:
+                            return true;
+                    }
+                })
+                .toList();
+
+        subscriptions.clear();
+        Subscription subscription = Observable
+                .zip(ttt, ppp, Pair::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Task>>() {
+                .doOnCompleted(() -> tasksView.setLoadingIndicator(false))
+                .doOnError(throwable -> {
+                    tasksView.showLoadingTasksError();
+                    tasksView.setLoadingIndicator(false);
+                    throwable.printStackTrace();
+                })
+                .doOnNext(pair -> {
+                    Log.d("TasksPresenter", "next");
+                    processTasks(pair);
+                })
+                .subscribe();
+                /*.subscribe(/*new Observer<List<Task>>()* new Observer<Pair<List<Task>, List<Project>>>() {
                     @Override
                     public void onCompleted() {
                         tasksView.setLoadingIndicator(false);
@@ -109,22 +136,42 @@ public class TasksPresenter implements TasksContract.Presenter {
                     }
 
                     @Override
-                    public void onNext(List<Task> tasks) {
+                    public void onNext(Pair<List<Task>, List<Project>> pair) {
                         Log.d("TasksPresenter", "next");
                         processTasks(tasks);
                     }
-                });
-        
+                });*/
+
         subscriptions.add(subscription);
     }
 
-    private void processTasks(List<Task> tasks) {
-        if (tasks.isEmpty()) {
+    private void processTasks(Pair<List<Task>, List<Project>> pair) {
+        if (pair.first.isEmpty() || pair.second.isEmpty()) {
             // Show a message indicating there are no tasks for that filter type.
             processEmptyTasks();
         } else {
+            //List<Task> sortedTasks = new ArrayList<>();
+            ArrayList<TasksAdapter.SectionItem> testSectionItems = new ArrayList<>();
+            ArrayList<TasksAdapter.TaskItem> taskItems = new ArrayList<>();
+            HashMap<Integer, Integer> sortLinks = new HashMap<>();
+
+            for (int i = 0, j, k = 0; i < pair.second.size(); i++) {
+                TasksAdapter.SectionItem sectionItem = new TasksAdapter.SectionItem(pair.second.get(i).getName());
+                testSectionItems.add(sectionItem);
+
+                sortLinks.put(k, i);
+
+                for (j = 0; j < pair.first.size(); j++) {
+                    if (pair.first.get(j).getProject().getId() == pair.second.get(i).getId()) { //TODO: Add not-null check
+                        //sortedTasks.add(pair.first.get(j));
+                        taskItems.add(new TasksAdapter.TaskItem(pair.first.get(j), null));
+                        k++;
+                    }
+                }
+            }
+
             // Show the list of tasks
-            tasksView.showTasks(tasks);
+            tasksView.showTasks(taskItems, testSectionItems, sortLinks);
             // Set the filter label's text.
             showFilterLabel();
         }

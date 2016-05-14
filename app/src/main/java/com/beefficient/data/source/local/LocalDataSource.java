@@ -20,6 +20,7 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+import static com.beefficient.data.source.local.PersistenceContract.ProjectEntry;
 import static com.beefficient.util.Objects.requireNonNull;
 
 /**
@@ -30,6 +31,7 @@ public class LocalDataSource implements TasksDataSource {
     private static LocalDataSource INSTANCE;
     private final BriteDatabase databaseHelper;
     private Func1<Cursor, Task> taskMapperFunction;
+    private Func1<Cursor, Project> projectMapperFunction;
 
     // Prevent direct instantiation.
     private LocalDataSource(@NonNull Context context) {
@@ -49,7 +51,7 @@ public class LocalDataSource implements TasksDataSource {
             long time = c.getLong(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_DUE_DATE));
 
             Task.Priority priority = Task.Priority.values()[
-                            c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_PRIORITY))];
+                    c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_PRIORITY))];
 
             return new Task.Builder(title, itemId)
                     .setDescription(description)
@@ -58,6 +60,13 @@ public class LocalDataSource implements TasksDataSource {
                     .setWithTime(withTime)
                     .setPriority(priority)
                     .build();
+        };
+        projectMapperFunction = c -> {
+            String itemId = c.getString(c.getColumnIndexOrThrow(ProjectEntry._ID));
+            String name = c.getString(c.getColumnIndexOrThrow(ProjectEntry.COLUMN_NAME_NAME));
+            int color = c.getInt(c.getColumnIndexOrThrow(ProjectEntry.COLUMN_NAME_COLOR));
+
+            return new Project(name, color, itemId);
         };
     }
 
@@ -163,26 +172,48 @@ public class LocalDataSource implements TasksDataSource {
 
     @Override
     public Observable<List<Project>> getProjects() {
-        return null;
+        String[] projection = {
+                ProjectEntry._ID,
+                ProjectEntry.COLUMN_NAME_NAME,
+                ProjectEntry.COLUMN_NAME_COLOR
+        };
+        String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", projection), ProjectEntry.TABLE_NAME);
+        return databaseHelper.createQuery(ProjectEntry.TABLE_NAME, sql)
+                .mapToList(projectMapperFunction);
     }
 
     @Override
     public Observable<Project> getProject(@NonNull String projectId) {
-        return null;
+        String[] projection = {
+                ProjectEntry._ID,
+                ProjectEntry.COLUMN_NAME_NAME,
+                ProjectEntry.COLUMN_NAME_COLOR
+        };
+        String sql = String.format("SELECT %s FROM %s WHERE %s LIKE ?",
+                TextUtils.join(",", projection), ProjectEntry.TABLE_NAME, ProjectEntry._ID);
+        return databaseHelper.createQuery(ProjectEntry.TABLE_NAME, sql, projectId)
+                .mapToOneOrDefault(projectMapperFunction, null);
     }
 
     @Override
     public void saveProject(@NonNull Project project) {
-
+        requireNonNull(project);
+        ContentValues values = new ContentValues();
+        values.put(ProjectEntry._ID, project.getId());
+        values.put(ProjectEntry.COLUMN_NAME_NAME, project.getName());
+        values.put(ProjectEntry.COLUMN_NAME_COLOR, project.getColor());
+        databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
     @Override
     public void refreshProjects() {
-
+        //
     }
 
     @Override
     public void deleteProject(@NonNull String projectId) {
-
+        String selection = ProjectEntry._ID + " LIKE ?";
+        String[] selectionArgs = {projectId};
+        databaseHelper.delete(ProjectEntry.TABLE_NAME, selection, selectionArgs);
     }
 }

@@ -22,6 +22,7 @@ import com.beefficient.main.MainContract;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class TasksFragment extends Fragment implements TasksContract.View {
@@ -49,14 +50,11 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         presenter = new TasksPresenter(TasksRepository.getInstance(RemoteDataSource.getInstance(),
                 LocalDataSource.getInstance(getContext().getApplicationContext())), this);
         tasksAdapter = new TasksAdapter(Collections.EMPTY_LIST);
-        tasksAdapter.setListener(new TasksAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Task task) {
-                Activity activity = getActivity();
-                if (activity instanceof MainContract.View) {
-                    ((MainContract.View) activity).showSnackbar("Clicked task: " + task.getTitle(),
-                            Snackbar.LENGTH_SHORT);
-                }
+        tasksAdapter.setListener(task -> {
+            Activity activity = getActivity();
+            if (activity instanceof MainContract.View) {
+                ((MainContract.View) activity).showSnackbar("Clicked task: " + task.getTitle(),
+                        Snackbar.LENGTH_SHORT);
             }
         });
     }
@@ -158,17 +156,12 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showTasks(List<Task> tasks) {
+    public void showTasks(ArrayList<TasksAdapter.TaskItem> taskItems, ArrayList<TasksAdapter.SectionItem> sectionItems, HashMap<Integer, Integer> sortLinks) {
         Log.d("TasksFragment", "showTasks");
-        ArrayList<TasksAdapter.SectionItem> testSectionItems = new ArrayList<>();
-        TasksAdapter.SectionItem testSectionItem = new TasksAdapter.SectionItem("Section"); // TODO
-        testSectionItems.add(testSectionItem);
-        ArrayList<TasksAdapter.TaskItem> taskItems = new ArrayList<>();
-        for (Task task : tasks) {
-            taskItems.add(new TasksAdapter.TaskItem(task, testSectionItem));
-        }
-        tasksAdapter.setSectionItems(testSectionItems);
+
+        tasksAdapter.setSectionItems(sectionItems);
         tasksAdapter.setTaskItems(taskItems);
+        tasksAdapter.setSortLinks(sortLinks);
     }
 
     @Override

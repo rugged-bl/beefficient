@@ -24,12 +24,22 @@ public class RemoteDataSource implements TasksDataSource {
     private static final int SERVICE_LATENCY_IN_MILLIS = 5000;
 
     private final static Map<String, Task> TASKS_SERVICE_DATA;
+    private final static Map<String, Project> PROJECTS_SERVICE_DATA;
 
     static {
         TASKS_SERVICE_DATA = new LinkedHashMap<>(2);
-        for (int i = 0; i < 10; i++) {
-            addTask("Build tower in Pisa", "Ground looks good, no foundation work required.");
-            addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!");
+        PROJECTS_SERVICE_DATA = new LinkedHashMap<>(2);
+
+        for (int i = 0; i < 1; i++) {
+            Project project1 = new Project("Project Pisa", 0xffffff);
+            Project project2 = new Project("Project Tacoma", 0xffffff);
+            addProject(project1);
+            addProject(project2);
+
+            for (int j = 0; j < 10; j++) {
+                addTask("Build tower in Pisa", "Ground looks good, no foundation work required.", project1);
+                addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!", project2);
+            }
         }
     }
 
@@ -44,9 +54,10 @@ public class RemoteDataSource implements TasksDataSource {
     private RemoteDataSource() {
     }
 
-    private static void addTask(String title, String description) {
+    private static void addTask(String title, String description, Project project) {
         Task newTask = new Task.Builder(title)
                 .setDescription(description)
+                .setProject(project)
                 .build();
         TASKS_SERVICE_DATA.put(newTask.getId(), newTask);
     }
@@ -130,9 +141,16 @@ public class RemoteDataSource implements TasksDataSource {
         TASKS_SERVICE_DATA.remove(taskId);
     }
 
+    private static void addProject(Project project) {
+        PROJECTS_SERVICE_DATA.put(project.getId(), project);
+    }
+
     @Override
     public Observable<List<Project>> getProjects() {
-        return null;
+        return Observable
+                .from(PROJECTS_SERVICE_DATA.values())
+                .delay(SERVICE_LATENCY_IN_MILLIS - 2000, TimeUnit.MILLISECONDS)
+                .toList();
     }
 
     @Override

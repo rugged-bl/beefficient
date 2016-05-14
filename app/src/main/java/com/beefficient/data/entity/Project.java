@@ -10,11 +10,20 @@ public class Project {
 
     private String id;
     private String name;
+    private int color = 0xffffff;
 
-    public Project(String name) {
+    public Project(String name, int color) {
         taskList = new ArrayList<>();
         id = UUID.randomUUID().toString();
         this.name = name;
+        this.color = color;
+    }
+
+    public Project(String name, int color, String id) {
+        taskList = new ArrayList<>();
+        this.id = id;
+        this.name = name;
+        this.color = color;
     }
 
     public boolean addTask(SoftReference<Task> task) {
@@ -34,7 +43,16 @@ public class Project {
         this.name = name;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     public ArrayList<SoftReference<Task>> getTaskList() {
         return taskList;
     }
+
 }

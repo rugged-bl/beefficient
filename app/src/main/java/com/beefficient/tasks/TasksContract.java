@@ -6,6 +6,8 @@ import com.beefficient.BasePresenter;
 import com.beefficient.BaseView;
 import com.beefficient.data.entity.Task;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public interface TasksContract {
@@ -13,7 +15,7 @@ public interface TasksContract {
 
         void setLoadingIndicator(boolean active);
 
-        void showTasks(List<Task> tasks);
+        void showTasks(ArrayList<TasksAdapter.TaskItem> taskItems, ArrayList<TasksAdapter.SectionItem> sectionItems, HashMap<Integer, Integer> sortLinks);
 
         void showAddTask();
 
