@@ -16,7 +16,7 @@ import com.beefficient.data.entity.Task;
 import java.util.Date;
 import java.util.List;
 
-public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> {
+public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	private static final int VIEW_TYPE_ITEM = 0;
 	private static final int VIEW_TYPE_SECTION = 1;
