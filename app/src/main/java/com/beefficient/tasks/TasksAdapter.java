@@ -95,8 +95,10 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         RecyclerView.ViewHolder viewHolder = null;
+
         if (viewType == VIEW_TYPE_ITEM) {
             final View view = inflater.inflate(R.layout.item_task, parent, false);
 
@@ -105,6 +107,13 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 if (listener != null) {
                     listener.onItemClick(taskViewHolder.item.getTask());
                 }
+            });
+
+            taskViewHolder.itemView.setOnLongClickListener(v -> {
+                if (listener != null) {
+                    listener.onLongItemClick(taskViewHolder.item.getTask());
+                }
+                return true;
             });
 
             viewHolder = taskViewHolder;
@@ -117,15 +126,14 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-//		int itemViewType = holder.getItemViewType();
         if (holder instanceof TaskViewHolder) {
             TaskViewHolder taskHolder = (TaskViewHolder) holder;
 
             int linkOffset = 0;
-            for (Integer pos : keysSet)
-            {
-                if (position >= pos)
+            for (Integer pos : keysSet) {
+                if (position >= pos) {
                     linkOffset++;
+                }
             }
 
             taskHolder.item = taskItems.get(position - linkOffset);
@@ -166,14 +174,14 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         } else if (holder instanceof SectionViewHolder) {
             SectionViewHolder sectionHolder = (SectionViewHolder) holder;
-            sectionHolder.item = sectionItems.get(sortLinks.get(position)); // TODO
+            sectionHolder.item = sectionItems.get(sortLinks.get(position));
             sectionHolder.title.setText(sectionHolder.item.getTitle());
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return (sortLinks.containsKey(position)) ? VIEW_TYPE_SECTION : VIEW_TYPE_ITEM; // TODO
+        return (sortLinks.containsKey(position)) ? VIEW_TYPE_SECTION : VIEW_TYPE_ITEM;
     }
 
     @Override
@@ -213,5 +221,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public interface OnItemClickListener {
         void onItemClick(Task task);
+
+        void onLongItemClick(Task task);
     }
 }

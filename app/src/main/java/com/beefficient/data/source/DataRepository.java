@@ -19,13 +19,12 @@ import static com.beefficient.util.Objects.requireNonNull;
 /**
  * Concrete implementation to load tasks from the data sources into a cache.
  */
-// TODO: придумать, куда засунуть проекты и метки
-public class TasksRepository implements TasksDataSource {
+public class DataRepository implements DataSource {
 
-    private static TasksRepository INSTANCE = null;
+    private static DataRepository INSTANCE = null;
 
-    private final TasksDataSource remoteDataSource;
-    private final TasksDataSource localDataSource;
+    private final DataSource remoteDataSource;
+    private final DataSource localDataSource;
 
     Map<String, Project> cachedProjects;
     Map<String, Task> cachedTasks;
@@ -36,8 +35,8 @@ public class TasksRepository implements TasksDataSource {
     AtomicBoolean cacheIsDirty = new AtomicBoolean(false);
 
     // Prevent direct instantiation
-    private TasksRepository(@NonNull TasksDataSource tasksRemoteDataSource,
-                            @NonNull TasksDataSource tasksLocalDataSource) {
+    private DataRepository(@NonNull DataSource tasksRemoteDataSource,
+                           @NonNull DataSource tasksLocalDataSource) {
         remoteDataSource = requireNonNull(tasksRemoteDataSource);
         localDataSource = requireNonNull(tasksLocalDataSource);
     }
@@ -47,18 +46,18 @@ public class TasksRepository implements TasksDataSource {
      *
      * @param tasksRemoteDataSource the backend data source
      * @param tasksLocalDataSource  the device storage data source
-     * @return the {@link TasksRepository} instance
+     * @return the {@link DataRepository} instance
      */
-    public static TasksRepository getInstance(TasksDataSource tasksRemoteDataSource,
-                                              TasksDataSource tasksLocalDataSource) {
+    public static DataRepository getInstance(DataSource tasksRemoteDataSource,
+                                             DataSource tasksLocalDataSource) {
         if (INSTANCE == null) {
-            INSTANCE = new TasksRepository(tasksRemoteDataSource, tasksLocalDataSource);
+            INSTANCE = new DataRepository(tasksRemoteDataSource, tasksLocalDataSource);
         }
         return INSTANCE;
     }
 
     /**
-     * Used to force {@link #getInstance(TasksDataSource, TasksDataSource)} to create a new instance
+     * Used to force {@link #getInstance(DataSource, DataSource)} to create a new instance
      * next time it's called.
      */
     public static void destroyInstance() {

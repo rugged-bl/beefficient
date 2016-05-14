@@ -16,4 +16,6 @@
     <string name="profile_photo">Фото профиля</string>
     <string name="projects">Проекты</string>
     <string name="today">Сегодня</string>
+    <string name="show_completed">Показать выполненные</string>
+    <string name="sort">Сортировка</string>
 </resources>

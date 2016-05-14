@@ -10,12 +10,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.beefficient.R;
 import com.beefficient.data.entity.Task;
-import com.beefficient.data.source.TasksRepository;
+import com.beefficient.data.source.DataRepository;
 import com.beefficient.data.source.local.LocalDataSource;
 import com.beefficient.data.source.remote.RemoteDataSource;
 import com.beefficient.main.MainContract;
@@ -23,7 +26,6 @@ import com.beefficient.main.MainContract;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 public class TasksFragment extends Fragment implements TasksContract.View {
 
@@ -47,14 +49,37 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new TasksPresenter(TasksRepository.getInstance(RemoteDataSource.getInstance(),
+        setHasOptionsMenu(true);
+
+        presenter = new TasksPresenter(DataRepository.getInstance(RemoteDataSource.getInstance(),
                 LocalDataSource.getInstance(getContext().getApplicationContext())), this);
+
         tasksAdapter = new TasksAdapter(Collections.EMPTY_LIST);
-        tasksAdapter.setListener(task -> {
-            Activity activity = getActivity();
-            if (activity instanceof MainContract.View) {
-                ((MainContract.View) activity).showSnackbar("Clicked task: " + task.getTitle(),
-                        Snackbar.LENGTH_SHORT);
+        tasksAdapter.setListener(new TasksAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Task task) {
+                // TODO: open BottomSheet with task options (or open EditTaskActivity)
+
+//                TextView testTextView = new TextView(getContext());
+//                int paddingPx = getResources().getDimensionPixelOffset(R.dimen.text_margin);
+//                testTextView.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+//                testTextView.setText(task.getTitle());
+//
+//                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+//                bottomSheetDialog.setContentView(testTextView);
+//                bottomSheetDialog.show();
+//                bottomSheetDialog.setOnDismissListener(dialog -> {
+//                    // onDismiss
+//                });
+            }
+
+            @Override
+            public void onLongItemClick(Task task) {
+                Activity activity = getActivity();
+                if (activity instanceof MainContract.View) {
+                    ((MainContract.View) activity).showSnackbar("Long clicked task: " + task.getTitle(),
+                            Snackbar.LENGTH_SHORT);
+                }
             }
         });
     }
@@ -168,6 +193,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     public void showSuccessfullySavedMessage() {
     }
 
+    // TODO: зачем это!?
     @Override
     public boolean isActive() {
         return true;
@@ -175,5 +201,26 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showFilteringPopUpMenu() {
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_tasks, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_toggle_completed: {
+                // TODO: show/hide completed tasks in this view
+                return true;
+            }
+            case R.id.menu_item_sort: {
+                // TODO: открыть диалог с выбором сортировки на RadioButton
+                return true;
+            }
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -6,8 +6,8 @@ import android.util.Log;
 
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
-import com.beefficient.data.source.TasksDataSource;
-import com.beefficient.data.source.TasksRepository;
+import com.beefficient.data.source.DataRepository;
+import com.beefficient.data.source.DataSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,17 +22,17 @@ import rx.subscriptions.CompositeSubscription;
 import static com.beefficient.util.Objects.requireNonNull;
 
 public class TasksPresenter implements TasksContract.Presenter {
-    private final TasksRepository tasksRepository;
+    private final DataRepository dataRepository;
 
     private final TasksContract.View tasksView;
 
-    private TasksFilterType mCurrentFiltering = TasksFilterType.ALL_TASKS;
+    private TasksFilterType currentFiltering = TasksFilterType.ALL_TASKS;
 
     private boolean firstLoad = true;
     private CompositeSubscription subscriptions;
 
-    public TasksPresenter(@NonNull TasksRepository tasksRepository, @NonNull TasksContract.View tasksView) {
-        this.tasksRepository = requireNonNull(tasksRepository, "tasksRepository cannot be null");
+    public TasksPresenter(@NonNull DataRepository dataRepository, @NonNull TasksContract.View tasksView) {
+        this.dataRepository = requireNonNull(dataRepository, "dataRepository cannot be null");
         this.tasksView = requireNonNull(tasksView, "tasksView cannot be null");
         this.subscriptions = new CompositeSubscription();
         tasksView.setPresenter(this);
@@ -64,26 +64,22 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     /**
-     * @param forceUpdate   Pass in true to refresh the data in the {@link TasksDataSource}
+     * @param forceUpdate   Pass in true to refresh the data in the {@link DataSource}
      * @param showLoadingUI Pass in true to display a loading icon in the UI
      */
-    private void loadTasks(boolean forceUpdate, final boolean showLoadingUI) {
+    private void loadTasks(boolean forceUpdate, boolean showLoadingUI) {
         if (showLoadingUI) {
             tasksView.setLoadingIndicator(true);
         }
         if (forceUpdate) {
-            tasksRepository.refreshTasks();
+            dataRepository.refreshTasks();
         }
 
-        // The network request might be handled in a different thread so make sure Espresso knows
-        // that the app is busy until the response is handled.
-        //EspressoIdlingResource.increment(); // App is busy until further notice
-
-        Observable<List<Task>> ttt = tasksRepository
+        Observable<List<Task>> tasks = dataRepository
                 .getTasks()
                 .flatMap(Observable::from)
                 .filter(task -> {
-                    switch (mCurrentFiltering) {
+                    switch (currentFiltering) {
                         case ACTIVE_TASKS:
                             //return task.isActive();
                             return true;
@@ -93,22 +89,21 @@ public class TasksPresenter implements TasksContract.Presenter {
                         default:
                             return true;
                     }
-                })
-                .toList();
-        Observable<List<Project>> ppp = tasksRepository
+                }).toList();
+
+        Observable<List<Project>> projects = dataRepository
                 .getProjects()
                 .flatMap(Observable::from)
                 .filter(project -> {
-                    switch (mCurrentFiltering) {
+                    switch (currentFiltering) {
                         default:
                             return true;
                     }
-                })
-                .toList();
+                }).toList();
 
         subscriptions.clear();
         Subscription subscription = Observable
-                .zip(ttt, ppp, Pair::new)
+                .zip(tasks, projects, Pair::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> tasksView.setLoadingIndicator(false))
@@ -155,16 +150,17 @@ public class TasksPresenter implements TasksContract.Presenter {
             ArrayList<TasksAdapter.TaskItem> taskItems = new ArrayList<>();
             HashMap<Integer, Integer> sortLinks = new HashMap<>();
 
-            for (int i = 0, j, k = 0; i < pair.second.size(); i++) {
-                TasksAdapter.SectionItem sectionItem = new TasksAdapter.SectionItem(pair.second.get(i).getName());
+            for (int projectIndex = 0, k = 0; projectIndex < pair.second.size(); projectIndex++) {
+                TasksAdapter.SectionItem sectionItem =
+                        new TasksAdapter.SectionItem(pair.second.get(projectIndex).getName());
                 testSectionItems.add(sectionItem);
 
-                sortLinks.put(k, i);
+                sortLinks.put(k++, projectIndex);
 
-                for (j = 0; j < pair.first.size(); j++) {
-                    if (pair.first.get(j).getProject().getId() == pair.second.get(i).getId()) { //TODO: Add not-null check
+                for (Task task : pair.first) {
+                    if (task.getProject().getId().equals(pair.second.get(projectIndex).getId())) { //TODO: Add not-null check
                         //sortedTasks.add(pair.first.get(j));
-                        taskItems.add(new TasksAdapter.TaskItem(pair.first.get(j), null));
+                        taskItems.add(new TasksAdapter.TaskItem(task, null));
                         k++;
                     }
                 }
@@ -178,7 +174,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     private void showFilterLabel() {
-        switch (mCurrentFiltering) {
+        switch (currentFiltering) {
             case ACTIVE_TASKS:
                 tasksView.showActiveFilterLabel();
                 break;
@@ -192,7 +188,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     private void processEmptyTasks() {
-        switch (mCurrentFiltering) {
+        switch (currentFiltering) {
             case ACTIVE_TASKS:
                 tasksView.showNoActiveTasks();
                 break;
@@ -219,7 +215,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void completeTask(@NonNull Task completedTask) {
         requireNonNull(completedTask, "completedTask cannot be null!");
-        tasksRepository.completeTask(completedTask);
+        dataRepository.completeTask(completedTask);
         tasksView.showTaskMarkedComplete();
         loadTasks(false, false);
     }
@@ -227,14 +223,14 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void activateTask(@NonNull Task activeTask) {
         requireNonNull(activeTask, "activeTask cannot be null!");
-        tasksRepository.activateTask(activeTask);
+        dataRepository.activateTask(activeTask);
         tasksView.showTaskMarkedActive();
         loadTasks(false, false);
     }
 
     @Override
     public void clearCompletedTasks() {
-        tasksRepository.clearCompletedTasks();
+        dataRepository.clearCompletedTasks();
         tasksView.showCompletedTasksCleared();
         loadTasks(false, false);
     }
@@ -248,11 +244,11 @@ public class TasksPresenter implements TasksContract.Presenter {
      */
     @Override
     public void setFiltering(TasksFilterType requestType) {
-        mCurrentFiltering = requestType;
+        currentFiltering = requestType;
     }
 
     @Override
     public TasksFilterType getFiltering() {
-        return mCurrentFiltering;
+        return currentFiltering;
     }
 }

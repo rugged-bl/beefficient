@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
-import com.beefficient.data.source.TasksDataSource;
+import com.beefficient.data.source.DataSource;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -17,7 +17,7 @@ import rx.Observable;
 /**
  * Implementation of the data source that adds a latency simulating network.
  */
-public class RemoteDataSource implements TasksDataSource {
+public class RemoteDataSource implements DataSource {
 
     private static RemoteDataSource INSTANCE;
 
@@ -31,14 +31,20 @@ public class RemoteDataSource implements TasksDataSource {
         PROJECTS_SERVICE_DATA = new LinkedHashMap<>(2);
 
         for (int i = 0; i < 1; i++) {
-            Project project1 = new Project("Project Pisa", 0xffffff);
-            Project project2 = new Project("Project Tacoma", 0xffffff);
+            Project project1 = new Project("Project One", 0xffffff);
+            Project project2 = new Project("Project Two", 0xffffff);
+            Project project3 = new Project("Project Three", 0xffffff);
+            Project project4 = new Project("Project Four", 0xffffff);
             addProject(project1);
             addProject(project2);
+            addProject(project3);
+            addProject(project4);
 
-            for (int j = 0; j < 10; j++) {
-                addTask("Build tower in Pisa", "Ground looks good, no foundation work required.", project1);
-                addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!", project2);
+            for (int j = 0; j < 5; j++) {
+                addTask("Title One " + j, "Desc One", project1);
+                addTask("Title Two " + j, "Desc Two", project2);
+                addTask("Title Three " + j, "Desc Three", project3);
+                addTask("Title Four " + j, "Desc Four", project4);
             }
         }
     }
@@ -50,7 +56,7 @@ public class RemoteDataSource implements TasksDataSource {
         return INSTANCE;
     }
 
-    // Prevent direct instantiation.
+    // Prevent direct instantiation
     private RemoteDataSource() {
     }
 
@@ -96,7 +102,7 @@ public class RemoteDataSource implements TasksDataSource {
 
     @Override
     public void completeTask(@NonNull String taskId) {
-        // Not required for the remote data source because the {@link TasksRepository} handles
+        // Not required for the remote data source because the {@link DataRepository} handles
         // converting from a {@code taskId} to a {@link task} using its cached data.
     }
 
@@ -110,7 +116,7 @@ public class RemoteDataSource implements TasksDataSource {
 
     @Override
     public void activateTask(@NonNull String taskId) {
-        // Not required for the remote data source because the {@link TasksRepository} handles
+        // Not required for the remote data source because the {@link DataRepository} handles
         // converting from a {@code taskId} to a {@link task} using its cached data.
     }
 
@@ -127,7 +133,7 @@ public class RemoteDataSource implements TasksDataSource {
 
     @Override
     public void refreshTasks() {
-        // Not required because the {@link TasksRepository} handles the logic of refreshing the
+        // Not required because the {@link DataRepository} handles the logic of refreshing the
         // tasks from all the available data sources.
     }
 

@@ -16,4 +16,7 @@
     <string name="labels">Labels</string>
     <string name="navigation_drawer_open">Open drawer</string>
     <string name="navigation_drawer_close">Close drawer</string>
+    <string name="show_completed">Show completed</string>
+    <string name="sort">Sort</string>
+    <string name="search">Search</string>
 </resources>

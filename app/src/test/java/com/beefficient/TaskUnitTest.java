@@ -12,7 +12,7 @@ public class TaskUnitTest {
 
     @Test
     public void taskBuilder() {
-        Project project = new Project("Project");
+        Project project = new Project("Project", 0xFF000000);
 
 		long time = System.currentTimeMillis();
         Task.Builder taskBuilder = new Task.Builder("Task")

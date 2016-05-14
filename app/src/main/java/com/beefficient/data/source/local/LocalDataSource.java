@@ -9,7 +9,7 @@ import android.text.TextUtils;
 
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
-import com.beefficient.data.source.TasksDataSource;
+import com.beefficient.data.source.DataSource;
 import com.beefficient.data.source.local.PersistenceContract.TaskEntry;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
@@ -26,7 +26,7 @@ import static com.beefficient.util.Objects.requireNonNull;
 /**
  * Concrete implementation of a data source as a db.
  */
-public class LocalDataSource implements TasksDataSource {
+public class LocalDataSource implements DataSource {
 
     private static LocalDataSource INSTANCE;
     private final BriteDatabase databaseHelper;
@@ -154,7 +154,7 @@ public class LocalDataSource implements TasksDataSource {
 
     @Override
     public void refreshTasks() {
-        // Not required because the {@link TasksRepository} handles the logic of refreshing the
+        // Not required because the {@link DataRepository} handles the logic of refreshing the
         // tasks from all the available data sources.
     }
 

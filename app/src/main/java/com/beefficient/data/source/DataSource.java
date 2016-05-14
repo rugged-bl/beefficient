@@ -13,7 +13,7 @@ import rx.Observable;
  * Main entry point for accessing tasks data.
  * <p>
  */
-public interface TasksDataSource {
+public interface DataSource {
 
     Observable<List<Task>> getTasks();
 
