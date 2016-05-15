@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
@@ -24,7 +25,7 @@ import static com.beefficient.data.source.local.PersistenceContract.ProjectEntry
 import static com.beefficient.util.Objects.requireNonNull;
 
 /**
- * Concrete implementation of a data source as a db.
+ * Concrete implementation of a data source as a db
  */
 public class LocalDataSource implements DataSource {
 
@@ -33,7 +34,7 @@ public class LocalDataSource implements DataSource {
     private Func1<Cursor, Task> taskMapperFunction;
     private Func1<Cursor, Project> projectMapperFunction;
 
-    // Prevent direct instantiation.
+    // Prevent direct instantiation
     private LocalDataSource(@NonNull Context context) {
         requireNonNull(context);
         DbHelper dbHelper = new DbHelper(context);
@@ -79,6 +80,7 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public Observable<List<Task>> getTasks() {
+        Log.d("LocalDataSource", "getTasks");
         String[] projection = {
                 TaskEntry.COLUMN_NAME_ENTRY_ID,
                 TaskEntry.COLUMN_NAME_TITLE,

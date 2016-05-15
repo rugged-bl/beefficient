@@ -1,6 +1,7 @@
 package com.beefficient.data.source.remote;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
@@ -70,6 +71,7 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public Observable<List<Task>> getTasks() {
+        Log.d("LocalDataSource", "getTasks");
         return Observable
                 .from(TASKS_SERVICE_DATA.values())
                 .delay(SERVICE_LATENCY_IN_MILLIS, TimeUnit.MILLISECONDS)

@@ -29,7 +29,7 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     private TasksFilterType currentFiltering = TasksFilterType.ALL_TASKS;
 
-    private boolean firstLoad = true;
+//    private boolean firstLoad = true;
     private CompositeSubscription subscriptions;
 
     public TasksPresenter(@NonNull DataRepository dataRepository, @NonNull TasksContract.View tasksView) {
@@ -59,8 +59,7 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     @Override
     public void loadTasks(boolean forceUpdate) {
-        loadTasks(forceUpdate || firstLoad, true);
-        firstLoad = false;
+        loadTasks(forceUpdate, true);
     }
 
     /**

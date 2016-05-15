@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.beefficient.R;
 import com.beefficient.data.entity.Task;
@@ -31,6 +32,9 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     private TasksContract.Presenter presenter;
     private TasksAdapter tasksAdapter;
+
+    private RecyclerView tasksView;
+    private TextView noTasksView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public TasksFragment() {
@@ -89,10 +93,10 @@ public class TasksFragment extends Fragment implements TasksContract.View {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tasks, container, false);
 
-        if (view instanceof RecyclerView) {
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setAdapter(tasksAdapter);
-        }
+        tasksView = (RecyclerView) view.findViewById(R.id.tasks_view);
+        tasksView.setAdapter(tasksAdapter);
+
+        noTasksView = (TextView) view.findViewById(R.id.no_tasks);
 
         Activity activity = getActivity();
         swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe_refresh_layout);
@@ -103,6 +107,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
             // TODO: start EditTaskActivity
             if (activity instanceof MainContract.View) {
                 ((MainContract.View) activity).showSnackbar("Add task", Snackbar.LENGTH_SHORT);
+                showAddTask();
             }
         });
 
@@ -178,11 +183,22 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showNoTasks() {
         Log.d("TasksFragment", "showNoTasks");
+
+        showNoTasksView((String) getResources().getText(R.string.no_tasks));
+    }
+
+    private void showNoTasksView(String text) {
+        tasksView.setVisibility(View.GONE);
+        noTasksView.setVisibility(View.VISIBLE);
+        noTasksView.setText(text);
     }
 
     @Override
     public void showTasks(ArrayList<TasksAdapter.TaskItem> taskItems, HashMap<Integer, TasksAdapter.SectionItem> sectionItems) {
         Log.d("TasksFragment", "showTasks");
+
+        tasksView.setVisibility(View.VISIBLE);
+        noTasksView.setVisibility(View.GONE);
 
         tasksAdapter.setSectionItems(sectionItems);
         tasksAdapter.setTaskItems(taskItems);
