@@ -16,7 +16,6 @@ import com.beefficient.data.entity.Task;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -66,9 +65,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private List<TaskItem> taskItems;
-    private List<SectionItem> sectionItems;
-    private HashMap<Integer, Integer> sortLinks = new HashMap<>();
-    Set<Integer> keysSet;
+    private HashMap<Integer, SectionItem> sectionItems;
     private OnItemClickListener listener;
 
     public TasksAdapter(List<TaskItem> taskItems) {
@@ -80,14 +77,14 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void setSectionItems(List<SectionItem> sectionItems) {
+    public void setSectionItems(HashMap<Integer, SectionItem> sectionItems) {
         this.sectionItems = sectionItems;
     }
 
-    public void setSortLinks(HashMap<Integer, Integer> sortLinks) {
-        this.sortLinks = sortLinks;
-        keysSet = sortLinks.keySet();
-    }
+//    public void setSortLinks(HashMap<Integer, Integer> sortLinks) {
+//        this.sortLinks = sortLinks;
+//        keysSet = sortLinks.keySet();
+//    }
 
     public void setListener(OnItemClickListener listener) {
         this.listener = listener;
@@ -129,14 +126,14 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         if (holder instanceof TaskViewHolder) {
             TaskViewHolder taskHolder = (TaskViewHolder) holder;
 
-            int linkOffset = 0;
-            for (Integer pos : keysSet) {
-                if (position >= pos) {
-                    linkOffset++;
+            int itemOffset = 0;
+            for (int sectionPosition : sectionItems.keySet()) {
+                if (position >= sectionPosition) {
+                    itemOffset--;
                 }
             }
 
-            taskHolder.item = taskItems.get(position - linkOffset);
+            taskHolder.item = taskItems.get(position + itemOffset);
 
             Task task = taskHolder.item.getTask();
             Project project = task.getProject();
@@ -174,19 +171,19 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         } else if (holder instanceof SectionViewHolder) {
             SectionViewHolder sectionHolder = (SectionViewHolder) holder;
-            sectionHolder.item = sectionItems.get(sortLinks.get(position));
+            sectionHolder.item = sectionItems.get(position);
             sectionHolder.title.setText(sectionHolder.item.getTitle());
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return (sortLinks.containsKey(position)) ? VIEW_TYPE_SECTION : VIEW_TYPE_ITEM;
+        return (sectionItems.containsKey(position)) ? VIEW_TYPE_SECTION : VIEW_TYPE_ITEM;
     }
 
     @Override
     public int getItemCount() {
-        return taskItems.size() + sortLinks.size();
+        return taskItems.size() + sectionItems.size();
     }
 
     public class TaskViewHolder extends RecyclerView.ViewHolder {

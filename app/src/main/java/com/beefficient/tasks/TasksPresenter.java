@@ -11,6 +11,7 @@ import com.beefficient.data.source.DataSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import rx.Observable;
@@ -58,7 +59,6 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     @Override
     public void loadTasks(boolean forceUpdate) {
-        // Simplification for sample: a network reload will be forced on first load.
         loadTasks(forceUpdate || firstLoad, true);
         firstLoad = false;
     }
@@ -106,17 +106,21 @@ public class TasksPresenter implements TasksContract.Presenter {
                 .zip(tasks, projects, Pair::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> tasksView.setLoadingIndicator(false))
+                .doOnCompleted(() -> {
+                    Log.d("TasksPresenter", "completed");
+                    tasksView.setLoadingIndicator(false);
+                })
                 .doOnError(throwable -> {
                     tasksView.showLoadingTasksError();
                     tasksView.setLoadingIndicator(false);
                     throwable.printStackTrace();
                 })
-                .doOnNext(pair -> {
+                .doOnNext((Pair<List<Task>, List<Project>> pair) -> {
                     Log.d("TasksPresenter", "next");
-                    processTasks(pair);
+                    processTasks(pair.first, pair.second);
                 })
                 .subscribe();
+                Log.d("TasksPresenter", "subscribed");
                 /*.subscribe(/*new Observer<List<Task>>()* new Observer<Pair<List<Task>, List<Project>>>() {
                     @Override
                     public void onCompleted() {
@@ -140,34 +144,29 @@ public class TasksPresenter implements TasksContract.Presenter {
         subscriptions.add(subscription);
     }
 
-    private void processTasks(Pair<List<Task>, List<Project>> pair) {
-        if (pair.first.isEmpty() || pair.second.isEmpty()) {
-            // Show a message indicating there are no tasks for that filter type.
+    private void processTasks(List<Task> tasks, List<Project> projects) {
+        Log.d("TasksPresenter", "processTasks");
+        if (tasks.isEmpty() || projects.isEmpty()) {
             processEmptyTasks();
         } else {
-            //List<Task> sortedTasks = new ArrayList<>();
-            ArrayList<TasksAdapter.SectionItem> testSectionItems = new ArrayList<>();
+            HashMap<Integer, TasksAdapter.SectionItem> sectionItems = new LinkedHashMap<>();
             ArrayList<TasksAdapter.TaskItem> taskItems = new ArrayList<>();
-            HashMap<Integer, Integer> sortLinks = new HashMap<>();
 
-            for (int projectIndex = 0, k = 0; projectIndex < pair.second.size(); projectIndex++) {
+            for (int projectIndex = 0, position = 0; projectIndex < projects.size(); projectIndex++) {
                 TasksAdapter.SectionItem sectionItem =
-                        new TasksAdapter.SectionItem(pair.second.get(projectIndex).getName());
-                testSectionItems.add(sectionItem);
+                        new TasksAdapter.SectionItem(projects.get(projectIndex).getName());
+                sectionItems.put(position, sectionItem);
 
-                sortLinks.put(k++, projectIndex);
-
-                for (Task task : pair.first) {
-                    if (task.getProject().getId().equals(pair.second.get(projectIndex).getId())) { //TODO: Add not-null check
-                        //sortedTasks.add(pair.first.get(j));
-                        taskItems.add(new TasksAdapter.TaskItem(task, null));
-                        k++;
+                for (Task task : tasks) {
+                    if (task.getProject().getId().equals(projects.get(projectIndex).getId())) { //TODO: Add not-null check
+                        taskItems.add(new TasksAdapter.TaskItem(task, sectionItem));
+                        position++;
                     }
                 }
             }
 
             // Show the list of tasks
-            tasksView.showTasks(taskItems, testSectionItems, sortLinks);
+            tasksView.showTasks(taskItems, sectionItems);
             // Set the filter label's text.
             showFilterLabel();
         }

@@ -181,12 +181,11 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showTasks(ArrayList<TasksAdapter.TaskItem> taskItems, ArrayList<TasksAdapter.SectionItem> sectionItems, HashMap<Integer, Integer> sortLinks) {
+    public void showTasks(ArrayList<TasksAdapter.TaskItem> taskItems, HashMap<Integer, TasksAdapter.SectionItem> sectionItems) {
         Log.d("TasksFragment", "showTasks");
 
         tasksAdapter.setSectionItems(sectionItems);
         tasksAdapter.setTaskItems(taskItems);
-        tasksAdapter.setSortLinks(sortLinks);
     }
 
     @Override

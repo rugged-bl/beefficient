@@ -8,14 +8,13 @@ import com.beefficient.data.entity.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public interface TasksContract {
     interface View extends BaseView<Presenter> {
 
         void setLoadingIndicator(boolean active);
 
-        void showTasks(ArrayList<TasksAdapter.TaskItem> taskItems, ArrayList<TasksAdapter.SectionItem> sectionItems, HashMap<Integer, Integer> sortLinks);
+        void showTasks(ArrayList<TasksAdapter.TaskItem> taskItems, HashMap<Integer, TasksAdapter.SectionItem> sectionItems);
 
         void showAddTask();
 
