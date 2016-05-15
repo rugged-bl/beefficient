@@ -22,54 +22,13 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_SECTION = 1;
 
-    public static class SectionItem {
-        CharSequence title;
-
-        public SectionItem(CharSequence title) {
-            this.title = title;
-        }
-
-        public CharSequence getTitle() {
-            return title;
-        }
-
-        public void setTitle(CharSequence title) {
-            this.title = title;
-        }
-    }
-
-    public static class TaskItem {
-        private SectionItem section;
-        private Task task;
-
-        public TaskItem(Task task, SectionItem section) {
-            this.section = section;
-            this.task = task;
-        }
-
-        public SectionItem getSection() {
-            return section;
-        }
-
-        public void setSection(SectionItem section) {
-            this.section = section;
-        }
-
-        public Task getTask() {
-            return task;
-        }
-
-        public void setTask(Task task) {
-            this.task = task;
-        }
-    }
-
     private List<TaskItem> taskItems;
-    private HashMap<Integer, SectionItem> sectionItems = new HashMap<>();
+    private HashMap<Integer, SectionItem> sectionItems;
     private OnItemClickListener listener;
 
     public TasksAdapter(List<TaskItem> taskItems) {
         this.taskItems = taskItems;
+        sectionItems = new HashMap<>();
     }
 
     public void setTaskItems(List<TaskItem> taskItems) {
@@ -213,6 +172,49 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public SectionViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
+        }
+    }
+
+
+    public static class SectionItem {
+        CharSequence title;
+
+        public SectionItem(CharSequence title) {
+            this.title = title;
+        }
+
+        public CharSequence getTitle() {
+            return title;
+        }
+
+        public void setTitle(CharSequence title) {
+            this.title = title;
+        }
+    }
+
+    public static class TaskItem {
+        private SectionItem section;
+        private Task task;
+
+        public TaskItem(Task task, SectionItem section) {
+            this.section = section;
+            this.task = task;
+        }
+
+        public SectionItem getSection() {
+            return section;
+        }
+
+        public void setSection(SectionItem section) {
+            this.section = section;
+        }
+
+        public Task getTask() {
+            return task;
+        }
+
+        public void setTask(Task task) {
+            this.task = task;
         }
     }
 

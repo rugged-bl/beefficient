@@ -152,13 +152,14 @@ public class TasksPresenter implements TasksContract.Presenter {
             HashMap<Integer, TasksAdapter.SectionItem> sectionItems = new LinkedHashMap<>();
             ArrayList<TasksAdapter.TaskItem> taskItems = new ArrayList<>();
 
-            for (int projectIndex = 0, position = 0; projectIndex < projects.size(); projectIndex++) {
+            int position = 0;
+            for (Project project : projects) {
                 TasksAdapter.SectionItem sectionItem =
-                        new TasksAdapter.SectionItem(projects.get(projectIndex).getName());
-                sectionItems.put(position, sectionItem);
+                        new TasksAdapter.SectionItem(project.getName());
+                sectionItems.put(position++, sectionItem);
 
                 for (Task task : tasks) {
-                    if (task.getProject().getId().equals(projects.get(projectIndex).getId())) { //TODO: Add not-null check
+                    if (task.getProject().getId().equals(project.getId())) { //TODO: Add not-null check
                         taskItems.add(new TasksAdapter.TaskItem(task, sectionItem));
                         position++;
                     }
