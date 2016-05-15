@@ -65,7 +65,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private List<TaskItem> taskItems;
-    private HashMap<Integer, SectionItem> sectionItems;
+    private HashMap<Integer, SectionItem> sectionItems = new HashMap<>();
     private OnItemClickListener listener;
 
     public TasksAdapter(List<TaskItem> taskItems) {
