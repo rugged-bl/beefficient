@@ -32,10 +32,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 TaskEntry.TABLE_NAME + " (" +
                 TaskEntry.Column._id + TEXT_TYPE + PRIMARY_KEY +
                 TaskEntry.Column.project_id + INTEGER_TYPE + COMMA_SEP +
+                TaskEntry.Column.completed + BOOLEAN_TYPE + COMMA_SEP +
                 TaskEntry.Column.title + TEXT_TYPE + COMMA_SEP +
                 TaskEntry.Column.description + TEXT_TYPE + COMMA_SEP +
-                TaskEntry.Column.description + INTEGER_TYPE + COMMA_SEP +
-                TaskEntry.Column.completed + BOOLEAN_TYPE + COMMA_SEP +
+                TaskEntry.Column.priority + INTEGER_TYPE + COMMA_SEP +
                 TaskEntry.Column.due_date + INTEGER_TYPE + COMMA_SEP +
                 TaskEntry.Column.with_time + BOOLEAN_TYPE + COMMA_SEP +
                 "FOREIGN KEY(" + TaskEntry.Column.project_id + ") REFERENCES " +

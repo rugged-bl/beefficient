@@ -100,13 +100,14 @@ public class LocalDataSource implements DataSource {
         requireNonNull(task);
         ContentValues values = new ContentValues();
         values.put(TaskEntry.Column._id.name(), task.getId());
+        values.put(TaskEntry.Column.project_id.name(), task.getProject().getId());
+        values.put(TaskEntry.Column.completed.name(), task.isCompleted());
         values.put(TaskEntry.Column.title.name(), task.getTitle());
         values.put(TaskEntry.Column.description.name(), task.getDescription());
-        values.put(TaskEntry.Column.completed.name(), task.isCompleted());
-        values.put(TaskEntry.Column.with_time.name(), task.isWithTime());
-        values.put(TaskEntry.Column.due_date.name(), task.getTime());
         values.put(TaskEntry.Column.priority.name(), task.getPriority().ordinal());
-        values.put(TaskEntry.Column.project_id.name(), task.getProject().getId());
+        values.put(TaskEntry.Column.due_date.name(), task.getTime());
+        values.put(TaskEntry.Column.with_time.name(), task.isWithTime());
+
         databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
