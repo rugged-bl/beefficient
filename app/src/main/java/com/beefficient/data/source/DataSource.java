@@ -45,5 +45,7 @@ public interface DataSource {
 
     void refreshProjects();
 
+    void deleteAllProjects();
+
     void deleteProject(@NonNull String projectId);
 }

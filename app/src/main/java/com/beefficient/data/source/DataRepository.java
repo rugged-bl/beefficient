@@ -114,6 +114,8 @@ public class DataRepository implements DataSource {
                 .toList()
                 .doOnCompleted(() -> cacheIsDirty.set(false));
         if (cacheIsDirty.get()) {
+            localDataSource.deleteAllTasks();
+            localDataSource.deleteAllProjects();
             return remoteProjects;
         } else {
             // Query the local storage if available. If not, query the network.
@@ -165,6 +167,15 @@ public class DataRepository implements DataSource {
     @Override
     public void refreshProjects() {
         cacheIsDirty.set(true);
+    }
+
+    @Override
+    public void deleteAllProjects()
+    {
+        remoteDataSource.deleteAllProjects();
+        localDataSource.deleteAllTasks();
+
+        cachedProjects.clear();
     }
 
     @Override

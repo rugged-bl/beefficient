@@ -200,8 +200,9 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         tasksView.setVisibility(View.VISIBLE);
         noTasksView.setVisibility(View.GONE);
 
-        tasksAdapter.setSectionItems(sectionItems);
-        tasksAdapter.setTaskItems(taskItems);
+//        tasksAdapter.setSectionItems(sectionItems);
+//        tasksAdapter.setTaskItems(taskItems);
+        tasksAdapter.setContent(taskItems, sectionItems);
     }
 
     @Override

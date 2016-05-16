@@ -29,7 +29,7 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     private TasksFilterType currentFiltering = TasksFilterType.ALL_TASKS;
 
-//    private boolean firstLoad = true;
+    //    private boolean firstLoad = true;
     private CompositeSubscription subscriptions;
 
     public TasksPresenter(@NonNull DataRepository dataRepository, @NonNull TasksContract.View tasksView) {
@@ -119,7 +119,7 @@ public class TasksPresenter implements TasksContract.Presenter {
                     processTasks(pair.first, pair.second);
                 })
                 .subscribe();
-                Log.d("TasksPresenter", "subscribed");
+        Log.d("TasksPresenter", "subscribed");
                 /*.subscribe(/*new Observer<List<Task>>()* new Observer<Pair<List<Task>, List<Project>>>() {
                     @Override
                     public void onCompleted() {
@@ -158,7 +158,10 @@ public class TasksPresenter implements TasksContract.Presenter {
                 sectionItems.put(position++, sectionItem);
 
                 for (Task task : tasks) {
-                    if (task.getProject().getId().equals(project.getId())) { //TODO: Add not-null check
+                    if (task.getProjectId() == null)
+                        continue;
+                    if (!task.getProjectId().isEmpty() && task.getProjectId().equals(project.getId())) { //TODO: Add not-null check
+                        task.setProject(project);
                         taskItems.add(new TasksAdapter.TaskItem(task, sectionItem));
                         position++;
                     }

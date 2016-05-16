@@ -177,6 +177,12 @@ public class RemoteDataSource implements DataSource {
     }
 
     @Override
+    public void deleteAllProjects()
+    {
+        PROJECTS_SERVICE_DATA.clear();
+    }
+
+    @Override
     public void deleteProject(@NonNull String projectId) {
 
     }

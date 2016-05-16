@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public class Task {
     private Project project;
+    private String projectId;
 
     private String id;
 
@@ -33,6 +34,7 @@ public class Task {
 
     public static class Builder {
         private Project project;
+        private String projectId;
 
         private String id;
 
@@ -65,6 +67,16 @@ public class Task {
         public Builder(String title, String id) {
             this.id = id;
             this.title = title;
+        }
+
+        public Builder setProject(@NonNull Project project) {
+            this.project = project;
+            return this;
+        }
+
+        public Builder setProjectId(@NonNull String projectId) {
+            this.projectId = projectId;
+            return this;
         }
 
         public Builder setTitle(String title) {
@@ -102,11 +114,6 @@ public class Task {
             return this;
         }
 
-        public Builder setProject(@NonNull Project project) {
-            this.project = project;
-            return this;
-        }
-
         public Task build() {
             Task task = new Task(title);
             task.id = id;
@@ -117,13 +124,28 @@ public class Task {
             task.time = time;
             task.labelList = labelList;
             task.project = project;
+            task.projectId = projectId;
 
             if (project != null) {
+                task.projectId = project.getId();
                 project.addTask(new SoftReference<>(task));
             }
 
             return task;
         }
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProject(@NonNull Project project) {
+        this.project = project;
+        projectId = project.getId();
+    }
+
+    public Project getProject() {
+        return project;
     }
 
     public String getId() {
@@ -132,10 +154,6 @@ public class Task {
 
     public String getTitle() {
         return title;
-    }
-
-    public Project getProject() {
-        return project;
     }
 
     @Nullable

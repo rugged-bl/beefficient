@@ -42,6 +42,7 @@ public class LocalDataSource implements DataSource {
         databaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
         taskMapperFunction = c -> {
             String itemId = c.getString(c.getColumnIndexOrThrow(TaskEntry.Column._id.name()));
+            String projectId = c.getString(c.getColumnIndexOrThrow(TaskEntry.Column.project_id.name()));
             String title = c.getString(c.getColumnIndexOrThrow(TaskEntry.Column.title.name()));
             String description =
                     c.getString(c.getColumnIndexOrThrow(TaskEntry.Column.description.name()));
@@ -55,6 +56,7 @@ public class LocalDataSource implements DataSource {
                     c.getInt(c.getColumnIndexOrThrow(TaskEntry.Column.priority.name()))];
 
             return new Task.Builder(title, itemId)
+                    .setProjectId(projectId)
                     .setDescription(description)
                     .setCompleted(completed)
                     .setTime(time)
@@ -100,7 +102,7 @@ public class LocalDataSource implements DataSource {
         requireNonNull(task);
         ContentValues values = new ContentValues();
         values.put(TaskEntry.Column._id.name(), task.getId());
-        values.put(TaskEntry.Column.project_id.name(), task.getProject().getId());
+        values.put(TaskEntry.Column.project_id.name(), task.getProjectId());
         values.put(TaskEntry.Column.completed.name(), task.isCompleted());
         values.put(TaskEntry.Column.title.name(), task.getTitle());
         values.put(TaskEntry.Column.description.name(), task.getDescription());
@@ -198,6 +200,11 @@ public class LocalDataSource implements DataSource {
     @Override
     public void refreshProjects() {
         //
+    }
+
+    @Override
+    public void deleteAllProjects() {
+        databaseHelper.delete(ProjectEntry.TABLE_NAME, null);
     }
 
     @Override
