@@ -237,6 +237,13 @@ public class TasksPresenter implements TasksContract.Presenter {
         loadTasks(false, false);
     }
 
+    @Override
+    public void deleteAllData()
+    {
+        dataRepository.deleteAllTasks();
+        dataRepository.deleteAllProjects();
+    }
+
     /**
      * Sets the current task filtering type.
      *

@@ -31,11 +31,14 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         sectionItems = new HashMap<>();
     }
 
-    public void setContent(List<TaskItem> taskItems, HashMap<Integer, SectionItem> sectionItems)
-    {
-        this.taskItems = taskItems;
-        this.sectionItems = sectionItems;
-        notifyDataSetChanged();
+    public void setContent(List<TaskItem> taskItems, HashMap<Integer, SectionItem> sectionItems) {
+        try {
+            this.taskItems = taskItems;
+            this.sectionItems = sectionItems;
+            notifyItemRangeChanged(0, getItemCount());
+        } catch (IndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setTaskItems(List<TaskItem> taskItems) {

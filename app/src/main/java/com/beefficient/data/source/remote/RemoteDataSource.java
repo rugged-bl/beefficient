@@ -32,20 +32,20 @@ public class RemoteDataSource implements DataSource {
         PROJECTS_SERVICE_DATA = new LinkedHashMap<>(2);
 
         for (int i = 0; i < 1; i++) {
-            Project project1 = new Project("Project One", 0xffffff);
-            Project project2 = new Project("Project Two", 0xffffff);
-            Project project3 = new Project("Project Three", 0xffffff);
-            Project project4 = new Project("Project Four", 0xffffff);
+            Project project1 = new Project("Project One", 0xffffff, "prid1");
+            Project project2 = new Project("Project Two", 0xffffff, "prid2");
+            Project project3 = new Project("Project Three", 0xffffff, "prid3");
+            Project project4 = new Project("Project Four", 0xffffff, "prid4");
             addProject(project1);
             addProject(project2);
             addProject(project3);
             addProject(project4);
 
-            for (int j = 0; j < 5; j++) {
-                addTask("Title One " + j, "Desc One", project1);
-                addTask("Title Two " + j, "Desc Two", project2);
-                addTask("Title Three " + j, "Desc Three", project3);
-                addTask("Title Four " + j, "Desc Four", project4);
+            for (int j = 0; j < 2; j++) {
+                addTask("Title One " + j, "Desc One", project1, "taid1" + j);
+                addTask("Title Two " + j, "Desc Two", project2, "taid2" + j);
+                addTask("Title Three " + j, "Desc Three", project3, "taid3" + j);
+                addTask("Title Four " + j, "Desc Four", project4, "taid4" + j);
             }
         }
     }
@@ -61,8 +61,8 @@ public class RemoteDataSource implements DataSource {
     private RemoteDataSource() {
     }
 
-    private static void addTask(String title, String description, Project project) {
-        Task newTask = new Task.Builder(title)
+    private static void addTask(String title, String description, Project project, String id) {
+        Task newTask = new Task.Builder(title, id)
                 .setDescription(description)
                 .setProject(project)
                 .build();

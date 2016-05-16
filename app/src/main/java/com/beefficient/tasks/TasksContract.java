@@ -66,6 +66,8 @@ public interface TasksContract {
 
         void setFiltering(TasksFilterType requestType);
 
+        void deleteAllData();
+
         TasksFilterType getFiltering();
     }
 }

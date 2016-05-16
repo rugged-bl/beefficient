@@ -107,6 +107,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
             // TODO: start EditTaskActivity
             if (activity instanceof MainContract.View) {
                 ((MainContract.View) activity).showSnackbar("Add task", Snackbar.LENGTH_SHORT);
+                presenter.deleteAllData(); //TODO:CARE :D
                 showAddTask();
             }
         });
@@ -203,6 +204,8 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 //        tasksAdapter.setSectionItems(sectionItems);
 //        tasksAdapter.setTaskItems(taskItems);
         tasksAdapter.setContent(taskItems, sectionItems);
+        //tasksAdapter.notifyDataSetChanged();
+
     }
 
     @Override
