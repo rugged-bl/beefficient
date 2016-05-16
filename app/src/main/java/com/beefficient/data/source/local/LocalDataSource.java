@@ -41,18 +41,18 @@ public class LocalDataSource implements DataSource {
         SqlBrite sqlBrite = SqlBrite.create();
         databaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
         taskMapperFunction = c -> {
-            String itemId = c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_ENTRY_ID));
-            String title = c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_TITLE));
+            String itemId = c.getString(c.getColumnIndexOrThrow(TaskEntry.Column._id.name()));
+            String title = c.getString(c.getColumnIndexOrThrow(TaskEntry.Column.title.name()));
             String description =
-                    c.getString(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_DESCRIPTION));
+                    c.getString(c.getColumnIndexOrThrow(TaskEntry.Column.description.name()));
             boolean completed =
-                    c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
+                    c.getInt(c.getColumnIndexOrThrow(TaskEntry.Column.completed.name())) == 1;
             boolean withTime =
-                    c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_WITH_TIME)) == 1;
-            long time = c.getLong(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_DUE_DATE));
+                    c.getInt(c.getColumnIndexOrThrow(TaskEntry.Column.with_time.name())) == 1;
+            long time = c.getLong(c.getColumnIndexOrThrow(TaskEntry.Column.due_date.name()));
 
             Task.Priority priority = Task.Priority.values()[
-                    c.getInt(c.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_PRIORITY))];
+                    c.getInt(c.getColumnIndexOrThrow(TaskEntry.Column.priority.name()))];
 
             return new Task.Builder(title, itemId)
                     .setDescription(description)
@@ -63,9 +63,9 @@ public class LocalDataSource implements DataSource {
                     .build();
         };
         projectMapperFunction = c -> {
-            String itemId = c.getString(c.getColumnIndexOrThrow(ProjectEntry._ID));
-            String name = c.getString(c.getColumnIndexOrThrow(ProjectEntry.COLUMN_NAME_NAME));
-            int color = c.getInt(c.getColumnIndexOrThrow(ProjectEntry.COLUMN_NAME_COLOR));
+            String itemId = c.getString(c.getColumnIndexOrThrow(ProjectEntry.Column._id.name()));
+            String name = c.getString(c.getColumnIndexOrThrow(ProjectEntry.Column.name.name()));
+            int color = c.getInt(c.getColumnIndexOrThrow(ProjectEntry.Column.color.name()));
 
             return new Project(name, color, itemId);
         };
@@ -81,27 +81,16 @@ public class LocalDataSource implements DataSource {
     @Override
     public Observable<List<Task>> getTasks() {
         Log.d("LocalDataSource", "getTasks");
-        String[] projection = {
-                TaskEntry.COLUMN_NAME_ENTRY_ID,
-                TaskEntry.COLUMN_NAME_TITLE,
-                TaskEntry.COLUMN_NAME_DESCRIPTION,
-                TaskEntry.COLUMN_NAME_COMPLETED
-        };
-        String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", projection), TaskEntry.TABLE_NAME);
+        String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", TaskEntry.Column.values()), TaskEntry.TABLE_NAME);
         return databaseHelper.createQuery(TaskEntry.TABLE_NAME, sql)
                 .mapToList(taskMapperFunction);
     }
 
     @Override
     public Observable<Task> getTask(@NonNull String taskId) {
-        String[] projection = {
-                TaskEntry.COLUMN_NAME_ENTRY_ID,
-                TaskEntry.COLUMN_NAME_TITLE,
-                TaskEntry.COLUMN_NAME_DESCRIPTION,
-                TaskEntry.COLUMN_NAME_COMPLETED
-        };
         String sql = String.format("SELECT %s FROM %s WHERE %s LIKE ?",
-                TextUtils.join(",", projection), TaskEntry.TABLE_NAME, TaskEntry.COLUMN_NAME_ENTRY_ID);
+                TextUtils.join(",", TaskEntry.Column.values()), TaskEntry.TABLE_NAME,
+                TaskEntry.Column._id);
         return databaseHelper.createQuery(TaskEntry.TABLE_NAME, sql, taskId)
                 .mapToOneOrDefault(taskMapperFunction, null);
     }
@@ -110,10 +99,14 @@ public class LocalDataSource implements DataSource {
     public void saveTask(@NonNull Task task) {
         requireNonNull(task);
         ContentValues values = new ContentValues();
-        values.put(TaskEntry.COLUMN_NAME_ENTRY_ID, task.getId());
-        values.put(TaskEntry.COLUMN_NAME_TITLE, task.getTitle());
-        values.put(TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
-        values.put(TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
+        values.put(TaskEntry.Column._id.name(), task.getId());
+        values.put(TaskEntry.Column.title.name(), task.getTitle());
+        values.put(TaskEntry.Column.description.name(), task.getDescription());
+        values.put(TaskEntry.Column.completed.name(), task.isCompleted());
+        values.put(TaskEntry.Column.with_time.name(), task.isWithTime());
+        values.put(TaskEntry.Column.due_date.name(), task.getTime());
+        values.put(TaskEntry.Column.priority.name(), task.getPriority().ordinal());
+        values.put(TaskEntry.Column.project_id.name(), task.getProject().getId());
         databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -125,9 +118,9 @@ public class LocalDataSource implements DataSource {
     @Override
     public void completeTask(@NonNull String taskId) {
         ContentValues values = new ContentValues();
-        values.put(TaskEntry.COLUMN_NAME_COMPLETED, true);
+        values.put(TaskEntry.Column.completed.name(), true);
 
-        String selection = TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
+        String selection = TaskEntry.Column._id + " LIKE ?";
         String[] selectionArgs = {taskId};
         databaseHelper.update(TaskEntry.TABLE_NAME, values, selection, selectionArgs);
     }
@@ -140,16 +133,16 @@ public class LocalDataSource implements DataSource {
     @Override
     public void activateTask(@NonNull String taskId) {
         ContentValues values = new ContentValues();
-        values.put(TaskEntry.COLUMN_NAME_COMPLETED, false);
+        values.put(TaskEntry.Column.completed.name(), false);
 
-        String selection = TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
+        String selection = TaskEntry.Column._id + " LIKE ?";
         String[] selectionArgs = {taskId};
         databaseHelper.update(TaskEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     @Override
     public void clearCompletedTasks() {
-        String selection = TaskEntry.COLUMN_NAME_COMPLETED + " LIKE ?";
+        String selection = TaskEntry.Column.completed + " LIKE ?";
         String[] selectionArgs = {"1"};
         databaseHelper.delete(TaskEntry.TABLE_NAME, selection, selectionArgs);
     }
@@ -167,32 +160,26 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public void deleteTask(@NonNull String taskId) {
-        String selection = TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
+        String selection = TaskEntry.Column._id + " LIKE ?";
         String[] selectionArgs = {taskId};
         databaseHelper.delete(TaskEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     @Override
     public Observable<List<Project>> getProjects() {
-        String[] projection = {
-                ProjectEntry._ID,
-                ProjectEntry.COLUMN_NAME_NAME,
-                ProjectEntry.COLUMN_NAME_COLOR
-        };
-        String sql = String.format("SELECT %s FROM %s", TextUtils.join(",", projection), ProjectEntry.TABLE_NAME);
+        String sql = String.format("SELECT %s FROM %s",
+                TextUtils.join(",", ProjectEntry.Column.values()), ProjectEntry.TABLE_NAME);
+
         return databaseHelper.createQuery(ProjectEntry.TABLE_NAME, sql)
                 .mapToList(projectMapperFunction);
     }
 
     @Override
     public Observable<Project> getProject(@NonNull String projectId) {
-        String[] projection = {
-                ProjectEntry._ID,
-                ProjectEntry.COLUMN_NAME_NAME,
-                ProjectEntry.COLUMN_NAME_COLOR
-        };
         String sql = String.format("SELECT %s FROM %s WHERE %s LIKE ?",
-                TextUtils.join(",", projection), ProjectEntry.TABLE_NAME, ProjectEntry._ID);
+                TextUtils.join(",", ProjectEntry.Column.values()), ProjectEntry.TABLE_NAME,
+                ProjectEntry.Column._id);
+
         return databaseHelper.createQuery(ProjectEntry.TABLE_NAME, sql, projectId)
                 .mapToOneOrDefault(projectMapperFunction, null);
     }
@@ -201,9 +188,9 @@ public class LocalDataSource implements DataSource {
     public void saveProject(@NonNull Project project) {
         requireNonNull(project);
         ContentValues values = new ContentValues();
-        values.put(ProjectEntry._ID, project.getId());
-        values.put(ProjectEntry.COLUMN_NAME_NAME, project.getName());
-        values.put(ProjectEntry.COLUMN_NAME_COLOR, project.getColor());
+        values.put(ProjectEntry.Column._id.name(), project.getId());
+        values.put(ProjectEntry.Column.name.name(), project.getName());
+        values.put(ProjectEntry.Column.color.name(), project.getColor());
         databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -214,7 +201,7 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public void deleteProject(@NonNull String projectId) {
-        String selection = ProjectEntry._ID + " LIKE ?";
+        String selection = ProjectEntry.Column._id + " LIKE ?";
         String[] selectionArgs = {projectId};
         databaseHelper.delete(ProjectEntry.TABLE_NAME, selection, selectionArgs);
     }

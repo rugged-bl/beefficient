@@ -12,8 +12,9 @@ import static com.beefficient.data.source.local.PersistenceContract.LabelEntry;
 public class DbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
 
-    public static final String DATABASE_NAME = "Tasks.db";
+    public static final String DATABASE_NAME = "beefficient.db";
 
+    private static final String PRIMARY_KEY = " PRIMARY_KEY,";
     private static final String TEXT_TYPE = " TEXT";
     private static final String BOOLEAN_TYPE = " INTEGER";
     private static final String INTEGER_TYPE = " INTEGER";
@@ -22,41 +23,42 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_PROJECT_TABLE = "CREATE TABLE " +
                 ProjectEntry.TABLE_NAME + " (" +
-                ProjectEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
-                ProjectEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                ProjectEntry.COLUMN_NAME_COLOR + TEXT_TYPE +
+                ProjectEntry.Column._id + TEXT_TYPE + PRIMARY_KEY +
+                ProjectEntry.Column.name + TEXT_TYPE + COMMA_SEP +
+                ProjectEntry.Column.color + TEXT_TYPE +
             ")";
 
     private static final String SQL_CREATE_TASK_TABLE = "CREATE TABLE " +
-            TaskEntry.TABLE_NAME + " (" +
-            TaskEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
-            TaskEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_NAME_PROJECT_ID + INTEGER_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_NAME_PRIORITY + INTEGER_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_NAME_COMPLETED + BOOLEAN_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_NAME_DUE_DATE + INTEGER_TYPE + COMMA_SEP +
-            TaskEntry.COLUMN_NAME_WITH_TIME + BOOLEAN_TYPE + COMMA_SEP +
-            "FOREIGN KEY(" + TaskEntry.COLUMN_NAME_PROJECT_ID + ") REFERENCES " +
-            ProjectEntry.TABLE_NAME + "(" + ProjectEntry._ID + ") ON DELETE CASCADE)";
+                TaskEntry.TABLE_NAME + " (" +
+                TaskEntry.Column._id + TEXT_TYPE + PRIMARY_KEY +
+                TaskEntry.Column.project_id + INTEGER_TYPE + COMMA_SEP +
+                TaskEntry.Column.title + TEXT_TYPE + COMMA_SEP +
+                TaskEntry.Column.description + TEXT_TYPE + COMMA_SEP +
+                TaskEntry.Column.description + INTEGER_TYPE + COMMA_SEP +
+                TaskEntry.Column.completed + BOOLEAN_TYPE + COMMA_SEP +
+                TaskEntry.Column.due_date + INTEGER_TYPE + COMMA_SEP +
+                TaskEntry.Column.with_time + BOOLEAN_TYPE + COMMA_SEP +
+                "FOREIGN KEY(" + TaskEntry.Column.project_id + ") REFERENCES " +
+                ProjectEntry.TABLE_NAME + "(" + ProjectEntry.Column._id + ") ON DELETE CASCADE" +
+            ")";
 
     private static final String SQL_CREATE_LABEL_TABLE = "CREATE TABLE " +
                 LabelEntry.TABLE_NAME + " (" +
-                LabelEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
-                LabelEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                LabelEntry.COLUMN_NAME_COLOR + INTEGER_TYPE +
+                LabelEntry.Column._id + TEXT_TYPE + " PRIMARY KEY," +
+                LabelEntry.Column.name + TEXT_TYPE + COMMA_SEP +
+                LabelEntry.Column.color + INTEGER_TYPE +
             ")";
 
     private static final String SQL_CREATE_TASK_LABEL_TABLE = "CREATE TABLE " +
-            TaskLabelEntry.TABLE_NAME + " (" +
-            TaskLabelEntry.COLUMN_NAME_TASK_ID + INTEGER_TYPE + COMMA_SEP +
-            TaskLabelEntry.COLUMN_NAME_LABEL_ID + INTEGER_TYPE + COMMA_SEP +
-            "PRIMARY KEY(" + TaskLabelEntry.COLUMN_NAME_TASK_ID + ", " + TaskLabelEntry.COLUMN_NAME_LABEL_ID + "), " +
-            "FOREIGN KEY(" + TaskLabelEntry.COLUMN_NAME_TASK_ID + ") REFERENCES " + TaskEntry.TABLE_NAME +
-            "(" + TaskEntry._ID + ") ON DELETE CASCADE," +
-            "FOREIGN KEY(" + TaskLabelEntry.COLUMN_NAME_LABEL_ID + ") REFERENCES " + LabelEntry.TABLE_NAME +
-            "(" + LabelEntry._ID + ") ON DELETE CASCADE)";
+                TaskLabelEntry.TABLE_NAME + " (" +
+                TaskLabelEntry.Column.task_id + INTEGER_TYPE + COMMA_SEP +
+                TaskLabelEntry.Column.label_id + INTEGER_TYPE + COMMA_SEP +
+                "PRIMARY KEY(" + TaskLabelEntry.Column.task_id + ", " + TaskLabelEntry.Column.label_id + "), " +
+                "FOREIGN KEY(" + TaskLabelEntry.Column.task_id + ") REFERENCES " + TaskEntry.TABLE_NAME +
+                "(" + TaskEntry.Column._id + ") ON DELETE CASCADE," +
+                "FOREIGN KEY(" + TaskLabelEntry.Column.label_id + ") REFERENCES " + LabelEntry.TABLE_NAME +
+                "(" + LabelEntry.Column._id + ") ON DELETE CASCADE" +
+            ")";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -71,10 +73,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Not required as at version 1
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Not required as at version 1
     }
 }

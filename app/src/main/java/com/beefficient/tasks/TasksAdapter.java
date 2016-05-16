@@ -33,7 +33,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setTaskItems(List<TaskItem> taskItems) {
         this.taskItems = taskItems;
-        notifyDataSetChanged();
+        notifyItemRangeInserted(0, taskItems.size());
     }
 
     public void setSectionItems(HashMap<Integer, SectionItem> sectionItems) {
