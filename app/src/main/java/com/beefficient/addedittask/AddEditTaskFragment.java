@@ -41,9 +41,9 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     private AddEditTaskContract.Presenter mPresenter;
 
-    private TextView mTitle;
+    private TextView title;
 
-    private TextView mDescription;
+    private TextView description;
 
     private String mEditedTaskId;
 
@@ -84,12 +84,12 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         fab.setOnClickListener(v -> {
             if (isNewTask()) {
                 mPresenter.createTask(
-                        mTitle.getText().toString(),
-                        mDescription.getText().toString());
+                        title.getText().toString(),
+                        description.getText().toString());
             } else {
                 mPresenter.updateTask(
-                        mTitle.getText().toString(),
-                        mDescription.getText().toString());
+                        title.getText().toString(),
+                        description.getText().toString());
             }
 
         });
@@ -99,18 +99,19 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.addtask_frag, container, false);
-        mTitle = (TextView) root.findViewById(R.id.add_task_title);
-        mDescription = (TextView) root.findViewById(R.id.add_task_description);
+        View view = inflater.inflate(R.layout.fragment_addtask, container, false);
+        title = (TextView) view.findViewById(R.id.task_title);
+        description = (TextView) view.findViewById(R.id.task_description);
 
         setHasOptionsMenu(true);
         setRetainInstance(true);
-        return root;
+
+        return view;
     }
 
     @Override
     public void showEmptyTaskError() {
-        Snackbar.make(mTitle, getString(R.string.empty_task_message), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(title, getString(R.string.empty_task_message), Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -121,12 +122,12 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     @Override
     public void setTitle(String title) {
-        mTitle.setText(title);
+        this.title.setText(title);
     }
 
     @Override
     public void setDescription(String description) {
-        mDescription.setText(description);
+        this.description.setText(description);
     }
 
     @Override

@@ -20,6 +20,7 @@ import rx.Observable;
  */
 public class RemoteDataSource implements DataSource {
 
+    private static final String TAG = "RemoteDataSource";
     private static RemoteDataSource INSTANCE;
 
     private static final int SERVICE_LATENCY_IN_MILLIS = 5000;
@@ -28,8 +29,8 @@ public class RemoteDataSource implements DataSource {
     private final static Map<String, Project> PROJECTS_SERVICE_DATA;
 
     static {
-        TASKS_SERVICE_DATA = new LinkedHashMap<>(2);
-        PROJECTS_SERVICE_DATA = new LinkedHashMap<>(2);
+        TASKS_SERVICE_DATA = new LinkedHashMap<>();
+        PROJECTS_SERVICE_DATA = new LinkedHashMap<>();
 
         for (int i = 0; i < 1; i++) {
             Project project1 = new Project("Project One", 0xffffff, "prid1");
@@ -71,7 +72,7 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public Observable<List<Task>> getTasks() {
-        Log.d("LocalDataSource", "getTasks");
+        Log.d(TAG, "getTasks");
         return Observable
                 .from(TASKS_SERVICE_DATA.values())
                 .delay(SERVICE_LATENCY_IN_MILLIS, TimeUnit.MILLISECONDS)

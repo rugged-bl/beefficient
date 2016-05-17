@@ -23,40 +23,33 @@ public class AddEditTaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.addtask_act);
+        setContentView(R.layout.activity_addtask);
 
-        // Set up the toolbar.
         initAppBar();
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
 
         AddEditTaskFragment addEditTaskFragment =
-                (AddEditTaskFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+                (AddEditTaskFragment) getSupportFragmentManager().findFragmentById(R.id.container);
 
         String taskId = null;
         if (addEditTaskFragment == null) {
             addEditTaskFragment = AddEditTaskFragment.newInstance();
 
             if (getIntent().hasExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID)) {
-                taskId = getIntent().getStringExtra(
-                        AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID);
-                if (actionBar != null) {
-                    actionBar.setTitle(R.string.edit_task);
+                taskId = getIntent().getStringExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID);
+                if (toolbar != null) {
+                    toolbar.setTitle(R.string.edit_task);
                 }
                 Bundle bundle = new Bundle();
                 bundle.putString(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId);
                 addEditTaskFragment.setArguments(bundle);
             } else {
-                if (actionBar != null) {
-                    actionBar.setTitle(R.string.add_task);
+                if (toolbar != null) {
+                    toolbar.setTitle(R.string.add_task);
                 }
             }
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    addEditTaskFragment, R.id.contentFrame);
+                    addEditTaskFragment, R.id.container);
         }
 
         // Create the presenter
@@ -70,6 +63,12 @@ public class AddEditTaskActivity extends AppCompatActivity {
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
     }
 
     @Override

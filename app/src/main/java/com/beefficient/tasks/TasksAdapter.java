@@ -1,5 +1,6 @@
 package com.beefficient.tasks;
 
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -24,7 +25,8 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private List<TaskItem> taskItems;
     private HashMap<Integer, SectionItem> sectionItems;
-    private OnItemClickListener listener;
+    private TaskItemListener listener;
+    private boolean showProject = true;
 
     public TasksAdapter(List<TaskItem> taskItems) {
         this.taskItems = taskItems;
@@ -50,7 +52,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.sectionItems = sectionItems;
     }
 
-    public void setListener(OnItemClickListener listener) {
+    public void setListener(TaskItemListener listener) {
         this.listener = listener;
     }
 
@@ -66,13 +68,13 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             TaskViewHolder taskViewHolder = new TaskViewHolder(view);
             taskViewHolder.itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    listener.onItemClick(taskViewHolder.item.getTask());
+                    listener.onTaskClick(taskViewHolder.item.getTask());
                 }
             });
 
             taskViewHolder.itemView.setOnLongClickListener(v -> {
                 if (listener != null) {
-                    listener.onLongItemClick(taskViewHolder.item.getTask());
+                    listener.onTaskLongClick(taskViewHolder.item.getTask());
                 }
                 return true;
             });
@@ -85,33 +87,44 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return viewHolder;
     }
 
+    /**
+     * @param position The position of the item within the adapter's data set.
+     * @return The TaskItem at position.
+     */
+    private TaskItem getTaskItem(int position) {
+        int itemOffset = 0;
+        for (int sectionPosition : sectionItems.keySet()) {
+            if (position >= sectionPosition) {
+                itemOffset++;
+            }
+        }
+
+        return taskItems.get(position - itemOffset);
+    }
+
+    public void setShowProject(boolean showProject) {
+        this.showProject = showProject;
+    }
+
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof TaskViewHolder) {
             TaskViewHolder taskHolder = (TaskViewHolder) holder;
-
-            int itemOffset = 0;
-            for (int sectionPosition : sectionItems.keySet()) {
-                if (position >= sectionPosition) {
-                    itemOffset--;
-                }
-            }
-
-            taskHolder.item = taskItems.get(position + itemOffset);
+            taskHolder.item = getTaskItem(position);
 
             Task task = taskHolder.item.getTask();
-            Project project = task.getProject();
 
-            if (project != null) {
-                taskHolder.project.setText(project.getName());
-                taskHolder.project.setVisibility(View.VISIBLE);
-            } else {
-                taskHolder.project.setVisibility(View.GONE);
-            }
             taskHolder.title.setText(task.getTitle());
-            taskHolder.done.setChecked(task.isCompleted());
+            taskHolder.completed.setChecked(task.isCompleted());
             taskHolder.priority.setBackgroundResource(task.getPriority().colorRes());
 
+            // Set project
+            if (showProject) {
+                Project project = task.getProject();
+                taskHolder.project.setText(project.getName());
+            }
+
+            // Set date
             Date dueDate = new Date(task.getTime());
             if (task.getTime() != 0) {
                 taskHolder.dueDate.setText(DateUtils.getRelativeDateTimeString(
@@ -123,6 +136,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 taskHolder.dueDate.setVisibility(View.GONE);
             }
 
+            // Set labels
             if (task.getLabelList().isEmpty()) {
                 taskHolder.labels.setVisibility(View.GONE);
             } else {
@@ -133,6 +147,25 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 taskHolder.labels.setText(labelBuilder);
                 taskHolder.labels.setVisibility(View.VISIBLE);
             }
+
+            if (task.isCompleted()) {
+                taskHolder.title.setTextAppearance(taskHolder.itemView.getContext(),
+                        R.style.TextAppearance_AppTheme_CompletedTask);
+
+//                rowView.setBackgroundDrawable(viewGroup.getContext()
+//                        .getResources().getDrawable(R.drawable.list_completed_touch_feedback));
+            } else {
+//                rowView.setBackgroundDrawable(viewGroup.getContext()
+//                        .getResources().getDrawable(R.drawable.touch_feedback));
+            }
+
+            taskHolder.completed.setOnClickListener(v -> {
+                if (!task.isCompleted()) {
+                    listener.onCompleteTaskClick(task);
+                } else {
+                    listener.onActivateTaskClick(task);
+                }
+            });
         } else if (holder instanceof SectionViewHolder) {
             SectionViewHolder sectionHolder = (SectionViewHolder) holder;
             sectionHolder.item = sectionItems.get(position);
@@ -150,26 +183,32 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return taskItems.size() + sectionItems.size();
     }
 
+    /**
+     * ViewHolder for TaskItem
+     */
     public class TaskViewHolder extends RecyclerView.ViewHolder {
         public TaskItem item;
         public View priority;
-        public CheckBox done;
-        public TextView title;
+        public CheckBox completed;
+        public AppCompatTextView title;
         public TextView labels;
         public TextView dueDate;
         public TextView project;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.title);
+            title = (AppCompatTextView) itemView.findViewById(R.id.title);
             project = (TextView) itemView.findViewById(R.id.project);
             dueDate = (TextView) itemView.findViewById(R.id.due_date);
             labels = (TextView) itemView.findViewById(R.id.labels);
-            done = (CheckBox) itemView.findViewById(R.id.checkbox_done);
+            completed = (CheckBox) itemView.findViewById(R.id.checkbox_done);
             priority = itemView.findViewById(R.id.priority_indicator);
         }
     }
 
+    /**
+     * ViewHolder for SectionItem
+     */
     public class SectionViewHolder extends RecyclerView.ViewHolder {
         public SectionItem item;
         public TextView title;
@@ -179,7 +218,6 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             title = (TextView) itemView.findViewById(R.id.title);
         }
     }
-
 
     public static class SectionItem {
         CharSequence title;
@@ -223,9 +261,14 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(Task task);
+    public interface TaskItemListener {
 
-        void onLongItemClick(Task task);
+        void onTaskClick(Task task);
+
+        void onTaskLongClick(Task task);
+
+        void onCompleteTaskClick(Task task);
+
+        void onActivateTaskClick(Task task);
     }
 }

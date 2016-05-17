@@ -19,9 +19,6 @@ package com.beefficient.addedittask;
 import com.beefficient.BasePresenter;
 import com.beefficient.BaseView;
 
-/**
- * This specifies the contract between the view and the presenter.
- */
 public interface AddEditTaskContract {
 
     interface View extends BaseView<Presenter> {

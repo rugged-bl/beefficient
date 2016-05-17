@@ -32,7 +32,7 @@ public class DataRepository implements DataSource {
     /**
      * Marks the cache as invalid, to force an update the next time data is requested.
      */
-    AtomicBoolean cacheIsDirty = new AtomicBoolean(false);
+    AtomicBoolean forceCache = new AtomicBoolean();
 
     // Prevent direct instantiation
     private DataRepository(@NonNull DataSource tasksRemoteDataSource,
@@ -71,10 +71,10 @@ public class DataRepository implements DataSource {
     @Override
     public Observable<List<Task>> getTasks() {
         // Respond immediately with cache if available and not dirty
-        if (cachedTasks != null && !cacheIsDirty.get()) {
+        if (cachedTasks != null && !forceCache.get()) {
             return Observable.from(cachedTasks.values()).toList();
-        } else if (cachedTasks == null) {
-            cachedTasks = new LinkedHashMap<>();
+        } else {
+            updateTasksCache();
         }
 
         Observable<List<Task>> remoteTasks = remoteDataSource
@@ -85,11 +85,11 @@ public class DataRepository implements DataSource {
                     cachedTasks.put(task.getId(), task);
                 })
                 .toList()
-                .doOnCompleted(() -> cacheIsDirty.set(false));
-        if (cacheIsDirty.get()) {
+                .doOnCompleted(() -> forceCache.set(false));
+
+        if (forceCache.get()) {
             return remoteTasks;
         } else {
-            // Query the local storage if available. If not, query the network.
             Observable<List<Task>> localTasks = localDataSource.getTasks();
             return Observable.concat(localTasks, remoteTasks).first();
         }
@@ -98,7 +98,7 @@ public class DataRepository implements DataSource {
     @Override
     public Observable<List<Project>> getProjects() {
         // Respond immediately with cache if available and not dirty
-        if (cachedProjects != null && !cacheIsDirty.get()) {
+        if (cachedProjects != null && !forceCache.get()) {
             return Observable.from(cachedProjects.values()).toList();
         } else if (cachedProjects == null) {
             cachedProjects = new LinkedHashMap<>();
@@ -112,8 +112,8 @@ public class DataRepository implements DataSource {
                     cachedProjects.put(project.getId(), project);
                 })
                 .toList()
-                .doOnCompleted(() -> cacheIsDirty.set(false));
-        if (cacheIsDirty.get()) {
+                .doOnCompleted(() -> forceCache.set(false));
+        if (forceCache.get()) {
             //deleteAllTasks();
             //deleteAllProjects();
             /*localDataSource.deleteAllTasks();
@@ -168,7 +168,7 @@ public class DataRepository implements DataSource {
 
     @Override
     public void refreshProjects() {
-        cacheIsDirty.set(true);
+        forceCache.set(true);
     }
 
     @Override
@@ -198,11 +198,14 @@ public class DataRepository implements DataSource {
         remoteDataSource.saveTask(task);
         localDataSource.saveTask(task);
 
-        // Do in memory cache update to keep the app UI up to date
+        updateTasksCache();
+        cachedTasks.put(task.getId(), task);
+    }
+
+    private void updateTasksCache() {
         if (cachedTasks == null) {
             cachedTasks = new LinkedHashMap<>();
         }
-        cachedTasks.put(task.getId(), task);
     }
 
     @Override
@@ -216,10 +219,8 @@ public class DataRepository implements DataSource {
                 .setCompleted(true)
                 .build();
 
-        // Do in memory cache update to keep the app UI up to date
-        if (cachedTasks == null) {
-            cachedTasks = new LinkedHashMap<>();
-        }
+        updateTasksCache();
+
         cachedTasks.put(task.getId(), completedTask);
     }
 
@@ -242,10 +243,8 @@ public class DataRepository implements DataSource {
                 .setDescription(task.getDescription())
                 .build();
 
-        // Do in memory cache update to keep the app UI up to date
-        if (cachedTasks == null) {
-            cachedTasks = new LinkedHashMap<>();
-        }
+        updateTasksCache();
+
         cachedTasks.put(task.getId(), activeTask);
     }
 
@@ -263,10 +262,8 @@ public class DataRepository implements DataSource {
         remoteDataSource.clearCompletedTasks();
         localDataSource.clearCompletedTasks();
 
-        // Do in memory cache update to keep the app UI up to date
-        if (cachedTasks == null) {
-            cachedTasks = new LinkedHashMap<>();
-        }
+        updateTasksCache();
+
         Iterator<Map.Entry<String, Task>> it = cachedTasks.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<String, Task> entry = it.next();
@@ -309,7 +306,7 @@ public class DataRepository implements DataSource {
 
     @Override
     public void refreshTasks() {
-        cacheIsDirty.set(true);
+        forceCache.set(true);
     }
 
     @Override
@@ -317,9 +314,7 @@ public class DataRepository implements DataSource {
         remoteDataSource.deleteAllTasks();
         localDataSource.deleteAllTasks();
 
-        if (cachedTasks == null) {
-            cachedTasks = new LinkedHashMap<>();
-        }
+        updateTasksCache();
         cachedTasks.clear();
     }
 

@@ -32,7 +32,7 @@
         android:layout_marginStart="@dimen/item_task_text_left_margin"
         android:layout_marginTop="@dimen/item_task_margin">
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

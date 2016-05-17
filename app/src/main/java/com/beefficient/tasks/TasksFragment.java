@@ -64,19 +64,29 @@ public class TasksFragment extends Fragment implements TasksContract.View {
                 LocalDataSource.getInstance(getContext().getApplicationContext())), this);
 
         tasksAdapter = new TasksAdapter(Collections.EMPTY_LIST);
-        tasksAdapter.setListener(new TasksAdapter.OnItemClickListener() {
+        tasksAdapter.setListener(new TasksAdapter.TaskItemListener() {
             @Override
-            public void onItemClick(Task task) {
+            public void onTaskClick(Task task) {
                 // TODO: open task options
             }
 
             @Override
-            public void onLongItemClick(Task task) {
+            public void onTaskLongClick(Task task) {
                 Activity activity = getActivity();
                 if (activity instanceof MainContract.View) {
                     // TODO: select task
                     showSnackbar("Long clicked task: " + task.getTitle());
                 }
+            }
+
+            @Override
+            public void onCompleteTaskClick(Task task) {
+                presenter.completeTask(task);
+            }
+
+            @Override
+            public void onActivateTaskClick(Task task) {
+                presenter.activateTask(task);
             }
         });
     }
@@ -100,8 +110,6 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         addTaskButton.setOnClickListener(v -> {
             // TODO: start EditTaskActivity
             if (activity instanceof MainContract.View) {
-                showSnackbar("Add task");
-                //presenter.deleteAllData(); //TODO:CARE :D
                 showAddTask();
             }
         });
@@ -218,7 +226,6 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         tasksAdapter.notifyDataSetChanged();
     }
 
-    // TODO: зачем это!?
     @Override
     public boolean isActive() {
         return true;
