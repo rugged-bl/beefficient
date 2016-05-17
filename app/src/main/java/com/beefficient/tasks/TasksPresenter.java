@@ -1,9 +1,11 @@
 package com.beefficient.tasks;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.util.Log;
 
+import com.beefficient.addedittask.AddEditTaskActivity;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataRepository;
@@ -52,9 +54,9 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void result(int requestCode, int resultCode) {
         // If a task was successfully added, show snackbar
-        /*if (AddEditTaskActivity.REQUEST_ADD_TASK == requestCode && Activity.RESULT_OK == resultCode) {
+        if (AddEditTaskActivity.REQUEST_ADD_TASK == requestCode && Activity.RESULT_OK == resultCode) {
             tasksView.showSuccessfullySavedMessage();
-        }*/
+        }
     }
 
     @Override

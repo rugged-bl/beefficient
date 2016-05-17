@@ -20,4 +20,9 @@
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="no_tasks">No tasks</string>
+    <string name="empty_task_message">Can\'t create this task</string>
+    <string name="edit_task">Edit task</string>
+    <string name="add_task">Add task</string>
+    <string name="title_hint">Title</string>
+    <string name="description_hint">Description</string>
 </resources>

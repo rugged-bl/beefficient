@@ -42,10 +42,10 @@ public class RemoteDataSource implements DataSource {
             addProject(project4);
 
             for (int j = 0; j < 2; j++) {
-                addTask("Title One " + j, "Desc One", project1, "taid1" + j);
-                addTask("Title Two " + j, "Desc Two", project2, "taid2" + j);
-                addTask("Title Three " + j, "Desc Three", project3, "taid3" + j);
-                addTask("Title Four " + j, "Desc Four", project4, "taid4" + j);
+                addTask("Title One " + j + " " + project1.getId(), "Desc One", project1, "taid1" + j);
+                addTask("Title Two " + j + " " + project2.getId(), "Desc Two", project2, "taid2" + j);
+                addTask("Title Three " + j + " " + project3.getId(), "Desc Three", project3, "taid3" + j);
+                addTask("Title Four " + j + " " + project4.getId(), "Desc Four", project4, "taid4" + j);
             }
         }
     }

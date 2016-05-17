@@ -15,6 +15,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "beefficient.db";
 
     private static final String PRIMARY_KEY = " PRIMARY_KEY,";
+    private static final String UNIQUE = " UNIQUE,";
     private static final String TEXT_TYPE = " TEXT";
     private static final String BOOLEAN_TYPE = " INTEGER";
     private static final String INTEGER_TYPE = " INTEGER";

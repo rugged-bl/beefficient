@@ -1,6 +1,7 @@
 package com.beefficient.tasks;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.beefficient.R;
+import com.beefficient.addedittask.AddEditTaskActivity;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataRepository;
 import com.beefficient.data.source.local.LocalDataSource;
@@ -120,6 +122,11 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        presenter.result(requestCode, resultCode);
+    }
+
+    @Override
     public void setPresenter(@NonNull TasksContract.Presenter presenter) {
         this.presenter = requireNonNull(presenter);
     }
@@ -131,11 +138,12 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showLoadingTasksError() {
-
     }
 
     @Override
     public void showAddTask() {
+        Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
+        startActivityForResult(intent, AddEditTaskActivity.REQUEST_ADD_TASK);
     }
 
     @Override
@@ -206,6 +214,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showSuccessfullySavedMessage() {
+        tasksAdapter.notifyDataSetChanged();
     }
 
     // TODO: зачем это!?
