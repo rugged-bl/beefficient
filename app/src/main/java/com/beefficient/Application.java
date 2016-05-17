@@ -1,15 +1,18 @@
 package com.beefficient;
 
+import android.content.Context;
+
 public class Application extends android.app.Application {
-//    private static Context context;
+    private static Context context;
 
     @Override
     public void onCreate() {
         super.onCreate();
-//        context = this;
+        context = this;
     }
-//
-//    public static Context getContext() {
-//        return context;
-//    }
+
+    //
+    public static Context getContext() {
+        return context;
+    }
 }

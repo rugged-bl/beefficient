@@ -175,7 +175,7 @@ public class DataRepository implements DataSource {
     public void deleteAllProjects()
     {
         remoteDataSource.deleteAllProjects();
-        localDataSource.deleteAllTasks();
+        localDataSource.deleteAllProjects();
 
         if (cachedProjects == null) {
             cachedProjects = new LinkedHashMap<>();

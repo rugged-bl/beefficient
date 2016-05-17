@@ -101,7 +101,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
             // TODO: start EditTaskActivity
             if (activity instanceof MainContract.View) {
                 showSnackbar("Add task");
-                presenter.deleteAllData(); //TODO:CARE :D
+                //presenter.deleteAllData(); //TODO:CARE :D
                 showAddTask();
             }
         });
@@ -214,6 +214,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showSuccessfullySavedMessage() {
+        showSnackbar("SuccessfullySaved");
         tasksAdapter.notifyDataSetChanged();
     }
 

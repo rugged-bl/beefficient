@@ -19,6 +19,7 @@ package com.beefficient.addedittask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 
@@ -72,7 +73,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         Task newTask = new Task
                 .Builder(title)
                 .setDescription(description)
-                .setProjectId("prid1") //TODO:FIX
+                .setProject(DefaultTypes.PROJECT)
                 .build();
         if (title.isEmpty()) {
             addTaskView.showEmptyTaskError();
@@ -90,7 +91,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         dataRepository.saveTask(new Task
                 .Builder(title, taskId)
                 .setDescription(description)
-                .setProjectId("prid1") //TODO:FIX
+                .setProject(DefaultTypes.PROJECT)
                 .build());
         addTaskView.showTasksList(); // After an edit, go back to the list.
     }

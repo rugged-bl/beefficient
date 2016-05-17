@@ -6,6 +6,7 @@ import android.support.v4.util.Pair;
 import android.util.Log;
 
 import com.beefficient.addedittask.AddEditTaskActivity;
+import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataRepository;
@@ -160,9 +161,11 @@ public class TasksPresenter implements TasksContract.Presenter {
                 sectionItems.put(position++, sectionItem);
 
                 for (Task task : tasks) {
-                    if (task.getProjectId() == null)
-                        continue;
-                    if (!task.getProjectId().isEmpty() && task.getProjectId().equals(project.getId())) { //TODO: Add not-null check
+                    if (task.getProjectId() == null) {
+                        task.setProject(DefaultTypes.PROJECT);
+                        taskItems.add(new TasksAdapter.TaskItem(task, sectionItem));
+                        position++;
+                    } else if (!task.getProjectId().isEmpty() && task.getProjectId().equals(project.getId())) { //TODO: Add not-null check
                         task.setProject(project);
                         taskItems.add(new TasksAdapter.TaskItem(task, sectionItem));
                         position++;

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
@@ -71,12 +72,22 @@ public class LocalDataSource implements DataSource {
 
             return new Project(name, color, itemId);
         };
+
+        /*getTasks()
+                .subscribe(query -> {
+                    for (Task task1 : query) {
+                        Log.d("Test", task1.getId());
+                    }
+                });*/
+
+        saveProject(DefaultTypes.PROJECT);
     }
 
     public static LocalDataSource getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
             INSTANCE = new LocalDataSource(context);
         }
+
         return INSTANCE;
     }
 
@@ -110,8 +121,17 @@ public class LocalDataSource implements DataSource {
         values.put(TaskEntry.Column.due_date.name(), task.getTime());
         values.put(TaskEntry.Column.with_time.name(), task.isWithTime());
 
-        deleteTask(task.getId());
-        databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+        getTask(task.getId())
+                .subscribe(t -> {
+                    if (t == null) {
+                        databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+                    } else {
+                        String selection = TaskEntry.Column._id + " LIKE ?";
+                        String[] selectionArgs = {t.getId()};
+
+                        databaseHelper.update(TaskEntry.TABLE_NAME, values, selection, selectionArgs);
+                    }
+                });
     }
 
     @Override
@@ -196,8 +216,17 @@ public class LocalDataSource implements DataSource {
         values.put(ProjectEntry.Column.name.name(), project.getName());
         values.put(ProjectEntry.Column.color.name(), project.getColor());
 
-        deleteProject(project.getId());
-        databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+        getProject(project.getId())
+                .subscribe(p -> {
+                    if (p == null) {
+                        databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+                    } else {
+                        String selection = ProjectEntry.Column._id + " LIKE ?";
+                        String[] selectionArgs = {p.getId()};
+
+                        databaseHelper.update(ProjectEntry.TABLE_NAME, values, selection, selectionArgs);
+                    }
+                });
     }
 
     @Override
