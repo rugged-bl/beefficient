@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -15,12 +14,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.beefficient.R;
 import com.beefficient.tasks.TasksFragment;
+
+import static com.beefficient.util.Objects.requireNonNull;
 
 public class MainActivity extends AppCompatActivity implements
         MainContract.View, NavigationView.OnNavigationItemSelectedListener {
@@ -74,14 +73,6 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_main, menu);
-
-        return super.onCreateOptionsMenu(menu);
     }
 
     private void initAppBar() {
@@ -165,11 +156,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void showSnackbar(CharSequence text, int duration) {
-        Snackbar.make(coordinatorLayout, text, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
     public void loadTasksFragment() {
         setFragment(TasksFragment.newInstance());
     }
@@ -181,18 +167,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void loadLabelsFragment() {
-
-    }
-
-    @Override
-    public void loadTaskDetailsFragment() {
-
+        //
     }
 
     @Override
     public void setPresenter(@NonNull MainContract.Presenter presenter) {
-        this.presenter = presenter;
+        this.presenter = requireNonNull(presenter);
     }
-
-
 }

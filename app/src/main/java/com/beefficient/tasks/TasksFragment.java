@@ -28,12 +28,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import static com.beefficient.util.Objects.requireNonNull;
+
 public class TasksFragment extends Fragment implements TasksContract.View {
 
     private TasksContract.Presenter presenter;
     private TasksAdapter tasksAdapter;
 
     private RecyclerView tasksView;
+    private View noTasksContainer;
     private TextView noTasksView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -62,27 +65,15 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         tasksAdapter.setListener(new TasksAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Task task) {
-                // TODO: open BottomSheet with task options (or open EditTaskActivity)
-
-//                TextView testTextView = new TextView(getContext());
-//                int paddingPx = getResources().getDimensionPixelOffset(R.dimen.text_margin);
-//                testTextView.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
-//                testTextView.setText(task.getTitle());
-//
-//                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
-//                bottomSheetDialog.setContentView(testTextView);
-//                bottomSheetDialog.show();
-//                bottomSheetDialog.setOnDismissListener(dialog -> {
-//                    // onDismiss
-//                });
+                // TODO: open task options
             }
 
             @Override
             public void onLongItemClick(Task task) {
                 Activity activity = getActivity();
                 if (activity instanceof MainContract.View) {
-                    ((MainContract.View) activity).showSnackbar("Long clicked task: " + task.getTitle(),
-                            Snackbar.LENGTH_SHORT);
+                    // TODO: select task
+                    showSnackbar("Long clicked task: " + task.getTitle());
                 }
             }
         });
@@ -96,6 +87,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         tasksView = (RecyclerView) view.findViewById(R.id.tasks_view);
         tasksView.setAdapter(tasksAdapter);
 
+        noTasksContainer = view.findViewById(R.id.no_tasks_container);
         noTasksView = (TextView) view.findViewById(R.id.no_tasks);
 
         Activity activity = getActivity();
@@ -106,7 +98,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         addTaskButton.setOnClickListener(v -> {
             // TODO: start EditTaskActivity
             if (activity instanceof MainContract.View) {
-                ((MainContract.View) activity).showSnackbar("Add task", Snackbar.LENGTH_SHORT);
+                showSnackbar("Add task");
                 presenter.deleteAllData(); //TODO:CARE :D
                 showAddTask();
             }
@@ -129,7 +121,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void setPresenter(@NonNull TasksContract.Presenter presenter) {
-        this.presenter = presenter;
+        this.presenter = requireNonNull(presenter);
     }
 
     @Override
@@ -139,6 +131,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showLoadingTasksError() {
+
     }
 
     @Override
@@ -190,7 +183,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     private void showNoTasksView(String text) {
         tasksView.setVisibility(View.GONE);
-        noTasksView.setVisibility(View.VISIBLE);
+        noTasksContainer.setVisibility(View.VISIBLE);
         noTasksView.setText(text);
     }
 
@@ -199,13 +192,16 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         Log.d("TasksFragment", "showTasks");
 
         tasksView.setVisibility(View.VISIBLE);
-        noTasksView.setVisibility(View.GONE);
+        noTasksContainer.setVisibility(View.GONE);
 
-//        tasksAdapter.setSectionItems(sectionItems);
-//        tasksAdapter.setTaskItems(taskItems);
         tasksAdapter.setContent(taskItems, sectionItems);
-        //tasksAdapter.notifyDataSetChanged();
+    }
 
+    private void showSnackbar(String message) {
+        View view = getView();
+        if (view != null) {
+            Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -230,12 +226,16 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_item_search: {
+                // TODO: show SearchView in toolbar
+                return true;
+            }
             case R.id.menu_item_toggle_completed: {
                 // TODO: show/hide completed tasks in this view
                 return true;
             }
             case R.id.menu_item_sort: {
-                // TODO: открыть диалог с выбором сортировки на RadioButton
+                // TODO: открыть диалог с выбором сортировки
                 return true;
             }
         }

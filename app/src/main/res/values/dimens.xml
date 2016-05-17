@@ -16,7 +16,8 @@
     <dimen name="profile_photo">64dp</dimen>
     <dimen name="nav_header_top_margin">40dp</dimen>
     <dimen name="toolbar_inset_start">72dp</dimen>
-    <dimen name="item_task_padding">16dp</dimen>
-    <dimen name="item_task_text_left_padding">56dp</dimen>
+    <dimen name="item_task_text_left_margin">72dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="item_task_checkbox_margin">16dp</dimen>
+    <dimen name="item_task_margin">16dp</dimen>
 </resources>

@@ -16,11 +16,18 @@
         tools:context="com.beefficient.tasks.TasksFragment"
         tools:listitem="@layout/item_task"/>
 
-    <TextView
-        android:id="@+id/no_tasks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/no_tasks"
-        android:visibility="gone"/>
+    <ScrollView
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/no_tasks_container">
+
+        <TextView
+            android:id="@+id/no_tasks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_tasks"/>
+
+    </ScrollView>
 </FrameLayout>

@@ -33,9 +33,10 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setContent(List<TaskItem> taskItems, HashMap<Integer, SectionItem> sectionItems) {
         try {
+            notifyItemRangeRemoved(0, getItemCount());
             this.taskItems = taskItems;
             this.sectionItems = sectionItems;
-            notifyItemRangeChanged(0, getItemCount());
+            notifyItemRangeInserted(0, getItemCount());
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
@@ -43,17 +44,11 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setTaskItems(List<TaskItem> taskItems) {
         this.taskItems = taskItems;
-        notifyItemRangeInserted(0, taskItems.size());
     }
 
     public void setSectionItems(HashMap<Integer, SectionItem> sectionItems) {
         this.sectionItems = sectionItems;
     }
-
-//    public void setSortLinks(HashMap<Integer, Integer> sortLinks) {
-//        this.sortLinks = sortLinks;
-//        keysSet = sortLinks.keySet();
-//    }
 
     public void setListener(OnItemClickListener listener) {
         this.listener = listener;
