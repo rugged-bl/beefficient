@@ -148,16 +148,11 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 taskHolder.labels.setVisibility(View.VISIBLE);
             }
 
-            if (task.isCompleted()) {
-                taskHolder.title.setTextAppearance(taskHolder.itemView.getContext(),
-                        R.style.TextAppearance_AppTheme_CompletedTask);
-
-//                rowView.setBackgroundDrawable(viewGroup.getContext()
-//                        .getResources().getDrawable(R.drawable.list_completed_touch_feedback));
-            } else {
-//                rowView.setBackgroundDrawable(viewGroup.getContext()
-//                        .getResources().getDrawable(R.drawable.touch_feedback));
-            }
+//            if (task.isCompleted()) {
+//                taskHolder.title.setTextAppearance(taskHolder.itemView.getContext(),
+//                        R.style.TextAppearance_AppTheme_CompletedTask);
+//            } else {
+//            }
 
             taskHolder.completed.setOnClickListener(v -> {
                 if (!task.isCompleted()) {

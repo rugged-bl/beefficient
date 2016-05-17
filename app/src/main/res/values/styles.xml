@@ -31,7 +31,5 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.AppTheme.CompletedTask" parent="TextAppearance.AppCompat.Title">
-
-    </style>
+    <!--<style name="TextAppearance.AppTheme.CompletedTask" parent="TextAppearance.AppCompat.Subhead"/>-->
 </resources>

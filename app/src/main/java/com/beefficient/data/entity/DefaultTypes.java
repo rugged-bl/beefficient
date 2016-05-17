@@ -4,7 +4,8 @@ import com.beefficient.Application;
 import com.beefficient.R;
 
 public final class DefaultTypes {
-    private static String defaultProjectTitle = Application.getContext().getString(R.string.inbox);
+    private static final String defaultProjectTitle = Application.getContext().getString(R.string.inbox);
 
-    public static final Project PROJECT = new Project(defaultProjectTitle, 0xffffff, defaultProjectTitle);
+    public static final Project PROJECT =
+            new Project(defaultProjectTitle, 0xFFFFFFFF, defaultProjectTitle);
 }
