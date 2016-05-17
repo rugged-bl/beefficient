@@ -130,6 +130,11 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        presenter.result(requestCode, resultCode);
+    }
+
+    @Override
     public void setPresenter(@NonNull TasksContract.Presenter presenter) {
         this.presenter = presenter;
     }
@@ -214,6 +219,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showSuccessfullySavedMessage() {
+        tasksAdapter.notifyDataSetChanged();
     }
 
     // TODO: зачем это!?
