@@ -107,20 +107,24 @@ public class TasksPresenter implements TasksContract.Presenter {
                 .zip(tasks, projects, Pair::new)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnCompleted(() -> {
-                    Log.d("TasksPresenter", "completed");
-                    tasksView.setLoadingIndicator(false);
-                })
-                .doOnError(throwable -> {
-                    tasksView.showLoadingTasksError();
-                    tasksView.setLoadingIndicator(false);
-                    throwable.printStackTrace();
-                })
-                .doOnNext((Pair<List<Task>, List<Project>> pair) -> {
-                    Log.d("TasksPresenter", "next");
-                    processTasks(pair.first, pair.second);
-                })
-                .subscribe();
+                .subscribe(
+                        // onNext
+                        (Pair<List<Task>, List<Project>> pair) -> {
+                            Log.d("TasksPresenter", "next");
+                            processTasks(pair.first, pair.second);
+                        },
+                        // onError
+                        throwable -> {
+                            tasksView.showLoadingTasksError();
+                            tasksView.setLoadingIndicator(false);
+                            throwable.printStackTrace();
+                        },
+                        // onCompleted
+                        () -> {
+                            Log.d("TasksPresenter", "completed");
+                            tasksView.setLoadingIndicator(false);
+                        });
+
         Log.d("TasksPresenter", "subscribed");
                 /*.subscribe(/*new Observer<List<Task>>()* new Observer<Pair<List<Task>, List<Project>>>() {
                     @Override
@@ -212,13 +216,13 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     @Override
     public void openTaskDetails(@NonNull Task requestedTask) {
-        requireNonNull(requestedTask, "requestedTask cannot be null!");
+        requireNonNull(requestedTask, "requestedTask cannot be null");
         tasksView.showTaskDetails(requestedTask.getId());
     }
 
     @Override
     public void completeTask(@NonNull Task completedTask) {
-        requireNonNull(completedTask, "completedTask cannot be null!");
+        requireNonNull(completedTask, "completedTask cannot be null");
         dataRepository.completeTask(completedTask);
         tasksView.showTaskMarkedComplete();
         loadTasks(false, false);
@@ -226,7 +230,7 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     @Override
     public void activateTask(@NonNull Task activeTask) {
-        requireNonNull(activeTask, "activeTask cannot be null!");
+        requireNonNull(activeTask, "activeTask cannot be null");
         dataRepository.activateTask(activeTask);
         tasksView.showTaskMarkedActive();
         loadTasks(false, false);
@@ -240,8 +244,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     @Override
-    public void deleteAllData()
-    {
+    public void deleteAllData() {
         dataRepository.deleteAllTasks();
         dataRepository.deleteAllProjects();
     }

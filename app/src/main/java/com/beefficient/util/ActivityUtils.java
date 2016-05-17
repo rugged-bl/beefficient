@@ -19,7 +19,6 @@ package com.beefficient.util;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 
 import static com.beefficient.util.Objects.requireNonNull;
 
@@ -36,9 +35,8 @@ public class ActivityUtils {
                                              @NonNull Fragment fragment, int frameId) {
         requireNonNull(fragmentManager);
         requireNonNull(fragment);
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(frameId, fragment);
-        transaction.commit();
+        fragmentManager.beginTransaction()
+                .add(frameId, fragment).commit();
     }
 
 }
