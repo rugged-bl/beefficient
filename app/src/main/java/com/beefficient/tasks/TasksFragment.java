@@ -1,6 +1,7 @@
 package com.beefficient.tasks;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.beefficient.R;
+import com.beefficient.addedittask.AddEditTaskActivity;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataRepository;
 import com.beefficient.data.source.local.LocalDataSource;
@@ -107,7 +109,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
             // TODO: start EditTaskActivity
             if (activity instanceof MainContract.View) {
                 ((MainContract.View) activity).showSnackbar("Add task", Snackbar.LENGTH_SHORT);
-                presenter.deleteAllData(); //TODO:CARE :D
+                //presenter.deleteAllData(); //TODO:CARE :D
                 showAddTask();
             }
         });
@@ -143,6 +145,8 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showAddTask() {
+        Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
+        startActivityForResult(intent, AddEditTaskActivity.REQUEST_ADD_TASK);
     }
 
     @Override

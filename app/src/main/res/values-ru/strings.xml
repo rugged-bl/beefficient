@@ -18,4 +18,11 @@
     <string name="today">Сегодня</string>
     <string name="show_completed">Показать выполненные</string>
     <string name="sort">Сортировка</string>
+    <string name="search">Поиск</string>
+    <string name="no_tasks">Нет задач</string>
+    <string name="empty_task_message">Не получается создать такую задачу</string>
+    <string name="edit_task">Правка задачи</string>
+    <string name="add_task">Новая задача</string>
+    <string name="title_hint">Название</string>
+    <string name="description_hint">Описание</string>
 </resources>
