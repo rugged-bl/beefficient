@@ -110,6 +110,7 @@ public class LocalDataSource implements DataSource {
         values.put(TaskEntry.Column.due_date.name(), task.getTime());
         values.put(TaskEntry.Column.with_time.name(), task.isWithTime());
 
+        deleteTask(task.getId());
         databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 
@@ -194,6 +195,8 @@ public class LocalDataSource implements DataSource {
         values.put(ProjectEntry.Column._id.name(), project.getId());
         values.put(ProjectEntry.Column.name.name(), project.getName());
         values.put(ProjectEntry.Column.color.name(), project.getColor());
+
+        deleteProject(project.getId());
         databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
     }
 

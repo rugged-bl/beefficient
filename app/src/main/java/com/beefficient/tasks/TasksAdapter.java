@@ -35,7 +35,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         try {
             this.taskItems = taskItems;
             this.sectionItems = sectionItems;
-            notifyItemRangeChanged(0, getItemCount());
+            notifyDataSetChanged();
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }
