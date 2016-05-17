@@ -154,6 +154,14 @@ public class LocalDataSource implements DataSource {
         databaseHelper.update(TaskEntry.TABLE_NAME, values, selection, taskId);
     }
 
+    private void setTaskCompleted(@NonNull String taskId, boolean completed) {
+        ContentValues values = new ContentValues();
+        values.put(TaskEntry.Column.completed.name(), completed);
+
+        String selection = TaskEntry.Column._id + " LIKE ?";
+        databaseHelper.update(TaskEntry.TABLE_NAME, values, selection, taskId);
+    }
+
     @Override
     public void completeTask(@NonNull Task task) {
         completeTask(task.getId());
