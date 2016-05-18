@@ -6,7 +6,7 @@ import java.util.UUID;
 
 // TODO: add color
 public class Project {
-    private ArrayList<SoftReference<Task>> taskList;
+    private ArrayList<Task> taskList;
 
     private String id;
     private String name;
@@ -26,7 +26,7 @@ public class Project {
         this.color = color;
     }
 
-    public boolean addTask(SoftReference<Task> task) {
+    public boolean addTask(Task task) {
         taskList.add(task);
         return true;
     }
@@ -51,7 +51,7 @@ public class Project {
         this.color = color;
     }
 
-    public ArrayList<SoftReference<Task>> getTaskList() {
+    public ArrayList<Task> getTaskList() {
         return taskList;
     }
 

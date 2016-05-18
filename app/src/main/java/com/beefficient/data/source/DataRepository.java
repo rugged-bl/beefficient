@@ -90,7 +90,13 @@ public class DataRepository implements DataSource {
         if (forceCache.get()) {
             return remoteTasks;
         } else {
-            Observable<List<Task>> localTasks = localDataSource.getTasks();
+            Observable<List<Task>> localTasks = localDataSource
+                    .getTasks()
+                    .doOnNext(tasks -> {
+                        for (Task task : tasks) {
+                            cachedTasks.put(task.getId(), task);
+                        }
+                    });
             return Observable.concat(localTasks, remoteTasks).first();
         }
     }
@@ -121,7 +127,13 @@ public class DataRepository implements DataSource {
             return remoteProjects;
         } else {
             // Query the local storage if available. If not, query the network.
-            Observable<List<Project>> localProjects = localDataSource.getProjects();
+            Observable<List<Project>> localProjects = localDataSource
+                    .getProjects()
+                    .doOnNext(projects -> {
+                        for (Project project : projects) {
+                            cachedProjects.put(project.getId(), project);
+                        }
+                    });
             return Observable.concat(localProjects, remoteProjects).first();
         }
     }
@@ -172,8 +184,7 @@ public class DataRepository implements DataSource {
     }
 
     @Override
-    public void deleteAllProjects()
-    {
+    public void deleteAllProjects() {
         remoteDataSource.deleteAllProjects();
         localDataSource.deleteAllProjects();
 
@@ -216,6 +227,7 @@ public class DataRepository implements DataSource {
 
         Task completedTask = new Task.Builder(task.getTitle(), task.getId())
                 .setDescription(task.getDescription())
+                .setProject(task.getProject())
                 .setCompleted(true)
                 .build();
 

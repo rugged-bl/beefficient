@@ -128,7 +128,7 @@ public class Task {
 
             if (project != null) {
                 task.projectId = project.getId();
-                project.addTask(new SoftReference<>(task));
+                project.addTask(task);
             }
 
             return task;

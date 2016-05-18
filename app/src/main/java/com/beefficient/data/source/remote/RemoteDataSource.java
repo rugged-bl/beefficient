@@ -98,6 +98,7 @@ public class RemoteDataSource implements DataSource {
     public void completeTask(@NonNull Task task) {
         Task completedTask = new Task.Builder(task.getTitle(), task.getId())
                 .setDescription(task.getDescription())
+                .setProject(task.getProject())
                 .setCompleted(true)
                 .build();
         TASKS_SERVICE_DATA.put(task.getId(), completedTask);
@@ -113,6 +114,7 @@ public class RemoteDataSource implements DataSource {
     public void activateTask(@NonNull Task task) {
         Task activeTask = new Task.Builder(task.getTitle(), task.getId())
                 .setDescription(task.getDescription())
+                .setProject(task.getProject())
                 .build();
         TASKS_SERVICE_DATA.put(task.getId(), activeTask);
     }
