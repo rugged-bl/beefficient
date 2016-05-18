@@ -87,16 +87,15 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
 
     @Override
     public void createTask(String title, String description, boolean completed) {
-        Task newTask = new Task
-                .Builder(title)
-                .setDescription(description)
-                .setProject(DefaultTypes.PROJECT)
-                .setCompleted(completed)
-                .build();
-
         if (title.isEmpty()) {
             addEditTaskView.showEmptyTaskError();
         } else {
+            Task newTask = new Task.Builder(title)
+                    .setDescription(description)
+                    .setProject(DefaultTypes.PROJECT)
+                    .setCompleted(completed)
+                    .build();
+
             dataRepository.saveTask(newTask);
             addEditTaskView.showTasksList();
         }
@@ -107,13 +106,19 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         if (taskId == null) {
             throw new RuntimeException("updateTask() was called but task is new.");
         }
-        dataRepository.saveTask(new Task.Builder(title, taskId)
-                .setDescription(description)
-                .setProject(DefaultTypes.PROJECT)
-                .setCompleted(completed)
-                .build());
 
-        addEditTaskView.showTasksList(); // After an edit, go back to the list
+        if (title.isEmpty()) {
+            addEditTaskView.showEmptyTaskError();
+        } else {
+            Task task = new Task.Builder(title, taskId)
+                    .setDescription(description)
+                    .setProject(DefaultTypes.PROJECT)
+                    .setCompleted(completed)
+                    .build();
+
+            dataRepository.saveTask(task);
+            addEditTaskView.showTasksList();
+        }
     }
 
     @Override
