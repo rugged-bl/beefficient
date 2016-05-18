@@ -7,6 +7,11 @@ import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
 import static com.beefficient.util.Objects.requireNonNull;
 
 /**
@@ -19,65 +24,96 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     private final DataSource dataRepository;
 
     @NonNull
-    private final AddEditTaskContract.View addTaskView;
+    private final AddEditTaskContract.View addEditTaskView;
 
     @Nullable
     private String taskId;
+
+    private CompositeSubscription subscriptions;
 
     /**
      * Creates a presenter for the add/edit view.
      *
      * @param taskId         ID of the task to edit or null for a new task
      * @param dataRepository a repository of data for tasks
-     * @param addTaskView    the add/edit view
+     * @param addEditTaskView    the add/edit view
      */
     public AddEditTaskPresenter(@Nullable String taskId, @NonNull DataSource dataRepository,
-                                @NonNull AddEditTaskContract.View addTaskView) {
+                                @NonNull AddEditTaskContract.View addEditTaskView) {
         this.taskId = taskId;
         this.dataRepository = requireNonNull(dataRepository);
-        this.addTaskView = requireNonNull(addTaskView);
+        this.addEditTaskView = requireNonNull(addEditTaskView);
 
-        this.addTaskView.setPresenter(this);
+        subscriptions = new CompositeSubscription();
+
+        this.addEditTaskView.setPresenter(this);
     }
 
     @Override
     public void subscribe() {
         if (taskId != null) {
             populateTask();
+            openTask();
         }
     }
 
     @Override
     public void unsubscribe() {
+        subscriptions.clear();
+    }
 
+    private void openTask() {
+        if (null == taskId || taskId.isEmpty()) {
+            return;
+        }
+
+        Subscription subscription = dataRepository
+                .getTask(taskId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(task -> showTask(task));
+
+        subscriptions.add(subscription);
+    }
+
+    private void showTask(Task task) {
+        String title = task.getTitle();
+        String description = task.getDescription();
+
+        addEditTaskView.setTitle(title);
+        addEditTaskView.setDescription(description);
+        addEditTaskView.setCompleted(task.isCompleted());
     }
 
     @Override
-    public void createTask(String title, String description) {
+    public void createTask(String title, String description, boolean completed) {
         Task newTask = new Task
                 .Builder(title)
                 .setDescription(description)
                 .setProject(DefaultTypes.PROJECT)
+                .setCompleted(completed)
                 .build();
+
         if (title.isEmpty()) {
-            addTaskView.showEmptyTaskError();
+            addEditTaskView.showEmptyTaskError();
         } else {
             dataRepository.saveTask(newTask);
-            addTaskView.showTasksList();
+            addEditTaskView.showTasksList();
         }
     }
 
     @Override
-    public void updateTask(String title, String description) {
+    public void updateTask(String title, String description, boolean completed) {
         if (taskId == null) {
             throw new RuntimeException("updateTask() was called but task is new.");
         }
-        dataRepository.saveTask(new Task
-                .Builder(title, taskId)
+        dataRepository.saveTask(new Task.Builder(title, taskId)
                 .setDescription(description)
                 .setProject(DefaultTypes.PROJECT)
+                .setCompleted(completed)
                 .build());
-        addTaskView.showTasksList(); // After an edit, go back to the list.
+
+        addEditTaskView.showTasksList(); // After an edit, go back to the list
     }
 
     @Override
@@ -88,20 +124,28 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         dataRepository.getTask(taskId);
     }
 
+    @Override
+    public void deleteTask() {
+        if (taskId != null) {
+            dataRepository.deleteTask(taskId);
+        }
+        addEditTaskView.showTaskDeleted();
+    }
+
 /*    @Override
     public void onTaskLoaded(Task task) {
         // The view may not be able to handle UI updates anymore
-        if (addTaskView.isActive()) {
-            addTaskView.setTitle(task.getTitle());
-            addTaskView.setDescription(task.getDescription());
+        if (addEditTaskView.isActive()) {
+            addEditTaskView.setTitle(task.getTitle());
+            addEditTaskView.setDescription(task.getDescription());
         }
     }
 
     @Override
     public void onDataNotAvailable() {
         // The view may not be able to handle UI updates anymore
-        if (addTaskView.isActive()) {
-            addTaskView.showEmptyTaskError();
+        if (addEditTaskView.isActive()) {
+            addEditTaskView.showEmptyTaskError();
         }
     }*/
 }

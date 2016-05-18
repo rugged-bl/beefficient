@@ -106,9 +106,7 @@ public class DataRepository implements DataSource {
         // Respond immediately with cache if available and not dirty
         if (cachedProjects != null && !forceCache.get()) {
             return Observable.from(cachedProjects.values()).toList();
-        } else if (cachedProjects == null) {
-            cachedProjects = new LinkedHashMap<>();
-        }
+        } else updateProjectsCache();
 
         Observable<List<Project>> remoteProjects = remoteDataSource
                 .getProjects()
@@ -171,10 +169,7 @@ public class DataRepository implements DataSource {
         remoteDataSource.saveProject(project);
         localDataSource.saveProject(project);
 
-        // Do in memory cache update to keep the app UI up to date
-        if (cachedProjects == null) {
-            cachedProjects = new LinkedHashMap<>();
-        }
+        updateProjectsCache();
         cachedProjects.put(project.getId(), project);
     }
 
@@ -188,11 +183,15 @@ public class DataRepository implements DataSource {
         remoteDataSource.deleteAllProjects();
         localDataSource.deleteAllProjects();
 
+        updateProjectsCache();
+
+        cachedProjects.clear();
+    }
+
+    private void updateProjectsCache() {
         if (cachedProjects == null) {
             cachedProjects = new LinkedHashMap<>();
         }
-
-        cachedProjects.clear();
     }
 
     @Override
@@ -253,6 +252,8 @@ public class DataRepository implements DataSource {
 
         Task activeTask = new Task.Builder(task.getTitle(), task.getId())
                 .setDescription(task.getDescription())
+                .setProject(task.getProject())
+                .setCompleted(false)
                 .build();
 
         updateTasksCache();

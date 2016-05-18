@@ -32,7 +32,7 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     private TasksFilterType currentFiltering = TasksFilterType.ALL_TASKS;
 
-    //    private boolean firstLoad = true;
+    // private boolean firstLoad = true;
     private CompositeSubscription subscriptions;
 
     public TasksPresenter(@NonNull DataRepository dataRepository, @NonNull TasksContract.View tasksView) {
@@ -127,25 +127,6 @@ public class TasksPresenter implements TasksContract.Presenter {
                         });
 
         Log.d("TasksPresenter", "subscribed");
-                /*.subscribe(/*new Observer<List<Task>>()* new Observer<Pair<List<Task>, List<Project>>>() {
-                    @Override
-                    public void onCompleted() {
-                        tasksView.setLoadingIndicator(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        tasksView.showLoadingTasksError();
-                        tasksView.setLoadingIndicator(false);
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(Pair<List<Task>, List<Project>> pair) {
-                        Log.d("TasksPresenter", "next");
-                        processTasks(tasks);
-                    }
-                });*/
 
         subscriptions.add(subscription);
     }
@@ -218,23 +199,23 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     @Override
-    public void openTaskDetails(@NonNull Task requestedTask) {
-        requireNonNull(requestedTask, "requestedTask cannot be null");
-        tasksView.showTaskDetails(requestedTask.getId());
+    public void editTask(@NonNull Task task) {
+        requireNonNull(task, "task cannot be null");
+        tasksView.showEditTask(task.getId());
     }
 
     @Override
-    public void completeTask(@NonNull Task completedTask) {
-        requireNonNull(completedTask, "completedTask cannot be null");
-        dataRepository.completeTask(completedTask);
+    public void completeTask(@NonNull Task task) {
+        requireNonNull(task, "completedTask cannot be null");
+        dataRepository.completeTask(task);
         tasksView.showTaskMarkedComplete();
         loadTasks(false, false);
     }
 
     @Override
-    public void activateTask(@NonNull Task activeTask) {
-        requireNonNull(activeTask, "activeTask cannot be null");
-        dataRepository.activateTask(activeTask);
+    public void activateTask(@NonNull Task task) {
+        requireNonNull(task, "activeTask cannot be null");
+        dataRepository.activateTask(task);
         tasksView.showTaskMarkedActive();
         loadTasks(false, false);
     }

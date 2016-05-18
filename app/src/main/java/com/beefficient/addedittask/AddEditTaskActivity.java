@@ -16,14 +16,16 @@ import com.beefficient.util.ActivityUtils;
 public class AddEditTaskActivity extends AppCompatActivity {
 
     public static final int REQUEST_ADD_TASK = 1;
+    public static final int REQUEST_EDIT_TASK = 2;
 
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
+    private ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_addtask);
+        setContentView(R.layout.activity_addedittask);
 
         initAppBar();
 
@@ -32,31 +34,26 @@ public class AddEditTaskActivity extends AppCompatActivity {
 
         String taskId = null;
         if (addEditTaskFragment == null) {
-            addEditTaskFragment = AddEditTaskFragment.newInstance();
 
             if (getIntent().hasExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID)) {
                 taskId = getIntent().getStringExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID);
-                if (toolbar != null) {
-                    toolbar.setTitle(R.string.edit_task);
+                if (actionBar != null) {
+                    actionBar.setTitle(R.string.edit_task);
                 }
-                Bundle bundle = new Bundle();
-                bundle.putString(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId);
-                addEditTaskFragment.setArguments(bundle);
             } else {
-                if (toolbar != null) {
-                    toolbar.setTitle(R.string.add_task);
+                if (actionBar != null) {
+                    actionBar.setTitle(R.string.add_task);
                 }
             }
 
+            addEditTaskFragment = AddEditTaskFragment.newInstance(taskId);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     addEditTaskFragment, R.id.container);
         }
 
         // Create the presenter
-        new AddEditTaskPresenter(
-                taskId,
-                Injection.provideDataRepository(getApplicationContext()),
-                addEditTaskFragment);
+        new AddEditTaskPresenter(taskId,
+                Injection.provideDataRepository(getApplicationContext()), addEditTaskFragment);
     }
 
     private void initAppBar() {
@@ -64,7 +61,7 @@ public class AddEditTaskActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);

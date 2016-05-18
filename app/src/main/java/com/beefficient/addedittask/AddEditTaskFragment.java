@@ -8,8 +8,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.beefficient.R;
@@ -23,16 +27,22 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     public static final String ARGUMENT_EDIT_TASK_ID = "EDIT_TASK_ID";
 
-    private AddEditTaskContract.Presenter mPresenter;
+    private AddEditTaskContract.Presenter presenter;
 
     private TextView title;
-
     private TextView description;
 
-    private String mEditedTaskId;
+    private String editedTaskId;
+    private CheckBox checkboxCompleted;
 
-    public static AddEditTaskFragment newInstance() {
-        return new AddEditTaskFragment();
+    public static AddEditTaskFragment newInstance(String taskId) {
+        AddEditTaskFragment fragment =  new AddEditTaskFragment();
+
+        Bundle args = new Bundle();
+        args.putString(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     public AddEditTaskFragment() {
@@ -42,18 +52,33 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.subscribe();
+        presenter.subscribe();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mPresenter.unsubscribe();
+        presenter.unsubscribe();
     }
 
     @Override
     public void setPresenter(@NonNull AddEditTaskContract.Presenter presenter) {
-        mPresenter = requireNonNull(presenter);
+        this.presenter = requireNonNull(presenter);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_addedittask, container, false);
+        title = (TextView) view.findViewById(R.id.task_title);
+        description = (TextView) view.findViewById(R.id.task_description);
+        checkboxCompleted = (CheckBox) view.findViewById(R.id.checkbox_completed);
+
+        setHasOptionsMenu(true);
+        setRetainInstance(true);
+
+        return view;
     }
 
     @Override
@@ -62,35 +87,38 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
         setTaskIdIfAny();
 
+        if (isNewTask()) {
+            title.requestFocus();
+        }
+
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
-        fab.setImageResource(R.drawable.ic_done);
+
         fab.setOnClickListener(v -> {
             if (isNewTask()) {
-                mPresenter.createTask(
-                        title.getText().toString(),
-                        description.getText().toString());
+                presenter.createTask(title.getText().toString(),
+                        description.getText().toString(), checkboxCompleted.isChecked());
             } else {
-                mPresenter.updateTask(
-                        title.getText().toString(),
-                        description.getText().toString());
+                presenter.updateTask(title.getText().toString(),
+                        description.getText().toString(), checkboxCompleted.isChecked());
             }
 
         });
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_addtask, container, false);
-        title = (TextView) view.findViewById(R.id.task_title);
-        description = (TextView) view.findViewById(R.id.task_description);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_addedittask, menu);
+    }
 
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
-
-        return view;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_delete:
+                presenter.deleteTask();
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -115,17 +143,22 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     }
 
     @Override
-    public boolean isActive() {
-        return isAdded();
+    public void setCompleted(boolean completed) {
+        checkboxCompleted.setChecked(completed);
+    }
+
+    @Override
+    public void showTaskDeleted() {
+        getActivity().finish();
     }
 
     private void setTaskIdIfAny() {
         if (getArguments() != null && getArguments().containsKey(ARGUMENT_EDIT_TASK_ID)) {
-            mEditedTaskId = getArguments().getString(ARGUMENT_EDIT_TASK_ID);
+            editedTaskId = getArguments().getString(ARGUMENT_EDIT_TASK_ID);
         }
     }
 
     private boolean isNewTask() {
-        return mEditedTaskId == null;
+        return editedTaskId == null;
     }
 }

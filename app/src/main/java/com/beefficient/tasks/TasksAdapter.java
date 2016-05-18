@@ -196,7 +196,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             project = (TextView) itemView.findViewById(R.id.project);
             dueDate = (TextView) itemView.findViewById(R.id.due_date);
             labels = (TextView) itemView.findViewById(R.id.labels);
-            completed = (CheckBox) itemView.findViewById(R.id.checkbox_done);
+            completed = (CheckBox) itemView.findViewById(R.id.checkbox_completed);
             priority = itemView.findViewById(R.id.priority_indicator);
         }
     }

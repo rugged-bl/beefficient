@@ -18,14 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.beefficient.Injection;
 import com.beefficient.R;
 import com.beefficient.addedittask.AddEditTaskActivity;
+import com.beefficient.addedittask.AddEditTaskFragment;
 import com.beefficient.data.entity.Task;
-import com.beefficient.data.source.DataRepository;
-import com.beefficient.data.source.local.LocalDataSource;
-import com.beefficient.data.source.remote.RemoteDataSource;
-import com.beefficient.main.MainContract;
-import com.beefficient.taskdetail.TaskDetailActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,41 +52,41 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         return fragment;
     }
 
+    private TasksAdapter.TaskItemListener taskItemListener = new TasksAdapter.TaskItemListener() {
+        @Override
+        public void onTaskClick(Task task) {
+            presenter.editTask(task);
+        }
+
+        @Override
+        public void onTaskLongClick(Task task) {
+            // TODO: select task
+            showSnackbar("Long clicked task: " + task.getTitle());
+        }
+
+        @Override
+        public void onCompleteTaskClick(Task task) {
+            presenter.completeTask(task);
+        }
+
+        @Override
+        public void onActivateTaskClick(Task task) {
+            presenter.activateTask(task);
+        }
+    };
+
     @Override
     @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        presenter = new TasksPresenter(DataRepository.getInstance(RemoteDataSource.getInstance(),
-                LocalDataSource.getInstance(getContext().getApplicationContext())), this);
-
         tasksAdapter = new TasksAdapter(Collections.EMPTY_LIST);
-        tasksAdapter.setListener(new TasksAdapter.TaskItemListener() {
-            @Override
-            public void onTaskClick(Task task) {
-                showTaskDetails(task.getId());
-            }
+        tasksAdapter.setListener(taskItemListener);
 
-            @Override
-            public void onTaskLongClick(Task task) {
-                Activity activity = getActivity();
-                if (activity instanceof MainContract.View) {
-                    // TODO: select task
-                    showSnackbar("Long clicked task: " + task.getTitle());
-                }
-            }
-
-            @Override
-            public void onCompleteTaskClick(Task task) {
-                presenter.completeTask(task);
-            }
-
-            @Override
-            public void onActivateTaskClick(Task task) {
-                presenter.activateTask(task);
-            }
-        });
+        // Create the presenter
+        new TasksPresenter(
+                Injection.provideDataRepository(getContext().getApplicationContext()), this);
     }
 
     @Override
@@ -108,12 +105,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         swipeRefreshLayout.setOnRefreshListener(() -> presenter.loadTasks(true));
 
         FloatingActionButton addTaskButton = (FloatingActionButton) activity.findViewById(R.id.fab_add);
-        addTaskButton.setOnClickListener(v -> {
-            // TODO: start EditTaskActivity
-            if (activity instanceof MainContract.View) {
-                showAddTask();
-            }
-        });
+        addTaskButton.setOnClickListener(v -> presenter.addNewTask());
 
         return view;
     }
@@ -156,10 +148,10 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showTaskDetails(String taskId) {
-        Intent intent = new Intent(getContext(), TaskDetailActivity.class);
-        intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskId);
-        startActivity(intent);
+    public void showEditTask(String taskId) {
+        Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
+        intent.putExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId);
+        startActivityForResult(intent, AddEditTaskActivity.REQUEST_EDIT_TASK);
     }
 
     @Override

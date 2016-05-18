@@ -18,7 +18,7 @@ public interface TasksContract {
 
         void showAddTask();
 
-        void showTaskDetails(String taskId);
+        void showEditTask(String taskId);
 
         void showTaskMarkedComplete();
 
@@ -56,11 +56,11 @@ public interface TasksContract {
 
         void addNewTask();
 
-        void openTaskDetails(@NonNull Task requestedTask);
+        void editTask(@NonNull Task task);
 
-        void completeTask(@NonNull Task completedTask);
+        void completeTask(@NonNull Task task);
 
-        void activateTask(@NonNull Task activeTask);
+        void activateTask(@NonNull Task task);
 
         void clearCompletedTasks();
 

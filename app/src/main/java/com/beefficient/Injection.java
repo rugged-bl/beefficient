@@ -27,8 +27,7 @@ import com.beefficient.data.source.remote.RemoteDataSource;
 import static com.beefficient.util.Objects.requireNonNull;
 
 /**
- * Enables injection of production implementations for
- * {@link DataSource} at compile time.
+ * Enables injection of production implementations for {@link DataSource} at compile time.
  */
 public class Injection {
 

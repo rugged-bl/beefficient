@@ -15,15 +15,19 @@ public interface AddEditTaskContract {
 
         void setDescription(String description);
 
-        boolean isActive();
+        void setCompleted(boolean completed);
+
+        void showTaskDeleted();
     }
 
     interface Presenter extends BasePresenter {
 
-        void createTask(String title, String description);
+        void createTask(String title, String description, boolean completed);
 
-        void updateTask( String title, String description);
+        void updateTask( String title, String description, boolean completed);
 
         void populateTask();
+
+        void deleteTask();
     }
 }
