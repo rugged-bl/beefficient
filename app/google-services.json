@@ -1,75 +1,79 @@
 {
   "project_info": {
-    "project_number": "56836928928",
-    "project_id": "beefficient-ff9f"
+    "project_number": "1055187393467",
+    "firebase_url": "https://project-4559730986248455380.firebaseio.com",
+    "project_id": "project-4559730986248455380",
+    "storage_bucket": "project-4559730986248455380.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:56836928928:android:e0038f28d2a7c3bf",
+        "mobilesdk_app_id": "1:1055187393467:android:e0038f28d2a7c3bf",
         "android_client_info": {
           "package_name": "com.beefficient"
         }
       },
       "oauth_client": [
         {
-          "client_id": "56836928928-4f6g8nc4a1epes9jign6al7h9etkbgd2.apps.googleusercontent.com",
+          "client_id": "1055187393467-b0624pop8bqi0p30f5u0lc873b74g7ce.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.beefficient",
-            "certificate_hash": "6002E2774931E1D70A574D4412FC6D09AA60FEF6"
+            "certificate_hash": "6B379F07A9A237B64BF383A8ED11B21AF813CB43"
           }
         },
         {
-          "client_id": "56836928928-nro36jh94a1demot8mifpk07uc4tldsr.apps.googleusercontent.com",
+          "client_id": "1055187393467-6ttd6hg2ug6ti488p2terc5a81jsfn88.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCu-jQbG45tcIeOUDAAt9BljDjWXsSUQHc"
+          "current_key": "AIzaSyCLr44AW6KtjyZc0CkMFFBB7oOD2pecHVs"
         }
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-77390592-1"
-          }
+          "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055187393467-6ttd6hg2ug6ti488p2terc5a81jsfn88.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:56836928928:android:4d08716d4b2dd275",
+        "mobilesdk_app_id": "1:1055187393467:android:4d08716d4b2dd275",
         "android_client_info": {
           "package_name": "com.beefficient.d"
         }
       },
       "oauth_client": [
         {
-          "client_id": "56836928928-kaqpmmsjtkshj6gaaug0r4s0csapeg5e.apps.googleusercontent.com",
+          "client_id": "1055187393467-daajldd2jjv88o8dsdoahpaq0v4f1156.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.beefficient.d",
-            "certificate_hash": "6002E2774931E1D70A574D4412FC6D09AA60FEF6"
+            "certificate_hash": "6B379F07A9A237B64BF383A8ED11B21AF813CB43"
           }
         },
         {
-          "client_id": "56836928928-nro36jh94a1demot8mifpk07uc4tldsr.apps.googleusercontent.com",
+          "client_id": "1055187393467-6ttd6hg2ug6ti488p2terc5a81jsfn88.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCu-jQbG45tcIeOUDAAt9BljDjWXsSUQHc"
+          "current_key": "AIzaSyCLr44AW6KtjyZc0CkMFFBB7oOD2pecHVs"
         }
       ],
       "services": {
@@ -77,11 +81,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055187393467-6ttd6hg2ug6ti488p2terc5a81jsfn88.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

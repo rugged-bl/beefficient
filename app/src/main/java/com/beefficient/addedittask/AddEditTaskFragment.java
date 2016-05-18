@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatSpinner;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     private TextView title;
     private TextView description;
 
+    private AppCompatSpinner projectSpinner;
     private String editedTaskId;
     private CheckBox checkboxCompleted;
 
@@ -74,6 +76,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         title = (TextView) view.findViewById(R.id.task_title);
         description = (TextView) view.findViewById(R.id.task_description);
         checkboxCompleted = (CheckBox) view.findViewById(R.id.checkbox_completed);
+        projectSpinner = (AppCompatSpinner) view.findViewById(R.id.project_spinner);
 
         setHasOptionsMenu(true);
         setRetainInstance(true);

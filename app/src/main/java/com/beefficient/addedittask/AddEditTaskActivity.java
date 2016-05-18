@@ -37,13 +37,14 @@ public class AddEditTaskActivity extends AppCompatActivity {
 
             if (getIntent().hasExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID)) {
                 taskId = getIntent().getStringExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID);
-                if (actionBar != null) {
-                    actionBar.setTitle(R.string.edit_task);
-                }
+                actionBar.setDisplayShowTitleEnabled(false);
+//                if (actionBar != null) {
+//                    actionBar.setTitle(R.string.edit_task);
+//                }
             } else {
-                if (actionBar != null) {
-                    actionBar.setTitle(R.string.add_task);
-                }
+//                if (actionBar != null) {
+//                    actionBar.setTitle(R.string.add_task);
+//                }
             }
 
             addEditTaskFragment = AddEditTaskFragment.newInstance(taskId);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,25 +17,39 @@
         <CheckBox
             android:id="@+id/checkbox_completed"
             android:layout_width="wrap_content"
+            android:layout_alignBaseline="@+id/task_title_layout"
             android:layout_height="wrap_content"/>
 
-        <EditText
-            android:id="@+id/task_title"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/task_title_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/checkbox_completed"
-            android:layout_toRightOf="@+id/checkbox_completed"
-            android:hint="@string/title_hint"
-            android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp"
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/task_description"
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/task_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/title_hint"
+                android:maxLines="3"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/task_description_layout"
+            android:layout_below="@+id/task_title_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/task_title"
-            android:gravity="top"
-            android:hint="@string/description_hint"/>
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/task_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top"
+                android:hint="@string/description_hint"/>
+
+        </android.support.design.widget.TextInputLayout>
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
