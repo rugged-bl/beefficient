@@ -25,4 +25,9 @@
     <string name="add_task">Новая задача</string>
     <string name="title_hint">Название</string>
     <string name="description_hint">Описание</string>
+    <string name="loading">Загрузка</string>
+    <string name="task_marked_complete">Задача помечена как выполненная</string>
+    <string name="task_marked_active">Задача помечена как активная</string>
+    <string name="no_data">Нет данных</string>
+    <string name="menu_delete_task">Удалить задачу</string>
 </resources>

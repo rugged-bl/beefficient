@@ -25,6 +25,7 @@ import com.beefficient.data.source.DataRepository;
 import com.beefficient.data.source.local.LocalDataSource;
 import com.beefficient.data.source.remote.RemoteDataSource;
 import com.beefficient.main.MainContract;
+import com.beefficient.taskdetail.TaskDetailActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,7 +68,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         tasksAdapter.setListener(new TasksAdapter.TaskItemListener() {
             @Override
             public void onTaskClick(Task task) {
-                // TODO: open task options
+                showTaskDetails(task.getId());
             }
 
             @Override
@@ -156,6 +157,9 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showTaskDetails(String taskId) {
+        Intent intent = new Intent(getContext(), TaskDetailActivity.class);
+        intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskId);
+        startActivity(intent);
     }
 
     @Override

@@ -25,4 +25,9 @@
     <string name="add_task">Add task</string>
     <string name="title_hint">Title</string>
     <string name="description_hint">Description</string>
+    <string name="loading">Loading</string>
+    <string name="task_marked_complete">Task marked complete</string>
+    <string name="task_marked_active">Task marked active</string>
+    <string name="no_data">No data</string>
+    <string name="menu_delete_task">Delete task</string>
 </resources>

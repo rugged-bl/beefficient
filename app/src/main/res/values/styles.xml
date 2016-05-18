@@ -20,6 +20,7 @@
 
     <style name="AppTheme.LoginScreen" parent="AppTheme.NoActionBar"/>
     <style name="AppTheme.AddEditTaskScreen" parent="AppTheme.NoActionBar"/>
+    <style name="AppTheme.TaskDetailScreen" parent="AppTheme.NoActionBar"/>
 
     <style name="NavigationView">
         <item name="android:layout_width">match_parent</item>
