@@ -33,10 +33,10 @@ public class RemoteDataSource implements DataSource {
         PROJECTS_SERVICE_DATA = new LinkedHashMap<>();
 
         for (int i = 0; i < 1; i++) {
-            Project project1 = new Project("Project One", 0xffffff, "prid1");
-            Project project2 = new Project("Project Two", 0xffffff, "prid2");
-            Project project3 = new Project("Project Three", 0xffffff, "prid3");
-            Project project4 = new Project("Project Four", 0xffffff, "prid4");
+            Project project1 = new Project("Project One", Project.Color.BLACK, "prid1");
+            Project project2 = new Project("Project Two", Project.Color.BLUE, "prid2");
+            Project project3 = new Project("Project Three", Project.Color.ORANGE, "prid3");
+            Project project4 = new Project("Project Four", Project.Color.BLACK, "prid4");
             addProject(project1);
             addProject(project2);
             addProject(project3);
