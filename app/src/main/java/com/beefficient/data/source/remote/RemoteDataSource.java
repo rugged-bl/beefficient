@@ -3,6 +3,7 @@ package com.beefficient.data.source.remote;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
@@ -60,6 +61,7 @@ public class RemoteDataSource implements DataSource {
 
     // Prevent direct instantiation
     private RemoteDataSource() {
+        addProject(DefaultTypes.PROJECT);
     }
 
     private static void addTask(String title, String description, Project project, String id) {

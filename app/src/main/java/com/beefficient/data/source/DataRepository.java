@@ -94,6 +94,7 @@ public class DataRepository implements DataSource {
                     .getTasks()
                     .doOnNext(tasks -> {
                         for (Task task : tasks) {
+                            remoteDataSource.saveTask(task);
                             cachedTasks.put(task.getId(), task);
                         }
                     });

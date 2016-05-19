@@ -90,7 +90,7 @@ public class LocalDataSource implements DataSource {
                     }
                 });*/
 
-        //saveProject(DefaultTypes.PROJECT);
+        saveProject(DefaultTypes.PROJECT);
     }
 
     public static LocalDataSource getInstance(@NonNull Context context) {
