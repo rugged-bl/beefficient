@@ -33,4 +33,6 @@
     <string name="light_blue">Light blue</string>
     <string name="black">Black</string>
     <string name="orange">Orange</string>
+    <string name="green">Green</string>
+    <string name="show_all">Show all</string>
 </resources>

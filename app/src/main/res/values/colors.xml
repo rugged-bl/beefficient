@@ -3,6 +3,7 @@
     <color name="orange_400">#FFA726</color>
     <color name="orange_600">#FB8C00</color>
     <color name="light_blue_a700">#0091EA</color>
+    <color name="light_green_500">#8bc34a</color>
 
     <!--Priority colors-->
     <color name="colorLowPriority">#81d4fa</color>

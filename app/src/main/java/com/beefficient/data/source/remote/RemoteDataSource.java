@@ -37,7 +37,7 @@ public class RemoteDataSource implements DataSource {
             Project project1 = new Project("Project One", Project.Color.BLACK, "prid1");
             Project project2 = new Project("Project Two", Project.Color.BLUE, "prid2");
             Project project3 = new Project("Project Three", Project.Color.ORANGE, "prid3");
-            Project project4 = new Project("Project Four", Project.Color.BLACK, "prid4");
+            Project project4 = new Project("Project Four", Project.Color.GREEN, "prid4");
             addProject(project1);
             addProject(project2);
             addProject(project3);
@@ -173,7 +173,7 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public void saveProject(@NonNull Project project) {
-
+        PROJECTS_SERVICE_DATA.put(project.getId(), project);
     }
 
     @Override

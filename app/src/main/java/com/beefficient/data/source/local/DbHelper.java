@@ -37,9 +37,7 @@ public class DbHelper extends SQLiteOpenHelper {
             TaskEntry.Column.description + TEXT_TYPE + COMMA_SEP +
             TaskEntry.Column.priority + INTEGER_TYPE + COMMA_SEP +
             TaskEntry.Column.due_date + INTEGER_TYPE + COMMA_SEP +
-            TaskEntry.Column.with_time + BOOLEAN_TYPE + COMMA_SEP +
-            "FOREIGN KEY(" + TaskEntry.Column.project_id + ") REFERENCES " +
-            ProjectEntry.TABLE_NAME + "(" + ProjectEntry.Column._id + ") ON DELETE CASCADE" +
+            TaskEntry.Column.with_time + BOOLEAN_TYPE +
             ")";
 
     private static final String SQL_CREATE_LABEL_TABLE = "CREATE TABLE " +
@@ -53,11 +51,7 @@ public class DbHelper extends SQLiteOpenHelper {
             TaskLabelEntry.TABLE_NAME + " (" +
             TaskLabelEntry.Column.task_id + INTEGER_TYPE + COMMA_SEP +
             TaskLabelEntry.Column.label_id + INTEGER_TYPE + COMMA_SEP +
-            "PRIMARY KEY(" + TaskLabelEntry.Column.task_id + ", " + TaskLabelEntry.Column.label_id + "), " +
-            "FOREIGN KEY(" + TaskLabelEntry.Column.task_id + ") REFERENCES " + TaskEntry.TABLE_NAME +
-            "(" + TaskEntry.Column._id + ") ON DELETE CASCADE," +
-            "FOREIGN KEY(" + TaskLabelEntry.Column.label_id + ") REFERENCES " + LabelEntry.TABLE_NAME +
-            "(" + LabelEntry.Column._id + ") ON DELETE CASCADE" +
+            "PRIMARY KEY(" + TaskLabelEntry.Column.task_id + ", " + TaskLabelEntry.Column.label_id + ")" +
             ")";
 
     public DbHelper(Context context) {
@@ -65,7 +59,6 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
-        db.setForeignKeyConstraintsEnabled(true);
         db.execSQL(SQL_CREATE_PROJECT_TABLE);
         db.execSQL(SQL_CREATE_TASK_TABLE);
         db.execSQL(SQL_CREATE_LABEL_TABLE);

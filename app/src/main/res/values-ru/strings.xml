@@ -30,4 +30,9 @@
     <string name="task_marked_active">Задача помечена как активная</string>
     <string name="no_data">Нет данных</string>
     <string name="menu_delete_task">Удалить задачу</string>
+    <string name="black">Чёрный</string>
+    <string name="green">Зелёный</string>
+    <string name="light_blue">Светло-голубой</string>
+    <string name="orange">Оранжевый</string>
+    <string name="show_all">Показать все</string>
 </resources>

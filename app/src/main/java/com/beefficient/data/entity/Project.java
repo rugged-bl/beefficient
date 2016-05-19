@@ -62,6 +62,7 @@ public class Project {
     public enum Color {
         BLUE(R.color.light_blue_a700, R.string.light_blue),
         ORANGE(R.color.orange_600, R.string.orange),
+        GREEN(R.color.light_green_500, R.string.green),
         BLACK(android.R.color.black, R.string.black);
 
         private int color;

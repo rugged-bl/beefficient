@@ -247,9 +247,8 @@ public class TasksFragment extends Fragment implements TasksContract.View {
                 return true;
             }
             case R.id.menu_item_toggle_completed: {
-                // TODO: show/hide completed tasks in this view
                 if (presenter.getFiltering() == TasksFilterType.ALL_TASKS) {
-                    item.setTitle("Показать все");
+                    item.setTitle(getString(R.string.show_all));
                     presenter.setFiltering(TasksFilterType.COMPLETED_TASKS);
                 } else {
                     item.setTitle(getString(R.string.show_completed));
