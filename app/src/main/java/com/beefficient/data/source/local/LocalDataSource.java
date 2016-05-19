@@ -47,7 +47,7 @@ public class LocalDataSource implements DataSource {
         DbHelper dbHelper = new DbHelper(context);
         SqlBrite sqlBrite = SqlBrite.create();
         databaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
-        
+
         taskMapperFunction = c -> {
             String taskId = c.getString(c.getColumnIndexOrThrow(TaskEntry.Column._id.name()));
             String title = c.getString(c.getColumnIndexOrThrow(TaskEntry.Column.title.name()));
@@ -82,15 +82,13 @@ public class LocalDataSource implements DataSource {
 
             return new Project(name, Projects.getColorFromIndex(color), projectId);
         };
-
+        saveProject(DefaultTypes.PROJECT);
         /*getTasks()
                 .subscribe(query -> {
                     for (Task task1 : query) {
                         Log.d("Test", task1.getId());
                     }
                 });*/
-
-        saveProject(DefaultTypes.PROJECT);
     }
 
     public static LocalDataSource getInstance(@NonNull Context context) {
@@ -143,7 +141,7 @@ public class LocalDataSource implements DataSource {
                         String selection = TaskEntry.Column._id + " LIKE ?";
                         String arg = t.getId();
 
-                        databaseHelper.update(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_ABORT, selection, arg);
+                        databaseHelper.update(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE, selection, arg);
                     }
 
                 });
@@ -243,7 +241,7 @@ public class LocalDataSource implements DataSource {
                         String selection = ProjectEntry.Column._id + " LIKE ?";
                         String[] selectionArgs = {p.getId()};
 
-                        databaseHelper.update(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_ABORT, selection, selectionArgs);
+                        databaseHelper.update(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE, selection, selectionArgs);
                     }
                 });
         subscription.unsubscribe();

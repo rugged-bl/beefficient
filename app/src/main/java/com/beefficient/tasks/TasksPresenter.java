@@ -132,30 +132,19 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     private void processTasks(List<Task> tasks, List<Project> projects) {
         Log.d("TasksPresenter", "processTasks");
-        if (tasks.isEmpty() || projects.isEmpty()) {
+        if (projects.isEmpty()) {
+            dataRepository.saveProject(DefaultTypes.PROJECT);
+        }
+        if (tasks.isEmpty()) {
             processEmptyTasks();
         } else {
             HashMap<Integer, TasksAdapter.SectionItem> sectionItems = new LinkedHashMap<>();
             ArrayList<TasksAdapter.TaskItem> taskItems = new ArrayList<>();
 
-            int position = 0;
-            for (Project project : projects) {
-                TasksAdapter.SectionItem sectionItem =
-                        new TasksAdapter.SectionItem(project.getName());
-                sectionItems.put(position++, sectionItem);
+            TasksSort.requireAllTasksHaveProject(tasks);
 
-                for (Task task : tasks) {
-                    if (task.getProjectId() == null) {
-                        task.setProject(DefaultTypes.PROJECT);
-                        taskItems.add(new TasksAdapter.TaskItem(task, sectionItem));
-                        position++;
-                    } else if (!task.getProjectId().isEmpty() && task.getProjectId().equals(project.getId())) { //TODO: Add not-null check
-                        task.setProject(project);
-                        taskItems.add(new TasksAdapter.TaskItem(task, sectionItem));
-                        position++;
-                    }
-                }
-            }
+            //TasksSort.groupByProject(taskItems, sectionItems, tasks, projects);
+            TasksSort.groupByDate(taskItems, sectionItems, tasks);
 
             // Show the list of tasks
             tasksView.showTasks(taskItems, sectionItems);

@@ -1,5 +1,6 @@
 package com.beefficient.data.source.remote;
 
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -8,10 +9,16 @@ import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
@@ -32,7 +39,15 @@ public class RemoteDataSource implements DataSource {
     static {
         TASKS_SERVICE_DATA = new LinkedHashMap<>();
         PROJECTS_SERVICE_DATA = new LinkedHashMap<>();
-
+        addProject(DefaultTypes.PROJECT);
+        long time = 0;
+        DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
+        dateFormat.setTimeZone(TimeZone.getDefault());
+        try {
+            time = dateFormat.parse(dateFormat.format(System.currentTimeMillis() / 1000L)).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < 1; i++) {
             Project project1 = new Project("Project One", Project.Color.BLACK, "prid1");
             Project project2 = new Project("Project Two", Project.Color.BLUE, "prid2");
@@ -44,10 +59,10 @@ public class RemoteDataSource implements DataSource {
             addProject(project4);
 
             for (int j = 0; j < 2; j++) {
-                addTask("Title One " + j + " " + project1.getId(), "Desc One", project1, "taid1" + j);
-                addTask("Title Two " + j + " " + project2.getId(), "Desc Two", project2, "taid2" + j);
-                addTask("Title Three " + j + " " + project3.getId(), "Desc Three", project3, "taid3" + j);
-                addTask("Title Four " + j + " " + project4.getId(), "Desc Four", project4, "taid4" + j);
+                addTask("Title One " + j + " " + project1.getId(), "Desc One", project1, "taid1" + j, time);
+                addTask("Title Two " + j + " " + project2.getId(), "Desc Two", project2, "taid2" + j, time + 10000000L);
+                addTask("Title Three " + j + " " + project3.getId(), "Desc Three", project3, "taid3" + j, time + 20000000L);
+                addTask("Title Four " + j + " " + project4.getId(), "Desc Four", project4, "taid4" + j, time + 10000000000L);
             }
         }
     }
@@ -61,12 +76,12 @@ public class RemoteDataSource implements DataSource {
 
     // Prevent direct instantiation
     private RemoteDataSource() {
-        addProject(DefaultTypes.PROJECT);
     }
 
-    private static void addTask(String title, String description, Project project, String id) {
+    private static void addTask(String title, String description, Project project, String id, Long time) {
         Task newTask = new Task.Builder(title, id)
                 .setDescription(description)
+                .setTime(time)
                 .setProject(project)
                 .build();
         TASKS_SERVICE_DATA.put(newTask.getId(), newTask);
