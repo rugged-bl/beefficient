@@ -35,10 +35,11 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void setContent(List<TaskItem> taskItems, HashMap<Integer, SectionItem> sectionItems) {
         try {
-            notifyItemRangeRemoved(0, getItemCount());
+            //notifyItemRangeRemoved(0, getItemCount());
             this.taskItems = taskItems;
             this.sectionItems = sectionItems;
-            notifyItemRangeInserted(0, getItemCount());
+            //notifyItemRangeInserted(0, getItemCount());
+            notifyDataSetChanged();
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
         }

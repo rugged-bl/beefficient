@@ -83,8 +83,7 @@ public class TasksPresenter implements TasksContract.Presenter {
                 .filter(task -> {
                     switch (currentFiltering) {
                         case ACTIVE_TASKS:
-                            //return task.isActive();
-                            return true;
+                            return !task.isCompleted();
                         case COMPLETED_TASKS:
                             return task.isCompleted();
                         case ALL_TASKS:

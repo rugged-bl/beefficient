@@ -174,16 +174,19 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     public void showCompletedFilterLabel() {
     }
 
+
     @Override
     public void showAllFilterLabel() {
     }
 
     @Override
     public void showNoActiveTasks() {
+        showNoTasksView("Нет активных");
     }
 
     @Override
     public void showNoCompletedTasks() {
+        showNoTasksView("Нет завершённых");
     }
 
     @Override
@@ -245,6 +248,14 @@ public class TasksFragment extends Fragment implements TasksContract.View {
             }
             case R.id.menu_item_toggle_completed: {
                 // TODO: show/hide completed tasks in this view
+                if (presenter.getFiltering() == TasksFilterType.ALL_TASKS) {
+                    item.setTitle("Показать все");
+                    presenter.setFiltering(TasksFilterType.COMPLETED_TASKS);
+                } else {
+                    item.setTitle(getString(R.string.show_completed));
+                    presenter.setFiltering(TasksFilterType.ALL_TASKS);
+                }
+                presenter.loadTasks(false);
                 return true;
             }
             case R.id.menu_item_sort: {
