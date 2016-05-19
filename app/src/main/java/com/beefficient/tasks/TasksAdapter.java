@@ -1,5 +1,7 @@
 package com.beefficient.tasks;
 
+import android.content.res.Resources;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -121,16 +123,19 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             // Set project
             if (showProject) {
+                Resources resources = taskHolder.itemView.getResources();
                 Project project = task.getProject();
                 taskHolder.project.setText(project.getName());
+                taskHolder.project.setTextColor(
+                        ResourcesCompat.getColor(resources, project.getColor().color(), null));
             }
 
             // Set date
             Date dueDate = new Date(task.getTime());
             if (task.getTime() != 0) {
                 taskHolder.dueDate.setText(DateUtils.getRelativeDateTimeString(
-                        taskHolder.itemView.getContext(), dueDate.getTime(), DateUtils.DAY_IN_MILLIS,
-                        DateUtils.DAY_IN_MILLIS, 0));
+                        taskHolder.itemView.getContext(), dueDate.getTime(),
+                        DateUtils.DAY_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0));
 
                 taskHolder.dueDate.setVisibility(View.VISIBLE);
             } else {

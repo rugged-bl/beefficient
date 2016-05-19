@@ -1,25 +1,25 @@
 package com.beefficient.data.entity;
 
-import java.lang.ref.SoftReference;
+import com.beefficient.R;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
-// TODO: add color
 public class Project {
     private ArrayList<Task> taskList;
 
     private String id;
     private String name;
-    private int color = 0xffffff;
+    private Color color = Color.BLACK;
 
-    public Project(String name, int color) {
+    public Project(String name, Color color) {
         taskList = new ArrayList<>();
         id = UUID.randomUUID().toString();
         this.name = name;
         this.color = color;
     }
 
-    public Project(String name, int color, String id) {
+    public Project(String name, Color color, String id) {
         taskList = new ArrayList<>();
         this.id = id;
         this.name = name;
@@ -27,8 +27,11 @@ public class Project {
     }
 
     public boolean addTask(Task task) {
-        taskList.add(task);
-        return true;
+        return taskList.add(task);
+    }
+
+    public boolean removeTask(Task task) {
+        return taskList.remove(task);
     }
 
     public String getId() {
@@ -43,16 +46,39 @@ public class Project {
         this.name = name;
     }
 
-    public int getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
     public ArrayList<Task> getTaskList() {
         return taskList;
+    }
+
+    // TODO: add more colors
+    public enum Color {
+        BLUE(R.color.light_blue_a700, R.string.light_blue),
+        ORANGE(R.color.orange_600, R.string.orange),
+        BLACK(android.R.color.black, R.string.black);
+
+        private int color;
+        private int colorName;
+
+        Color(int color, int colorName) {
+            this.color = color;
+            this.colorName = colorName;
+        }
+
+        public int color() {
+            return color;
+        }
+
+        public int colorName() {
+            return colorName;
+        }
     }
 
 }

@@ -12,6 +12,8 @@ import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 import com.beefficient.data.source.local.PersistenceContract.TaskEntry;
+import com.beefficient.util.Projects;
+import com.beefficient.util.Tasks;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 
@@ -61,8 +63,7 @@ public class LocalDataSource implements DataSource {
             boolean withTime =
                     c.getInt(c.getColumnIndexOrThrow(TaskEntry.Column.with_time.name())) == 1;
 
-            Task.Priority priority = Task.Priority.values()[
-                    Math.max(Math.min(priorityIndex, Task.Priority.values().length), 0)];
+            Task.Priority priority = Tasks.getPriorityFromIndex(priorityIndex);
 
             return new Task.Builder(title, taskId)
                     .setProjectId(projectId)
@@ -79,7 +80,7 @@ public class LocalDataSource implements DataSource {
             String name = c.getString(c.getColumnIndexOrThrow(ProjectEntry.Column.name.name()));
             int color = c.getInt(c.getColumnIndexOrThrow(ProjectEntry.Column.color.name()));
 
-            return new Project(name, color, projectId);
+            return new Project(name, Projects.getColorFromIndex(color), projectId);
         };
 
         /*getTasks()
@@ -232,7 +233,7 @@ public class LocalDataSource implements DataSource {
         ContentValues values = new ContentValues();
         values.put(ProjectEntry.Column._id.name(), project.getId());
         values.put(ProjectEntry.Column.name.name(), project.getName());
-        values.put(ProjectEntry.Column.color.name(), project.getColor());
+        values.put(ProjectEntry.Column.color.name(), project.getColor().ordinal());
 
         Subscription subscription = getProject(project.getId())
                 .subscribe(p -> {

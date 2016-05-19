@@ -2,10 +2,8 @@ package com.beefficient.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -21,33 +19,23 @@ import com.beefficient.BackgroundService;
 import com.beefficient.R;
 import com.beefficient.tasks.TasksFragment;
 
-import static com.beefficient.util.Objects.requireNonNull;
-
 public class MainActivity extends AppCompatActivity implements
-        MainContract.View, NavigationView.OnNavigationItemSelectedListener {
+        NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
-
-    private MainContract.Presenter presenter;
-    Intent intentService;
 
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private ActionBarDrawerToggle drawerToggle;
-    private CoordinatorLayout coordinatorLayout;
-
-    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        intentService = new Intent(this, BackgroundService.class);
+        Intent intentService = new Intent(this, BackgroundService.class);
         startService(intentService);
-
-        presenter = new MainPresenter(this);
 
         initAppBar();
         initDrawer();
@@ -55,10 +43,9 @@ public class MainActivity extends AppCompatActivity implements
 
         initSwipeRefreshLayout();
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator_layout);
-
         loadTasksFragment();
     }
+
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -106,9 +93,11 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private void initSwipeRefreshLayout() {
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.orange_400),
-                ContextCompat.getColor(this, R.color.light_blue_a700));
+        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.orange_400),
+                    ContextCompat.getColor(this, R.color.light_blue_a700));
+        }
     }
 
     private void setFragment(Fragment fragment) {
@@ -161,23 +150,7 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    public void loadTasksFragment() {
+    private void loadTasksFragment() {
         setFragment(TasksFragment.newInstance());
-    }
-
-    @Override
-    public void loadProjectsFragment() {
-
-    }
-
-    @Override
-    public void loadLabelsFragment() {
-        //
-    }
-
-    @Override
-    public void setPresenter(@NonNull MainContract.Presenter presenter) {
-        this.presenter = requireNonNull(presenter);
     }
 }
