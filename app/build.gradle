@@ -73,7 +73,8 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
-    // GMS
+    // Firebase
+    compile "com.google.firebase:firebase-database:$playServicesVersion"
     compile "com.google.firebase:firebase-auth:$playServicesVersion"
     compile "com.google.android.gms:play-services-auth:$playServicesVersion"
     // Retrofit

@@ -154,12 +154,6 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 taskHolder.labels.setVisibility(View.VISIBLE);
             }
 
-//            if (task.isCompleted()) {
-//                taskHolder.title.setTextAppearance(taskHolder.itemView.getContext(),
-//                        R.style.TextAppearance_AppTheme_CompletedTask);
-//            } else {
-//            }
-
             taskHolder.completed.setOnClickListener(v -> {
                 if (!task.isCompleted()) {
                     listener.onCompleteTaskClick(task);
