@@ -20,6 +20,7 @@ import com.squareup.sqlbrite.SqlBrite;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -89,7 +90,7 @@ public class LocalDataSource implements DataSource {
                     }
                 });*/
 
-        saveProject(DefaultTypes.PROJECT);
+        //saveProject(DefaultTypes.PROJECT);
     }
 
     public static LocalDataSource getInstance(@NonNull Context context) {
@@ -134,17 +135,19 @@ public class LocalDataSource implements DataSource {
         values.put(TaskEntry.Column.due_date.name(), task.getTime());
         values.put(TaskEntry.Column.with_time.name(), task.isWithTime());
 
-        getTask(task.getId())
+        Subscription subscription = getTask(task.getId())
                 .subscribe(t -> {
                     if (t == null) {
                         databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
                     } else {
                         String selection = TaskEntry.Column._id + " LIKE ?";
-                        String[] selectionArgs = {t.getId()};
+                        String arg = t.getId();
 
-                        databaseHelper.update(TaskEntry.TABLE_NAME, values, selection, selectionArgs);
+                        databaseHelper.update(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_ABORT, selection, arg);
                     }
+
                 });
+        subscription.unsubscribe();
     }
 
     private void setTaskCompleted(@NonNull String taskId, boolean completed) {
@@ -232,7 +235,7 @@ public class LocalDataSource implements DataSource {
         values.put(ProjectEntry.Column.name.name(), project.getName());
         values.put(ProjectEntry.Column.color.name(), project.getColor().ordinal());
 
-        getProject(project.getId())
+        Subscription subscription = getProject(project.getId())
                 .subscribe(p -> {
                     if (p == null) {
                         databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
@@ -240,9 +243,10 @@ public class LocalDataSource implements DataSource {
                         String selection = ProjectEntry.Column._id + " LIKE ?";
                         String[] selectionArgs = {p.getId()};
 
-                        databaseHelper.update(ProjectEntry.TABLE_NAME, values, selection, selectionArgs);
+                        databaseHelper.update(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_ABORT, selection, selectionArgs);
                     }
                 });
+        subscription.unsubscribe();
     }
 
     @Override
