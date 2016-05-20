@@ -140,25 +140,25 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     @Override
     public void setTitle(String title) {
         this.title = title;
-        addEditTaskView.setTitle(title);
+        addEditTaskView.showTitle(title);
     }
 
     @Override
     public void setDescription(String description) {
         this.description = description;
-        addEditTaskView.setDescription(description);
+        addEditTaskView.showDescription(description);
     }
 
     @Override
     public void setCompleted(boolean completed) {
         this.completed = completed;
-        addEditTaskView.setCompleted(completed);
+        addEditTaskView.showCompleted(completed);
     }
 
     @Override
     public void setProject(Project project) {
         this.project = project;
-        addEditTaskView.setProject(project.getName());
+        addEditTaskView.showProject(project.getName());
     }
 
     @Override
@@ -184,8 +184,8 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     public void onTaskLoaded(Task task) {
         // The view may not be able to handle UI updates anymore
         if (addEditTaskView.isActive()) {
-            addEditTaskView.setTitle(task.getTitle());
-            addEditTaskView.setDescription(task.getDescription());
+            addEditTaskView.showTitle(task.getTitle());
+            addEditTaskView.showDescription(task.getDescription());
         }
     }
 

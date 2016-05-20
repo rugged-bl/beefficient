@@ -17,15 +17,15 @@ public interface AddEditTaskContract {
 
         void showTasksList();
 
-        void setTitle(String title);
+        void showTitle(String title);
 
-        void setDescription(String description);
+        void showDescription(String description);
 
-        void setCompleted(boolean completed);
+        void showCompleted(boolean completed);
 
         void setPriority(@StringRes int priorityName);
 
-        void setProject(String name);
+        void showProject(String name);
 
         void showTaskDeleted();
 

@@ -242,17 +242,17 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     }
 
     @Override
-    public void setTitle(String title) {
+    public void showTitle(String title) {
         this.titleView.setText(title);
     }
 
     @Override
-    public void setDescription(String description) {
+    public void showDescription(String description) {
         this.descriptionView.setText(description);
     }
 
     @Override
-    public void setCompleted(boolean completed) {
+    public void showCompleted(boolean completed) {
         checkboxCompleted.setChecked(completed);
     }
 
@@ -262,7 +262,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     }
 
     @Override
-    public void setProject(String name) {
+    public void showProject(String name) {
         projectView.setText(name);
     }
 
