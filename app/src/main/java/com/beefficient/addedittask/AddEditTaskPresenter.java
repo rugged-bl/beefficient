@@ -92,8 +92,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         setProject(task.getProject());
         setPriority(task.getPriority());
     }
-
-    @SuppressWarnings("might be null")
+    
     @Override
     public void saveTask() {
         if (title.isEmpty()) {
