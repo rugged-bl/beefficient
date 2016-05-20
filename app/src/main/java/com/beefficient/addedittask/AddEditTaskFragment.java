@@ -104,6 +104,8 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
         if (isNewTask()) {
             titleView.requestFocus();
+            setProject(getString(R.string.inbox));
+            setPriority(R.string.low);
         }
 
         FloatingActionButton fab =
