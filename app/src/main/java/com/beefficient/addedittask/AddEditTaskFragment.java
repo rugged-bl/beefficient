@@ -9,6 +9,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,11 +17,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beefficient.R;
 import com.beefficient.data.entity.DefaultTypes;
+import com.beefficient.data.entity.Project;
+
+import java.util.List;
 
 import static com.beefficient.util.Objects.requireNonNull;
 
@@ -43,6 +49,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     private TextView projectView;
     private TextView dueDateView;
     private TextView priorityView;
+    private View projectLayout;
 
     public AddEditTaskFragment() {
     }
@@ -91,9 +98,35 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         descriptionView = (TextView) view.findViewById(R.id.task_description);
         checkboxCompleted = (CheckBox) view.findViewById(R.id.checkbox_completed);
         priorityView = (TextView) view.findViewById(R.id.task_priority);
+        projectLayout = view.findViewById(R.id.task_project_layout);
         projectView = (TextView) view.findViewById(R.id.task_project);
 
+        projectLayout.setOnClickListener(v -> {
+            presenter.selectProject();
+        });
+
         return view;
+    }
+
+    @Override
+    public void showSelectProjectDialog(List<Project> projects) {
+
+        // TODO
+        ArrayAdapter<Project> adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_list_item_1);
+        adapter.addAll(projects);
+
+        new AlertDialog.Builder(getContext())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
+                    Toast.makeText(getContext(), "^_^", Toast.LENGTH_SHORT).show();
+                })
+                .setTitle(getString(R.string.select_project))
+                .setAdapter(adapter, (dialog, which) -> {
+                    Project project = adapter.getItem(which);
+                    presenter.setProject(project);
+                    setProject(project.getName());
+                }).show();
+
     }
 
     @Override
@@ -112,8 +145,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
 
         fab.setOnClickListener(v -> presenter.saveTask(titleView.getText().toString(),
-                descriptionView.getText().toString(), checkboxCompleted.isChecked(),
-                DefaultTypes.PROJECT, 0, false));
+                descriptionView.getText().toString(), checkboxCompleted.isChecked(), 0, false));
     }
 
     @Override

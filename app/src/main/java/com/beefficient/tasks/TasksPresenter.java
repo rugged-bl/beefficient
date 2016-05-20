@@ -168,7 +168,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     private void processTasks(List<Task> tasks, List<Project> projects) {
-        Log.d("TasksPresenter", "processTasks");
+        Log.d("TasksPresenter", "processTasks thread: " + Thread.currentThread().getName());
         if (projects.isEmpty()) {
             dataRepository.saveProject(DefaultTypes.PROJECT);
         }

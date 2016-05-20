@@ -2,12 +2,13 @@ package com.beefficient.addedittask;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
+
+import java.util.ArrayList;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,6 +31,9 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
 
     @Nullable
     private String taskId;
+
+    private Task.Priority priority;
+    private Project project;
 
     private CompositeSubscription subscriptions;
 
@@ -79,7 +83,6 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     private void showTask(Task task) {
-        Log.d("AddEditTaskPresenter", "showTask thread: " + Thread.currentThread().getName());
         String title = task.getTitle();
         String description = task.getDescription();
 
@@ -91,8 +94,8 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     @Override
-    public void saveTask(String title, String description, boolean completed, Project project,
-                           int time, boolean withTime) {
+    public void saveTask(String title, String description, boolean completed, int time,
+                         boolean withTime) {
         if (title.isEmpty()) {
             addEditTaskView.showEmptyTaskError();
         } else {
@@ -105,7 +108,8 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
 
             Task task = taskBuilder
                     .setDescription(description)
-                    .setProject(DefaultTypes.PROJECT)
+                    .setProject(project)
+                    .setPriority(DefaultTypes.PRIORITY)
                     .setCompleted(completed)
                     .build();
 
@@ -132,6 +136,19 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
             dataRepository.deleteTask(taskId);
         }
         addEditTaskView.showTaskDeleted();
+    }
+
+    @Override
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    @Override
+    public void selectProject() {
+        ArrayList<Project> projects =
+                (ArrayList<Project>) dataRepository.getProjects().toBlocking().single();
+
+        addEditTaskView.showSelectProjectDialog(projects);
     }
 
 /*    @Override

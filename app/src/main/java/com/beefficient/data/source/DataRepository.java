@@ -108,7 +108,9 @@ public class DataRepository implements DataSource {
         // Respond immediately with cache if available and not dirty
         if (cachedProjects != null && !forceCache.get()) {
             return Observable.from(cachedProjects.values()).toList();
-        } else updateProjectsCache();
+        } else {
+            updateProjectsCache();
+        }
 
         Observable<List<Project>> remoteProjects = remoteDataSource
                 .getProjects()

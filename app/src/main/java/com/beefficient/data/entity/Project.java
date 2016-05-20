@@ -58,6 +58,11 @@ public class Project {
         return taskList;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     // TODO: add more colors
     public enum Color {
         BLUE(R.color.light_blue_a700, R.string.light_blue),
