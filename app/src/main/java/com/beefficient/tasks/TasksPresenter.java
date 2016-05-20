@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscription;
@@ -30,7 +35,11 @@ public class TasksPresenter implements TasksContract.Presenter {
 
     private final TasksContract.View tasksView;
 
+    private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(100);
+    private final ExecutorService executorService = new ThreadPoolExecutor(1, 8, 0L, TimeUnit.MILLISECONDS, queue);
+
     private TasksFilterType currentFiltering = TasksFilterType.ALL_TASKS;
+    private TasksSortType currentSorting = TasksSortType.PROJECTS;
 
     // private boolean firstLoad = true;
     private CompositeSubscription subscriptions;
@@ -141,10 +150,17 @@ public class TasksPresenter implements TasksContract.Presenter {
             HashMap<Integer, TasksAdapter.SectionItem> sectionItems = new LinkedHashMap<>();
             ArrayList<TasksAdapter.TaskItem> taskItems = new ArrayList<>();
 
-            TasksSort.requireAllTasksHaveProject(tasks);
+            TasksSort.requireAllTasksHaveProject(tasks, projects);
 
-            //TasksSort.groupByProject(taskItems, sectionItems, tasks, projects);
-            TasksSort.groupByDate(taskItems, sectionItems, tasks);
+            switch (currentSorting) {
+                case DATE:
+                    TasksSort.Period.groupByDate(taskItems, sectionItems, tasks);
+                    break;
+                case PROJECTS:
+                default:
+                    TasksSort.groupByProject(taskItems, sectionItems, tasks, projects);
+                    break;
+            }
 
             // Show the list of tasks
             tasksView.showTasks(taskItems, sectionItems);
@@ -236,5 +252,21 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public TasksFilterType getFiltering() {
         return currentFiltering;
+    }
+
+    /**
+     * Sets the current task filtering type.
+     *
+     * @param requestType Can be {@link TasksSortType#PROJECTS},
+     *                    {@link TasksSortType#DATE}
+     */
+    @Override
+    public void setSorting(TasksSortType requestType) {
+        currentSorting = requestType;
+    }
+
+    @Override
+    public TasksSortType getSorting() {
+        return currentSorting;
     }
 }

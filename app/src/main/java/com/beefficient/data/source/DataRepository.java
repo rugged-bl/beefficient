@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -307,7 +308,8 @@ public class DataRepository implements DataSource {
         // Is the task in the local data source? If not, query the network.
         Observable<Task> localTask = localDataSource
                 .getTask(taskId)
-                .doOnNext(task -> cachedTasks.put(taskId, task));
+                .doOnNext(task ->
+                        cachedTasks.put(taskId, task));
         Observable<Task> remoteTask = remoteDataSource
                 .getTask(taskId)
                 .doOnNext(task -> {
@@ -334,10 +336,25 @@ public class DataRepository implements DataSource {
 
     @Override
     public void deleteTask(@NonNull String taskId) {
+        Task task = getTaskWithId(taskId);
+
+        if (task != null) {
+            Project project = getProjectWithId(task.getProjectId());
+            if (project != null) {
+                ArrayList<Task> taskList = project.getTaskList();
+                for (int i = taskList.size() - 1; i >= 0; i--) {
+                    if (taskList.get(i).getId().equals(taskId)) {
+                        taskList.remove(i);
+                    }
+                }
+            }
+        }
+
         remoteDataSource.deleteTask(requireNonNull(taskId));
         localDataSource.deleteTask(requireNonNull(taskId));
 
         cachedTasks.remove(taskId);
+
     }
 
     @Nullable

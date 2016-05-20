@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -181,12 +182,12 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showNoActiveTasks() {
-        showNoTasksView("Нет активных");
+        showNoTasksView((String) getResources().getText(R.string.no_active_tasks));
     }
 
     @Override
     public void showNoCompletedTasks() {
-        showNoTasksView("Нет завершённых");
+        showNoTasksView((String) getResources().getText(R.string.no_completed_tasks));
     }
 
     @Override
@@ -199,6 +200,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     private void showNoTasksView(String text) {
         tasksView.setVisibility(View.GONE);
         noTasksContainer.setVisibility(View.VISIBLE);
+
         noTasksView.setText(text);
     }
 
@@ -232,6 +234,50 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showFilteringPopUpMenu() {
+        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_filter));
+        popup.getMenuInflater().inflate(R.menu.filter_tasks, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.active:
+                    presenter.setFiltering(TasksFilterType.ACTIVE_TASKS);
+                    break;
+                case R.id.completed:
+                    presenter.setFiltering(TasksFilterType.COMPLETED_TASKS);
+                    break;
+                default:
+                    presenter.setFiltering(TasksFilterType.ALL_TASKS);
+                    break;
+            }
+            presenter.loadTasks(false);
+            return true;
+        });
+
+        popup.show();
+    }
+
+    @Override
+    public void showSortingPopUpMenu() {
+        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_sort));
+        popup.getMenuInflater().inflate(R.menu.sort_tasks, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.projects:
+                    presenter.setSorting(TasksSortType.PROJECTS);
+                    break;
+                case R.id.date:
+                    presenter.setSorting(TasksSortType.DATE);
+                    break;
+                default:
+                    presenter.setSorting(TasksSortType.PROJECTS);
+                    break;
+            }
+            presenter.loadTasks(false);
+            return true;
+        });
+
+        popup.show();
     }
 
     @Override
@@ -243,23 +289,17 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_search: {
-                // TODO: show SearchView in toolbar
-                return true;
+                break;
             }
-            case R.id.menu_item_toggle_completed: {
-                if (presenter.getFiltering() == TasksFilterType.ALL_TASKS) {
-                    item.setTitle(getString(R.string.show_all));
-                    presenter.setFiltering(TasksFilterType.COMPLETED_TASKS);
-                } else {
-                    item.setTitle(getString(R.string.show_completed));
-                    presenter.setFiltering(TasksFilterType.ALL_TASKS);
-                }
-                presenter.loadTasks(false);
-                return true;
-            }
-            case R.id.menu_item_sort: {
-                // TODO: открыть диалог с выбором сортировки
-                return true;
+            case R.id.menu_filter:
+                showFilteringPopUpMenu();
+                break;
+            case R.id.menu_clear:
+                presenter.clearCompletedTasks();
+                break;
+            case R.id.menu_sort: {
+                showSortingPopUpMenu();
+                break;
             }
         }
 

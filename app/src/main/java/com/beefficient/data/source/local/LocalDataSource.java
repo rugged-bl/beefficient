@@ -34,16 +34,16 @@ public class LocalDataSource implements DataSource {
 
     public static final String TAG = "LocalDataSource";
     private static LocalDataSource INSTANCE;
-    
+
     private final BriteDatabase databaseHelper;
-    
+
     private Func1<Cursor, Task> taskMapperFunction;
     private Func1<Cursor, Project> projectMapperFunction;
 
     // Prevent direct instantiation
     private LocalDataSource(@NonNull Context context) {
         requireNonNull(context);
-        
+
         DbHelper dbHelper = new DbHelper(context);
         SqlBrite sqlBrite = SqlBrite.create();
         databaseHelper = sqlBrite.wrapDatabaseHelper(dbHelper, Schedulers.io());
@@ -74,7 +74,7 @@ public class LocalDataSource implements DataSource {
                     .setPriority(priority)
                     .build();
         };
-        
+
         projectMapperFunction = c -> {
             String projectId = c.getString(c.getColumnIndexOrThrow(ProjectEntry.Column._id.name()));
             String name = c.getString(c.getColumnIndexOrThrow(ProjectEntry.Column.name.name()));
@@ -133,19 +133,20 @@ public class LocalDataSource implements DataSource {
         values.put(TaskEntry.Column.due_date.name(), task.getTime());
         values.put(TaskEntry.Column.with_time.name(), task.isWithTime());
 
-        Subscription subscription = getTask(task.getId())
-                .subscribe(t -> {
-                    if (t == null) {
-                        databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
-                    } else {
-                        String selection = TaskEntry.Column._id + " LIKE ?";
-                        String arg = t.getId();
+        Observable<Task> taskObservable = getTask(task.getId());
+        Subscription subscription = taskObservable.subscribe(t -> {
+            if (t == null) {
+                taskObservable.ignoreElements();
+                databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+            } else {
+                String selection = TaskEntry.Column._id + " LIKE ?";
+                String arg = t.getId();
 
-                        databaseHelper.update(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE, selection, arg);
-                    }
+                taskObservable.ignoreElements();
+                databaseHelper.update(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE, selection, arg);
+            }
+        }, Throwable::printStackTrace);
 
-                });
-        subscription.unsubscribe();
     }
 
     private void setTaskCompleted(@NonNull String taskId, boolean completed) {
@@ -233,18 +234,19 @@ public class LocalDataSource implements DataSource {
         values.put(ProjectEntry.Column.name.name(), project.getName());
         values.put(ProjectEntry.Column.color.name(), project.getColor().ordinal());
 
-        Subscription subscription = getProject(project.getId())
-                .subscribe(p -> {
-                    if (p == null) {
-                        databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
-                    } else {
-                        String selection = ProjectEntry.Column._id + " LIKE ?";
-                        String[] selectionArgs = {p.getId()};
+        Observable<Project> projectObservable = getProject(project.getId());
+        Subscription subscription = projectObservable.subscribe(p -> {
+            if (p == null) {
+                projectObservable.ignoreElements();
+                databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+            } else {
+                String selection = ProjectEntry.Column._id + " LIKE ?";
+                String[] selectionArgs = {p.getId()};
 
-                        databaseHelper.update(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE, selection, selectionArgs);
-                    }
-                });
-        subscription.unsubscribe();
+                projectObservable.ignoreElements();
+                databaseHelper.update(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE, selection, selectionArgs);
+            }
+        }, Throwable::printStackTrace);
     }
 
     @Override

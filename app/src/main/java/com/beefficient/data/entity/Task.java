@@ -142,6 +142,7 @@ public class Task {
     public void setProject(@NonNull Project project) {
         this.project = project;
         projectId = project.getId();
+        project.addTask(this);
     }
 
     public Project getProject() {

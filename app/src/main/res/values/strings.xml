@@ -9,7 +9,7 @@
     <string name="profile_photo">Profile photo</string>
     <string name="all_tasks">All tasks</string>
     <string name="today">Today</string>
-    <string name="next_week">Next week</string>
+    <string name="week">Week</string>
     <string name="calendar">Calendar</string>
     <string name="inbox">Inbox</string>
     <string name="projects">Projects</string>
@@ -35,4 +35,17 @@
     <string name="orange">Orange</string>
     <string name="green">Green</string>
     <string name="show_all">Show all</string>
+    <string name="past">Past</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="next_week">Next week</string>
+    <string name="all_time">All time</string>
+    <string name="no_active_tasks">No active tasks</string>
+    <string name="no_completed_tasks">No completed tasks</string>
+    <string name="menu_clear">Clear completed</string>
+    <string name="menu_filter">Filter</string>
+    <string name="nav_all">All</string>
+    <string name="nav_active">Active</string>
+    <string name="nav_completed">Completed</string>
+    <string name="nav_projects">Projects</string>
+    <string name="nav_date">Date</string>
 </resources>

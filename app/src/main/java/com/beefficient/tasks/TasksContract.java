@@ -46,6 +46,8 @@ public interface TasksContract {
         boolean isActive();
 
         void showFilteringPopUpMenu();
+
+        void showSortingPopUpMenu();
     }
 
     interface Presenter extends BasePresenter {
@@ -64,10 +66,14 @@ public interface TasksContract {
 
         void clearCompletedTasks();
 
-        void setFiltering(TasksFilterType requestType);
-
         void deleteAllData();
 
+        void setFiltering(TasksFilterType requestType);
+
         TasksFilterType getFiltering();
+
+        void setSorting(TasksSortType requestType);
+
+        TasksSortType getSorting();
     }
 }

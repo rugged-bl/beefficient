@@ -12,7 +12,7 @@
     <string name="labels">Метки</string>
     <string name="navigation_drawer_close">Закрыть навигацию</string>
     <string name="navigation_drawer_open">Открыть навигацию</string>
-    <string name="next_week">Неделя</string>
+    <string name="week">Неделя</string>
     <string name="profile_photo">Фото профиля</string>
     <string name="projects">Проекты</string>
     <string name="today">Сегодня</string>
@@ -35,4 +35,17 @@
     <string name="light_blue">Светло-голубой</string>
     <string name="orange">Оранжевый</string>
     <string name="show_all">Показать все</string>
+    <string name="past">Прошедшие</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="next_week">Следующая неделя</string>
+    <string name="all_time">Всё время</string>
+    <string name="no_active_tasks">Нет активных задач</string>
+    <string name="no_completed_tasks">Нет завершённых задач</string>
+    <string name="menu_clear">Удалить завершённые</string>
+    <string name="menu_filter">Фильтр</string>
+    <string name="nav_active">Активные</string>
+    <string name="nav_all">Все</string>
+    <string name="nav_completed">Завершённые</string>
+    <string name="nav_date">Дата</string>
+    <string name="nav_projects">Проекты</string>
 </resources>

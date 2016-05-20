@@ -44,7 +44,7 @@ public class RemoteDataSource implements DataSource {
         DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
         dateFormat.setTimeZone(TimeZone.getDefault());
         try {
-            time = dateFormat.parse(dateFormat.format(System.currentTimeMillis() / 1000L)).getTime();
+            time = dateFormat.parse(dateFormat.format(System.currentTimeMillis())).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
