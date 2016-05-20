@@ -223,19 +223,25 @@ public class Task {
     }
 
     public enum Priority {
-        LOW(R.color.colorLowPriority),
-        MEDIUM(R.color.colorMediumPriority),
-        HIGH(R.color.colorHighPriority),
-        VERY_HIGH(R.color.colorVeryHighPriority);
+        LOW(R.color.colorLowPriority, R.string.low),
+        MEDIUM(R.color.colorMediumPriority, R.string.medium),
+        HIGH(R.color.colorHighPriority, R.string.high),
+        VERY_HIGH(R.color.colorVeryHighPriority, R.string.very_high);
 
         private final int color;
+        private final int priorityName;
 
-        Priority(int color) {
+        Priority(int color, int priorityName) {
             this.color = color;
+            this.priorityName = priorityName;
         }
 
         public int colorRes() {
             return color;
+        }
+
+        public int priorityName() {
+            return priorityName;
         }
     }
 }

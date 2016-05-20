@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -34,11 +35,14 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     private AddEditTaskContract.Presenter presenter;
 
-    private TextView title;
-    private TextView description;
-
     private String editedTaskId;
+
+    private TextView titleView;
+    private TextView descriptionView;
     private CheckBox checkboxCompleted;
+    private TextView projectView;
+    private TextView dueDateView;
+    private TextView priorityView;
 
     public AddEditTaskFragment() {
     }
@@ -83,9 +87,11 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_addedittask, container, false);
-        title = (TextView) view.findViewById(R.id.task_title);
-        description = (TextView) view.findViewById(R.id.task_description);
+        titleView = (TextView) view.findViewById(R.id.task_title);
+        descriptionView = (TextView) view.findViewById(R.id.task_description);
         checkboxCompleted = (CheckBox) view.findViewById(R.id.checkbox_completed);
+        priorityView = (TextView) view.findViewById(R.id.task_priority);
+        projectView = (TextView) view.findViewById(R.id.task_project);
 
         return view;
     }
@@ -97,14 +103,14 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         setTaskIdIfAny();
 
         if (isNewTask()) {
-            title.requestFocus();
+            titleView.requestFocus();
         }
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
 
-        fab.setOnClickListener(v -> presenter.saveTask(title.getText().toString(),
-                description.getText().toString(), checkboxCompleted.isChecked(),
+        fab.setOnClickListener(v -> presenter.saveTask(titleView.getText().toString(),
+                descriptionView.getText().toString(), checkboxCompleted.isChecked(),
                 DefaultTypes.PROJECT, 0, false));
     }
 
@@ -125,7 +131,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     @Override
     public void showEmptyTaskError() {
-        Snackbar.make(title, getString(R.string.empty_task_message), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(titleView, getString(R.string.empty_task_message), Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -136,17 +142,27 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     @Override
     public void setTitle(String title) {
-        this.title.setText(title);
+        this.titleView.setText(title);
     }
 
     @Override
     public void setDescription(String description) {
-        this.description.setText(description);
+        this.descriptionView.setText(description);
     }
 
     @Override
     public void setCompleted(boolean completed) {
         checkboxCompleted.setChecked(completed);
+    }
+
+    @Override
+    public void setPriority(@StringRes int priorityName) {
+        priorityView.setText(getString(priorityName));
+    }
+
+    @Override
+    public void setProject(String name) {
+        projectView.setText(name);
     }
 
     @Override

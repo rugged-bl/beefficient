@@ -48,6 +48,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <RelativeLayout
+            android:id="@+id/task_project_layout"
             android:layout_marginTop="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,6 +68,30 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:text="Inbox"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/task_priority_layout"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/task_project_layout">
+
+            <TextView
+                android:id="@+id/task_priority_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:text="@string/priority"/>
+
+            <TextView
+                android:layout_below="@+id/task_priority_title"
+                android:id="@+id/task_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                tools:text="Low"/>
 
         </RelativeLayout>
 

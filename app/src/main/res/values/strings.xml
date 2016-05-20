@@ -52,4 +52,9 @@
     <string name="nav_completed">Completed</string>
     <string name="nav_projects">Projects</string>
     <string name="nav_date">Date</string>
+    <string name="priority">Priority</string>
+    <string name="low">Low</string>
+    <string name="medium">Medium</string>
+    <string name="high">High</string>
+    <string name="very_high">Very high</string>
 </resources>

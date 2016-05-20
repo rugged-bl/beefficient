@@ -2,6 +2,7 @@ package com.beefficient.addedittask;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
@@ -72,18 +73,21 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
                 .getTask(taskId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(task -> showTask(task));
+                .subscribe(this::showTask);
 
         subscriptions.add(subscription);
     }
 
     private void showTask(Task task) {
+        Log.d("AddEditTaskPresenter", "showTask thread: " + Thread.currentThread().getName());
         String title = task.getTitle();
         String description = task.getDescription();
 
         addEditTaskView.setTitle(title);
         addEditTaskView.setDescription(description);
         addEditTaskView.setCompleted(task.isCompleted());
+        addEditTaskView.setProject(task.getProject().getName());
+        addEditTaskView.setPriority(task.getPriority().priorityName());
     }
 
     @Override

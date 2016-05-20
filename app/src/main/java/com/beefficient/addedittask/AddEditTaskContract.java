@@ -1,5 +1,7 @@
 package com.beefficient.addedittask;
 
+import android.support.annotation.StringRes;
+
 import com.beefficient.BasePresenter;
 import com.beefficient.BaseView;
 import com.beefficient.data.entity.Project;
@@ -21,6 +23,10 @@ public interface AddEditTaskContract {
         void showTaskDeleted();
 
         void showTask();
+
+        void setPriority(@StringRes int priorityName);
+
+        void setProject(String name);
     }
 
     interface Presenter extends BasePresenter {

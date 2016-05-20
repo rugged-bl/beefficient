@@ -12,7 +12,6 @@
     <string name="labels">Метки</string>
     <string name="navigation_drawer_close">Закрыть навигацию</string>
     <string name="navigation_drawer_open">Открыть навигацию</string>
-    <string name="week">Неделя</string>
     <string name="profile_photo">Фото профиля</string>
     <string name="projects">Проекты</string>
     <string name="today">Сегодня</string>
@@ -48,4 +47,14 @@
     <string name="nav_completed">Завершённые</string>
     <string name="nav_date">Дата</string>
     <string name="nav_projects">Проекты</string>
+    <string name="high">Высокий</string>
+    <string name="low">Низкий</string>
+    <string name="medium">Средний</string>
+    <string name="priority">Приоритет</string>
+    <string name="project">Проект</string>
+    <string name="task_deleted">Задача удалена</string>
+    <string name="task_edited">Задача отредактирована</string>
+    <string name="task_saved">Задача сохранена</string>
+    <string name="very_high">Очень высокий</string>
+    <string name="week">Неделя</string>
 </resources>

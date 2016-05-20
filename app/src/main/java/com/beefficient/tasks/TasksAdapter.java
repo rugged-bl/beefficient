@@ -28,7 +28,6 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private List<TaskItem> taskItems;
     private HashMap<Integer, SectionItem> sectionItems;
     private TaskItemListener listener;
-    private boolean showProject = true;
 
     public TasksAdapter(List<TaskItem> taskItems) {
         this.taskItems = taskItems;
@@ -107,10 +106,6 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return taskItems.get(position - itemOffset);
     }
 
-    public void setShowProject(boolean showProject) {
-        this.showProject = showProject;
-    }
-
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof TaskViewHolder) {
@@ -124,13 +119,11 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             taskHolder.priority.setBackgroundResource(task.getPriority().colorRes());
 
             // Set project
-            if (showProject) {
-                Resources resources = taskHolder.itemView.getResources();
-                Project project = task.getProject();
-                taskHolder.project.setText(project.getName());
-                taskHolder.project.setTextColor(
-                        ResourcesCompat.getColor(resources, project.getColor().color(), null));
-            }
+            Resources resources = taskHolder.itemView.getResources();
+            Project project = task.getProject();
+            taskHolder.project.setText(project.getName());
+            taskHolder.project.setTextColor(
+                    ResourcesCompat.getColor(resources, project.getColor().color(), null));
 
             // Set date
             Date dueDate = new Date(task.getTime());
