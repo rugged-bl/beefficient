@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import rx.Observable;
-import rx.subjects.BehaviorSubject;
 
 import static com.beefficient.util.Objects.requireNonNull;
 
@@ -287,10 +286,6 @@ public class DataRepository implements DataSource {
         }
     }
 
-    /**
-     * Gets tasks from local data source (sqlite) unless the table is new or empty. In that case it
-     * uses the network data source. This is done to simplify the sample.
-     */
     @Override
     public Observable<Task> getTask(@NonNull final String taskId) {
         requireNonNull(taskId);
@@ -302,9 +297,6 @@ public class DataRepository implements DataSource {
             return Observable.just(cachedTask);
         }
 
-        // Load from server/persisted if needed.
-        // http://blog.danlew.net/2015/06/22/loading-data-from-multiple-sources-with-rxjava/
-        // Is the task in the local data source? If not, query the network.
         Observable<Task> localTask = localDataSource
                 .getTask(taskId)
                 .doOnNext(task ->

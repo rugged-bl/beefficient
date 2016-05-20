@@ -23,7 +23,7 @@ public interface AddEditTaskContract {
 
         void showCompleted(boolean completed);
 
-        void setPriority(@StringRes int priorityName);
+        void showPriority(@StringRes int priorityName);
 
         void showProject(String name);
 
@@ -34,6 +34,8 @@ public interface AddEditTaskContract {
         void showSelectProjectDialog(List<Project> projects);
 
         void showSelectPriorityDialog(List<Task.Priority> priorities);
+
+        void showSelectDateDialog();
     }
 
     interface Presenter extends BasePresenter {
@@ -52,10 +54,12 @@ public interface AddEditTaskContract {
 
         void setProject(Project item);
 
+        void setPriority(Task.Priority priority);
+
         void selectProject();
 
         void selectPriority();
 
-        void setPriority(Task.Priority priority);
+        void selectDate();
     }
 }

@@ -101,6 +101,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
         View projectLayout = view.findViewById(R.id.task_project_layout);
         View priorityLayout = view.findViewById(R.id.task_priority_layout);
+        View dateLayout = view.findViewById(R.id.task_date_layout);
 
         projectLayout.setOnClickListener(v -> {
             presenter.selectProject();
@@ -108,6 +109,10 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
         priorityLayout.setOnClickListener(v -> {
             presenter.selectPriority();
+        });
+
+        dateLayout.setOnClickListener(v -> {
+            presenter.selectDate();
         });
 
         return view;
@@ -231,6 +236,14 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     }
 
     @Override
+    public void showSelectDateDialog() {
+//        new AlertDialog.Builder(getContext())
+//                .setNegativeButton(R.string.cancel, (dialog, which) -> {})
+//                .setPositiveButton(R.string.select, (dialog, which) -> {})
+//                .setView();
+    }
+
+    @Override
     public void showEmptyTaskError() {
         Snackbar.make(titleView, R.string.empty_task_message, Snackbar.LENGTH_LONG).show();
     }
@@ -257,7 +270,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     }
 
     @Override
-    public void setPriority(@StringRes int priorityName) {
+    public void showPriority(@StringRes int priorityName) {
         priorityView.setText(priorityName);
     }
 

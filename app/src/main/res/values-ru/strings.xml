@@ -60,4 +60,6 @@
     <string name="select_project">Выбрать проект</string>
     <string name="select_priority">Выбрать приоритет</string>
     <string name="cancel">Отмена</string>
+    <string name="date">Дата</string>
+    <string name="select">Выбрать</string>
 </resources>

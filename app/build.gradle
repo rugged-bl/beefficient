@@ -74,24 +74,24 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
     // Firebase
-    compile "com.google.firebase:firebase-database:$playServicesVersion"
-    compile "com.google.firebase:firebase-auth:$playServicesVersion"
-    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+//    compile "com.google.firebase:firebase-database:$playServicesVersion"
+//    compile "com.google.firebase:firebase-auth:$playServicesVersion"
+//    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
     // Retrofit
-    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+//    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+//    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+//    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
     // Rx
     compile "io.reactivex:rxjava:$rxJavaVersion"
     compile "io.reactivex:rxandroid:$rxAndroidVersion"
-    compile "com.jakewharton.rxbinding:rxbinding:$rxBindingVersion"
-    compile "com.tbruyelle.rxpermissions:rxpermissions:$rxPermissionsVersion@aar"
+//    compile "com.jakewharton.rxbinding:rxbinding:$rxBindingVersion"
+//    compile "com.tbruyelle.rxpermissions:rxpermissions:$rxPermissionsVersion@aar"
     compile "com.squareup.sqlbrite:sqlbrite:$sqlbriteVersion"
     // Time
-    compile "joda-time:joda-time:$jodaTimeVersion"
+//    compile "joda-time:joda-time:$jodaTimeVersion"
 //    compile "org.ocpsoft.prettytime:prettytime-nlp:$prettyTimeNlpVersion"
 
     compile 'de.hdodenhof:circleimageview:2.0.0'
 }
 
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'

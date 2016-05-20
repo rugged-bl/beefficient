@@ -166,7 +166,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     @Override
     public void setPriority(Task.Priority priority) {
         this.priority = priority;
-        addEditTaskView.setPriority(priority.priorityName());
+        addEditTaskView.showPriority(priority.priorityName());
     }
 
     @Override
@@ -180,6 +180,11 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     @Override
     public void selectPriority() {
         addEditTaskView.showSelectPriorityDialog(Arrays.asList(Task.Priority.values()));
+    }
+
+    @Override
+    public void selectDate() {
+        addEditTaskView.showSelectDateDialog();
     }
 
 /*    @Override
