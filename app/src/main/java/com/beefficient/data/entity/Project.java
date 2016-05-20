@@ -1,5 +1,7 @@
 package com.beefficient.data.entity;
 
+import android.support.annotation.NonNull;
+
 import com.beefficient.R;
 
 import java.util.ArrayList;
@@ -8,18 +10,20 @@ import java.util.UUID;
 public class Project {
     private ArrayList<Task> taskList;
 
-    private String id;
+    private final String id;
+
+    @NonNull
     private String name;
     private Color color = Color.BLACK;
 
-    public Project(String name, Color color) {
+    public Project(@NonNull String name, Color color) {
         taskList = new ArrayList<>();
         id = UUID.randomUUID().toString();
         this.name = name;
         this.color = color;
     }
 
-    public Project(String name, Color color, String id) {
+    public Project(@NonNull String name, Color color, String id) {
         taskList = new ArrayList<>();
         this.id = id;
         this.name = name;
@@ -38,11 +42,12 @@ public class Project {
         return id;
     }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
@@ -70,8 +75,8 @@ public class Project {
         GREEN(R.color.light_green_500, R.string.green),
         BLACK(android.R.color.black, R.string.black);
 
-        private int color;
-        private int colorName;
+        private final int color;
+        private final int colorName;
 
         Color(int color, int colorName) {
             this.color = color;

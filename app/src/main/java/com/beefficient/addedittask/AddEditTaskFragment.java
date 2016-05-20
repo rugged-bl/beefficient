@@ -47,7 +47,6 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     private TextView descriptionView;
     private CheckBox checkboxCompleted;
     private TextView projectView;
-    private TextView dueDateView;
     private TextView priorityView;
 
     public AddEditTaskFragment() {
@@ -103,17 +102,11 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         View priorityLayout = view.findViewById(R.id.task_priority_layout);
         View dateLayout = view.findViewById(R.id.task_date_layout);
 
-        projectLayout.setOnClickListener(v -> {
-            presenter.selectProject();
-        });
+        projectLayout.setOnClickListener(v -> presenter.selectProject());
 
-        priorityLayout.setOnClickListener(v -> {
-            presenter.selectPriority();
-        });
+        priorityLayout.setOnClickListener(v -> presenter.selectPriority());
 
-        dateLayout.setOnClickListener(v -> {
-            presenter.selectDate();
-        });
+        dateLayout.setOnClickListener(v -> presenter.selectDate());
 
         return view;
     }

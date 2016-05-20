@@ -173,10 +173,6 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return taskItems.size() + sectionItems.size();
     }
 
-    public void updateTask(String taskId) {
-
-    }
-
     /**
      * ViewHolder for TaskItem
      */

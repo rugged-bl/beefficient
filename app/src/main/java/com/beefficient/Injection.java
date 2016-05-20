@@ -20,7 +20,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.beefficient.data.source.DataRepository;
-import com.beefficient.data.source.DataSource;
 import com.beefficient.data.source.local.LocalDataSource;
 import com.beefficient.data.source.remote.RemoteDataSource;
 

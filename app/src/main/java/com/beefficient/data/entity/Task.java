@@ -62,7 +62,7 @@ public class Task {
             this.completed = task.completed;
             this.withTime = task.withTime;
             this.time = task.time;
-            this.labelList = labelList;
+            this.labelList = task.labelList;
         }
 
         /**

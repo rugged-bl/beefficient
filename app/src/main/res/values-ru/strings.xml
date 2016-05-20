@@ -5,7 +5,6 @@
     <string name="username">Имя пользователя</string>
     <string name="action_settings">Настройки</string>
     <string name="login">Вход</string>
-    <string name="app_logo">Логотип приложения</string>
     <string name="all_tasks">Все задачи</string>
     <string name="calendar">Календарь</string>
     <string name="inbox">Входящие</string>

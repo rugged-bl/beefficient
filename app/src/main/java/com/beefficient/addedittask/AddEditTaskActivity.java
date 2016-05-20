@@ -22,8 +22,6 @@ public class AddEditTaskActivity extends AppCompatActivity {
 
     public static final String EXTRA_TASK_ID = "TASK_ID";
 
-    private AppBarLayout appBarLayout;
-    private Toolbar toolbar;
     private ActionBar actionBar;
 
     @Override
@@ -56,8 +54,8 @@ public class AddEditTaskActivity extends AppCompatActivity {
     }
 
     private void initAppBar() {
-        appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         actionBar = getSupportActionBar();

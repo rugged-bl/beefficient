@@ -30,7 +30,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     private final AddEditTaskContract.View addEditTaskView;
 
     @Nullable
-    private String taskId;
+    private final String taskId;
 
     private String title;
     private String description;
@@ -38,7 +38,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     private Task.Priority priority;
     private Project project;
 
-    private CompositeSubscription subscriptions;
+    private final CompositeSubscription subscriptions;
 
     /**
      * Creates a presenter for the add/edit view.

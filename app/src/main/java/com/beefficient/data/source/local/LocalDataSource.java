@@ -37,8 +37,8 @@ public class LocalDataSource implements DataSource {
 
     private final BriteDatabase databaseHelper;
 
-    private Func1<Cursor, Task> taskMapperFunction;
-    private Func1<Cursor, Project> projectMapperFunction;
+    private final Func1<Cursor, Task> taskMapperFunction;
+    private final Func1<Cursor, Project> projectMapperFunction;
 
     // Prevent direct instantiation
     private LocalDataSource(@NonNull Context context) {

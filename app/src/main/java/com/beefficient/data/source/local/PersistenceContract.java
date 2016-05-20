@@ -1,7 +1,5 @@
 package com.beefficient.data.source.local;
 
-import android.provider.BaseColumns;
-
 /**
  * The contract used for the db to save data locally.
  */
