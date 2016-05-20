@@ -97,8 +97,10 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private TaskItem getTaskItem(int position) {
         int itemOffset = 0;
         for (int sectionPosition : sectionItems.keySet()) {
-            if (position >= sectionPosition) {
+            if (position > sectionPosition) {
                 itemOffset++;
+            } else if (position == sectionPosition) {
+                return null;
             }
         }
 
@@ -176,6 +178,10 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemCount() {
         return taskItems.size() + sectionItems.size();
+    }
+
+    public void updateTask(String taskId) {
+
     }
 
     /**

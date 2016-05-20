@@ -2,6 +2,7 @@ package com.beefficient.addedittask;
 
 import com.beefficient.BasePresenter;
 import com.beefficient.BaseView;
+import com.beefficient.data.entity.Project;
 
 public interface AddEditTaskContract {
 
@@ -18,13 +19,14 @@ public interface AddEditTaskContract {
         void setCompleted(boolean completed);
 
         void showTaskDeleted();
+
+        void showTask();
     }
 
     interface Presenter extends BasePresenter {
 
-        void createTask(String title, String description, boolean completed);
-
-        void updateTask( String title, String description, boolean completed);
+        void saveTask(String title, String description, boolean completed, Project project,
+                        int time, boolean withTime);
 
         void populateTask();
 

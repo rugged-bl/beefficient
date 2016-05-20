@@ -152,5 +152,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private void loadTasksFragment() {
         setFragment(TasksFragment.newInstance());
+        setTitle(getString(R.string.all_tasks));
     }
 }

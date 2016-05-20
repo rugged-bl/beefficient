@@ -1,4 +1,4 @@
-package com.beefficient.util;
+package com.beefficient.tasks;
 
 import com.beefficient.data.entity.Task;
 

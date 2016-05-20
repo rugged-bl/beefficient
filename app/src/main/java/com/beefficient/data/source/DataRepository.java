@@ -226,9 +226,7 @@ public class DataRepository implements DataSource {
         remoteDataSource.completeTask(task);
         localDataSource.completeTask(task);
 
-        Task completedTask = new Task.Builder(task.getTitle(), task.getId())
-                .setDescription(task.getDescription())
-                .setProject(task.getProject())
+        Task completedTask = new Task.Builder(task)
                 .setCompleted(true)
                 .build();
 
@@ -252,9 +250,7 @@ public class DataRepository implements DataSource {
         remoteDataSource.activateTask(task);
         localDataSource.activateTask(task);
 
-        Task activeTask = new Task.Builder(task.getTitle(), task.getId())
-                .setDescription(task.getDescription())
-                .setProject(task.getProject())
+        Task activeTask = new Task.Builder(task)
                 .setCompleted(false)
                 .build();
 

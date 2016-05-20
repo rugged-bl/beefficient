@@ -34,18 +34,17 @@ public abstract class TasksSort {
         });
 
         for (Project project : projectsArr) {
-            if (project.getTaskList() == null || project.getTaskList().isEmpty()) {
-                continue;
-            }
-            TasksAdapter.SectionItem sectionItem =
-                    new TasksAdapter.SectionItem(project.getName());
-            sectionItems.put(position++, sectionItem);
+            if (project.getTaskList() != null && !project.getTaskList().isEmpty()) {
+                TasksAdapter.SectionItem sectionItem =
+                        new TasksAdapter.SectionItem(project.getName());
+                sectionItems.put(position++, sectionItem);
 
-            for (Task task : tasks) {
-                if (!task.getProjectId().isEmpty() && task.getProjectId().equals(project.getId())) {
-                    task.setProject(project);
-                    taskItems.add(new TasksAdapter.TaskItem(task, sectionItem));
-                    position++;
+                for (Task task : tasks) {
+                    if (!task.getProjectId().isEmpty() && task.getProjectId().equals(project.getId())) {
+                        task.setProject(project);
+                        taskItems.add(new TasksAdapter.TaskItem(task, sectionItem));
+                        position++;
+                    }
                 }
             }
         }

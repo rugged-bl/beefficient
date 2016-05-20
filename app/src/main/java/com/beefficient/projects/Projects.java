@@ -1,4 +1,4 @@
-package com.beefficient.util;
+package com.beefficient.projects;
 
 import com.beefficient.data.entity.Project;
 

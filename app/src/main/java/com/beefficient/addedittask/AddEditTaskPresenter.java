@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.beefficient.data.entity.DefaultTypes;
+import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 
@@ -86,39 +87,31 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     @Override
-    public void createTask(String title, String description, boolean completed) {
+    public void saveTask(String title, String description, boolean completed, Project project,
+                           int time, boolean withTime) {
         if (title.isEmpty()) {
             addEditTaskView.showEmptyTaskError();
         } else {
-            Task newTask = new Task.Builder(title)
-                    .setDescription(description)
-                    .setProject(DefaultTypes.PROJECT)
-                    .setCompleted(completed)
-                    .build();
+            Task.Builder taskBuilder;
+            if (isNewTask()) {
+                taskBuilder = new Task.Builder(title);
+            } else {
+                taskBuilder = new Task.Builder(title, taskId);
+            }
 
-            dataRepository.saveTask(newTask);
-            addEditTaskView.showTasksList();
-        }
-    }
-
-    @Override
-    public void updateTask(String title, String description, boolean completed) {
-        if (taskId == null) {
-            throw new RuntimeException("updateTask() was called but task is new.");
-        }
-
-        if (title.isEmpty()) {
-            addEditTaskView.showEmptyTaskError();
-        } else {
-            Task task = new Task.Builder(title, taskId)
+            Task task = taskBuilder
                     .setDescription(description)
                     .setProject(DefaultTypes.PROJECT)
                     .setCompleted(completed)
                     .build();
 
             dataRepository.saveTask(task);
-            addEditTaskView.showTasksList();
+            addEditTaskView.showTask();
         }
+    }
+
+    private boolean isNewTask() {
+        return taskId == null;
     }
 
     @Override

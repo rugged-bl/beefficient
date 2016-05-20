@@ -1,5 +1,6 @@
 package com.beefficient.tasks;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 
 import com.beefficient.BasePresenter;
@@ -30,20 +31,15 @@ public interface TasksContract {
 
         void showNoTasks();
 
-        void showActiveFilterLabel();
-
-        void showCompletedFilterLabel();
-
-        void showAllFilterLabel();
-
         void showNoActiveTasks();
 
         void showNoCompletedTasks();
 
-        void showSuccessfullySavedMessage();
+        void showSavedMessage();
 
-        // TODO: для чего это?
-        boolean isActive();
+        void showDeletedMessage();
+
+        void showEditedMessage();
 
         void showFilteringPopUpMenu();
 
@@ -52,7 +48,7 @@ public interface TasksContract {
 
     interface Presenter extends BasePresenter {
 
-        void result(int requestCode, int resultCode);
+        void result(int requestCode, int resultCode, Intent data);
 
         void loadTasks(boolean forceUpdate);
 

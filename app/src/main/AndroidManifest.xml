@@ -22,13 +22,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".login.LoginActivity"
-            android:theme="@style/AppTheme.LoginScreen" />
-        <activity
             android:name=".addedittask.AddEditTaskActivity"
             android:theme="@style/AppTheme.AddEditTaskScreen" />
 
-        <service
+<!--        <service
             android:name=".BackgroundService"
             android:enabled="true"
             android:exported="true" />
@@ -46,7 +43,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
-        </receiver>
+        </receiver>-->
     </application>
 
 </manifest>

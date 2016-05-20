@@ -12,8 +12,8 @@ import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 import com.beefficient.data.source.local.PersistenceContract.TaskEntry;
-import com.beefficient.util.Projects;
-import com.beefficient.util.Tasks;
+import com.beefficient.projects.Projects;
+import com.beefficient.tasks.Tasks;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
 
@@ -139,7 +139,7 @@ public class LocalDataSource implements DataSource {
                 taskObservable.ignoreElements();
                 databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
             } else {
-                String selection = TaskEntry.Column._id + " LIKE ?";
+                String selection = TaskEntry.Column._id + " = ?";
                 String arg = t.getId();
 
                 taskObservable.ignoreElements();
@@ -153,7 +153,7 @@ public class LocalDataSource implements DataSource {
         ContentValues values = new ContentValues();
         values.put(TaskEntry.Column.completed.name(), completed);
 
-        String selection = TaskEntry.Column._id + " LIKE ?";
+        String selection = TaskEntry.Column._id + " = ?";
         databaseHelper.update(TaskEntry.TABLE_NAME, values, selection, taskId);
     }
 
@@ -182,7 +182,7 @@ public class LocalDataSource implements DataSource {
     @Override
     public void clearCompletedTasks() {
         Log.d(TAG, "clearCompletedTasks");
-        String selection = TaskEntry.Column.completed + " LIKE 1";
+        String selection = TaskEntry.Column.completed + " = 1";
         databaseHelper.delete(TaskEntry.TABLE_NAME, selection);
     }
 
@@ -201,7 +201,7 @@ public class LocalDataSource implements DataSource {
     @Override
     public void deleteTask(@NonNull String taskId) {
         Log.d(TAG, "deleteTask");
-        String selection = TaskEntry.Column._id + " LIKE ?";
+        String selection = TaskEntry.Column._id + " = ?";
         databaseHelper.delete(TaskEntry.TABLE_NAME, selection, taskId);
     }
 
@@ -217,7 +217,7 @@ public class LocalDataSource implements DataSource {
     @Override
     public Observable<Project> getProject(@NonNull String projectId) {
         Log.d(TAG, "getProject " + projectId);
-        String sql = String.format("SELECT * FROM %s WHERE %s LIKE ?",
+        String sql = String.format("SELECT * FROM %s WHERE %s = ?",
                 ProjectEntry.TABLE_NAME, ProjectEntry.Column._id);
 
         return databaseHelper.createQuery(ProjectEntry.TABLE_NAME, sql, projectId)
@@ -240,7 +240,7 @@ public class LocalDataSource implements DataSource {
                 projectObservable.ignoreElements();
                 databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
             } else {
-                String selection = ProjectEntry.Column._id + " LIKE ?";
+                String selection = ProjectEntry.Column._id + " = ?";
                 String[] selectionArgs = {p.getId()};
 
                 projectObservable.ignoreElements();
@@ -251,7 +251,6 @@ public class LocalDataSource implements DataSource {
 
     @Override
     public void refreshProjects() {
-        // ?
     }
 
     @Override
@@ -263,7 +262,7 @@ public class LocalDataSource implements DataSource {
     @Override
     public void deleteProject(@NonNull String projectId) {
         Log.d(TAG, "deleteProject " + projectId);
-        String selection = ProjectEntry.Column._id + " LIKE ?";
+        String selection = ProjectEntry.Column._id + " = ?";
         databaseHelper.delete(ProjectEntry.TABLE_NAME, selection, projectId);
     }
 }

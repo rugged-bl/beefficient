@@ -1,13 +1,14 @@
 package com.beefficient.addedittask;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatSpinner;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.beefficient.R;
+import com.beefficient.data.entity.DefaultTypes;
 
 import static com.beefficient.util.Objects.requireNonNull;
 
@@ -26,6 +28,8 @@ import static com.beefficient.util.Objects.requireNonNull;
  */
 public class AddEditTaskFragment extends Fragment implements AddEditTaskContract.View {
 
+    private static final String TAG = "AddEditTaskFragment";
+
     public static final String ARGUMENT_EDIT_TASK_ID = "EDIT_TASK_ID";
 
     private AddEditTaskContract.Presenter presenter;
@@ -33,22 +37,20 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     private TextView title;
     private TextView description;
 
-    private AppCompatSpinner projectSpinner;
     private String editedTaskId;
     private CheckBox checkboxCompleted;
 
+    public AddEditTaskFragment() {
+    }
+
     public static AddEditTaskFragment newInstance(String taskId) {
-        AddEditTaskFragment fragment =  new AddEditTaskFragment();
+        AddEditTaskFragment fragment = new AddEditTaskFragment();
 
         Bundle args = new Bundle();
         args.putString(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId);
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    public AddEditTaskFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -68,6 +70,14 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         this.presenter = requireNonNull(presenter);
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true);
+//        setRetainInstance(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,10 +86,6 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         title = (TextView) view.findViewById(R.id.task_title);
         description = (TextView) view.findViewById(R.id.task_description);
         checkboxCompleted = (CheckBox) view.findViewById(R.id.checkbox_completed);
-        projectSpinner = (AppCompatSpinner) view.findViewById(R.id.project_spinner);
-
-        setHasOptionsMenu(true);
-        setRetainInstance(true);
 
         return view;
     }
@@ -97,16 +103,9 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
 
-        fab.setOnClickListener(v -> {
-            if (isNewTask()) {
-                presenter.createTask(title.getText().toString(),
-                        description.getText().toString(), checkboxCompleted.isChecked());
-            } else {
-                presenter.updateTask(title.getText().toString(),
-                        description.getText().toString(), checkboxCompleted.isChecked());
-            }
-
-        });
+        fab.setOnClickListener(v -> presenter.saveTask(title.getText().toString(),
+                description.getText().toString(), checkboxCompleted.isChecked(),
+                DefaultTypes.PROJECT, 0, false));
     }
 
     @Override
@@ -151,7 +150,19 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     }
 
     @Override
+    public void showTask() {
+        Log.d(TAG, "showTask");
+        Intent intent = new Intent();
+        intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, editedTaskId);
+        getActivity().setResult(Activity.RESULT_OK, intent);
+        getActivity().finish();
+    }
+
+    @Override
     public void showTaskDeleted() {
+        Intent intent = new Intent();
+        intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, editedTaskId);
+        getActivity().setResult(AddEditTaskActivity.RESULT_TASK_DELETED, intent);
         getActivity().finish();
     }
 

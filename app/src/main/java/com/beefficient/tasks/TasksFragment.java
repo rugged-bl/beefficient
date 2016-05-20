@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.beefficient.Injection;
 import com.beefficient.R;
 import com.beefficient.addedittask.AddEditTaskActivity;
-import com.beefficient.addedittask.AddEditTaskFragment;
 import com.beefficient.data.entity.Task;
 
 import java.util.ArrayList;
@@ -80,6 +79,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @SuppressWarnings("unchecked")
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setHasOptionsMenu(true);
 
         tasksAdapter = new TasksAdapter(Collections.EMPTY_LIST);
@@ -105,7 +105,8 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         swipeRefreshLayout = (SwipeRefreshLayout) activity.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(() -> presenter.loadTasks(true));
 
-        FloatingActionButton addTaskButton = (FloatingActionButton) activity.findViewById(R.id.fab_add);
+        FloatingActionButton addTaskButton =
+                (FloatingActionButton) activity.findViewById(R.id.fab_add);
         addTaskButton.setOnClickListener(v -> presenter.addNewTask());
 
         return view;
@@ -125,7 +126,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        presenter.result(requestCode, resultCode);
+        presenter.result(requestCode, resultCode, data);
     }
 
     @Override
@@ -151,7 +152,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showEditTask(String taskId) {
         Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
-        intent.putExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId);
+        intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, taskId);
         startActivityForResult(intent, AddEditTaskActivity.REQUEST_EDIT_TASK);
     }
 
@@ -168,33 +169,18 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showActiveFilterLabel() {
-    }
-
-    @Override
-    public void showCompletedFilterLabel() {
-    }
-
-
-    @Override
-    public void showAllFilterLabel() {
-    }
-
-    @Override
     public void showNoActiveTasks() {
-        showNoTasksView((String) getResources().getText(R.string.no_active_tasks));
+        showNoTasksView(getString(R.string.no_active_tasks));
     }
 
     @Override
     public void showNoCompletedTasks() {
-        showNoTasksView((String) getResources().getText(R.string.no_completed_tasks));
+        showNoTasksView(getString(R.string.no_completed_tasks));
     }
 
     @Override
     public void showNoTasks() {
-        Log.d("TasksFragment", "showNoTasks");
-
-        showNoTasksView((String) getResources().getText(R.string.no_tasks));
+        showNoTasksView(getString(R.string.no_tasks));
     }
 
     private void showNoTasksView(String text) {
@@ -205,7 +191,8 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showTasks(ArrayList<TasksAdapter.TaskItem> taskItems, HashMap<Integer, TasksAdapter.SectionItem> sectionItems) {
+    public void showTasks(ArrayList<TasksAdapter.TaskItem> taskItems,
+                          HashMap<Integer, TasksAdapter.SectionItem> sectionItems) {
         Log.d("TasksFragment", "showTasks");
 
         tasksView.setVisibility(View.VISIBLE);
@@ -222,14 +209,15 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showSuccessfullySavedMessage() {
-        showSnackbar("SuccessfullySaved");
+    public void showSavedMessage() {
+        showSnackbar(getString(R.string.task_saved));
         tasksAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public boolean isActive() {
-        return true;
+    public void showDeletedMessage() {
+        showSnackbar(getString(R.string.task_deleted));
+        tasksAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -278,6 +266,12 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         });
 
         popup.show();
+    }
+
+    @Override
+    public void showEditedMessage() {
+        showSnackbar(getString(R.string.task_edited));
+        tasksAdapter.notifyDataSetChanged();
     }
 
     @Override

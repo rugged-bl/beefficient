@@ -18,6 +18,10 @@ public class AddEditTaskActivity extends AppCompatActivity {
     public static final int REQUEST_ADD_TASK = 1;
     public static final int REQUEST_EDIT_TASK = 2;
 
+    public static final int RESULT_TASK_DELETED = 1;
+
+    public static final String EXTRA_TASK_ID = "TASK_ID";
+
     private AppBarLayout appBarLayout;
     private Toolbar toolbar;
     private ActionBar actionBar;
@@ -35,16 +39,8 @@ public class AddEditTaskActivity extends AppCompatActivity {
         String taskId = null;
         if (addEditTaskFragment == null) {
 
-            if (getIntent().hasExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID)) {
-                taskId = getIntent().getStringExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID);
-                actionBar.setDisplayShowTitleEnabled(false);
-//                if (actionBar != null) {
-//                    actionBar.setTitle(R.string.edit_task);
-//                }
-            } else {
-//                if (actionBar != null) {
-//                    actionBar.setTitle(R.string.add_task);
-//                }
+            if (getIntent().hasExtra(EXTRA_TASK_ID)) {
+                taskId = getIntent().getStringExtra(EXTRA_TASK_ID);
             }
 
             addEditTaskFragment = AddEditTaskFragment.newInstance(taskId);

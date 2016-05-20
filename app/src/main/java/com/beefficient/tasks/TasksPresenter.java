@@ -1,6 +1,7 @@
 package com.beefficient.tasks;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.util.Log;
@@ -31,8 +32,10 @@ import rx.subscriptions.CompositeSubscription;
 import static com.beefficient.util.Objects.requireNonNull;
 
 public class TasksPresenter implements TasksContract.Presenter {
-    private final DataRepository dataRepository;
 
+    private static final String TAG = "TasksPresenter";
+
+    private final DataRepository dataRepository;
     private final TasksContract.View tasksView;
 
     private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(100);
@@ -62,10 +65,35 @@ public class TasksPresenter implements TasksContract.Presenter {
     }
 
     @Override
-    public void result(int requestCode, int resultCode) {
-        // If a task was successfully added, show snackbar
-        if (AddEditTaskActivity.REQUEST_ADD_TASK == requestCode && Activity.RESULT_OK == resultCode) {
-            tasksView.showSuccessfullySavedMessage();
+    public void result(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "result: " + requestCode + " " + resultCode + " " + data);
+        String taskId = null;
+        if (data != null) {
+            taskId = data.getStringExtra(AddEditTaskActivity.EXTRA_TASK_ID);
+        }
+
+        if (taskId != null) {
+            switch (requestCode) {
+                case AddEditTaskActivity.REQUEST_ADD_TASK: {
+                    if (Activity.RESULT_OK == resultCode) {
+//                        tasksView.insertTask(taskId);
+                        tasksView.showSavedMessage();
+                    } else if (AddEditTaskActivity.RESULT_TASK_DELETED == resultCode) {
+                        tasksView.showDeletedMessage();
+                    }
+                    break;
+                }
+                case AddEditTaskActivity.REQUEST_EDIT_TASK: {
+                    if (Activity.RESULT_OK == resultCode) {
+//                        tasksView.updateTask(taskId);
+                        tasksView.showEditedMessage();
+                    } else if (AddEditTaskActivity.RESULT_TASK_DELETED == resultCode) {
+//                        tasksView.deleteTask(taskId);
+                        tasksView.showDeletedMessage();
+                    }
+                    break;
+                }
+            }
         }
     }
 
@@ -165,23 +193,23 @@ public class TasksPresenter implements TasksContract.Presenter {
             // Show the list of tasks
             tasksView.showTasks(taskItems, sectionItems);
             // Set the filter label's text.
-            showFilterLabel();
+//            showFilterLabel();
         }
     }
 
-    private void showFilterLabel() {
-        switch (currentFiltering) {
-            case ACTIVE_TASKS:
-                tasksView.showActiveFilterLabel();
-                break;
-            case COMPLETED_TASKS:
-                tasksView.showCompletedFilterLabel();
-                break;
-            default:
-                tasksView.showAllFilterLabel();
-                break;
-        }
-    }
+//    private void showFilterLabel() {
+//        switch (currentFiltering) {
+//            case ACTIVE_TASKS:
+//                tasksView.showActiveFilterLabel();
+//                break;
+//            case COMPLETED_TASKS:
+//                tasksView.showCompletedFilterLabel();
+//                break;
+//            default:
+//                tasksView.showAllFilterLabel();
+//                break;
+//        }
+//    }
 
     private void processEmptyTasks() {
         switch (currentFiltering) {

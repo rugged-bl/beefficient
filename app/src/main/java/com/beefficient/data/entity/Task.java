@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import com.beefficient.R;
 import com.beefficient.util.Objects;
 
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -49,6 +48,24 @@ public class Task {
         private List<Label> labelList = new ArrayList<>();
 
         /**
+         * Use this constructor to create a copy of another Task.
+         *
+         * @param task task
+         */
+        public Builder(Task task) {
+            this.project = task.project;
+            this.projectId = task.projectId;
+            this.id = task.id;
+            this.title = task.title;
+            this.description = task.description;
+            this.priority = task.priority;
+            this.completed = task.completed;
+            this.withTime = task.withTime;
+            this.time = task.time;
+            this.labelList = labelList;
+        }
+
+        /**
          * Use this constructor to create a new active Task.
          *
          * @param title title
@@ -58,7 +75,7 @@ public class Task {
             this.title = title;
         }
         /**
-         * Use this builder to specify a Task if the Task already has an id (copy of
+         * Use this constructor to specify a Task if the Task already has an id (copy of
          * another Task).
          *
          * @param title title

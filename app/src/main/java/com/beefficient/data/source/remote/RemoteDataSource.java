@@ -1,6 +1,5 @@
 package com.beefficient.data.source.remote;
 
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -12,8 +11,6 @@ import com.beefficient.data.source.DataSource;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -84,6 +81,7 @@ public class RemoteDataSource implements DataSource {
                 .setTime(time)
                 .setProject(project)
                 .build();
+
         TASKS_SERVICE_DATA.put(newTask.getId(), newTask);
     }
 
@@ -113,11 +111,10 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public void completeTask(@NonNull Task task) {
-        Task completedTask = new Task.Builder(task.getTitle(), task.getId())
-                .setDescription(task.getDescription())
-                .setProject(task.getProject())
+        Task completedTask = new Task.Builder(task)
                 .setCompleted(true)
                 .build();
+
         TASKS_SERVICE_DATA.put(task.getId(), completedTask);
     }
 
@@ -129,10 +126,10 @@ public class RemoteDataSource implements DataSource {
 
     @Override
     public void activateTask(@NonNull Task task) {
-        Task activeTask = new Task.Builder(task.getTitle(), task.getId())
-                .setDescription(task.getDescription())
-                .setProject(task.getProject())
+        Task activeTask = new Task.Builder(task)
+                .setCompleted(false)
                 .build();
+
         TASKS_SERVICE_DATA.put(task.getId(), activeTask);
     }
 
