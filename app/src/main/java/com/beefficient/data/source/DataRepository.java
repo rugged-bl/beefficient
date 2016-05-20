@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import rx.Observable;
+import rx.subjects.BehaviorSubject;
 
 import static com.beefficient.util.Objects.requireNonNull;
 

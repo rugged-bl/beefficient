@@ -115,7 +115,8 @@ public class LocalDataSource implements DataSource {
                 TaskEntry.TABLE_NAME, TaskEntry.Column._id);
 
         return databaseHelper.createQuery(TaskEntry.TABLE_NAME, sql, taskId)
-                .mapToOneOrDefault(taskMapperFunction, null);
+                .mapToOneOrDefault(taskMapperFunction, null)
+                .take(1);
     }
 
     @Override
@@ -133,19 +134,17 @@ public class LocalDataSource implements DataSource {
         values.put(TaskEntry.Column.due_date.name(), task.getTime());
         values.put(TaskEntry.Column.with_time.name(), task.isWithTime());
 
-        Observable<Task> taskObservable = getTask(task.getId());
-        Subscription subscription = taskObservable.subscribe(t -> {
-            if (t == null) {
-                taskObservable.ignoreElements();
-                databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
-            } else {
-                String selection = TaskEntry.Column._id + " = ?";
-                String arg = t.getId();
+        Subscription subscription = getTask(task.getId())
+                .subscribe(t -> {
+                    if (t == null) {
+                        databaseHelper.insert(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+                    } else {
+                        String selection = TaskEntry.Column._id + " = ?";
+                        String arg = t.getId();
 
-                taskObservable.ignoreElements();
-                databaseHelper.update(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE, selection, arg);
-            }
-        }, Throwable::printStackTrace);
+                        databaseHelper.update(TaskEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE, selection, arg);
+                    }
+                }, Throwable::printStackTrace);
 
     }
 
@@ -221,7 +220,8 @@ public class LocalDataSource implements DataSource {
                 ProjectEntry.TABLE_NAME, ProjectEntry.Column._id);
 
         return databaseHelper.createQuery(ProjectEntry.TABLE_NAME, sql, projectId)
-                .mapToOneOrDefault(projectMapperFunction, null);
+                .mapToOneOrDefault(projectMapperFunction, null)
+                .take(1);
     }
 
     @Override
@@ -234,16 +234,13 @@ public class LocalDataSource implements DataSource {
         values.put(ProjectEntry.Column.name.name(), project.getName());
         values.put(ProjectEntry.Column.color.name(), project.getColor().ordinal());
 
-        Observable<Project> projectObservable = getProject(project.getId());
-        Subscription subscription = projectObservable.subscribe(p -> {
+        Subscription subscription = getProject(project.getId()).subscribe(p -> {
             if (p == null) {
-                projectObservable.ignoreElements();
                 databaseHelper.insert(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
             } else {
                 String selection = ProjectEntry.Column._id + " = ?";
                 String[] selectionArgs = {p.getId()};
 
-                projectObservable.ignoreElements();
                 databaseHelper.update(ProjectEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE, selection, selectionArgs);
             }
         }, Throwable::printStackTrace);

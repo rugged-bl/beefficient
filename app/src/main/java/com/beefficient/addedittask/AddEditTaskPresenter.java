@@ -43,9 +43,9 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     /**
      * Creates a presenter for the add/edit view.
      *
-     * @param taskId         ID of the task to edit or null for a new task
-     * @param dataRepository a repository of data for tasks
-     * @param addEditTaskView    the add/edit view
+     * @param taskId          ID of the task to edit or null for a new task
+     * @param dataRepository  a repository of data for tasks
+     * @param addEditTaskView the add/edit view
      */
     public AddEditTaskPresenter(@Nullable String taskId, @NonNull DataSource dataRepository,
                                 @NonNull AddEditTaskContract.View addEditTaskView) {
@@ -93,6 +93,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         setPriority(task.getPriority());
     }
 
+    @SuppressWarnings("might be null")
     @Override
     public void saveTask() {
         if (title.isEmpty()) {
@@ -102,6 +103,8 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
             if (isNewTask()) {
                 taskBuilder = new Task.Builder(title);
             } else {
+                assert taskId != null;
+                dataRepository.deleteTask(taskId);
                 taskBuilder = new Task.Builder(title, taskId);
             }
 
