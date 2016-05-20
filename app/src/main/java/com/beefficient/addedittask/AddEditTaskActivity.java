@@ -38,9 +38,11 @@ public class AddEditTaskActivity extends AppCompatActivity {
 
         String taskId = null;
         if (addEditTaskFragment == null) {
-
             if (getIntent().hasExtra(EXTRA_TASK_ID)) {
                 taskId = getIntent().getStringExtra(EXTRA_TASK_ID);
+                actionBar.setTitle(getString(R.string.edit_task));
+            } else {
+                actionBar.setTitle(getString(R.string.add_task));
             }
 
             addEditTaskFragment = AddEditTaskFragment.newInstance(taskId);
