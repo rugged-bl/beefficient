@@ -20,11 +20,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.beefficient.R;
 import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
+import com.beefficient.data.entity.Task;
 
 import java.util.List;
 
@@ -49,7 +49,6 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     private TextView projectView;
     private TextView dueDateView;
     private TextView priorityView;
-    private View projectLayout;
 
     public AddEditTaskFragment() {
     }
@@ -98,11 +97,17 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         descriptionView = (TextView) view.findViewById(R.id.task_description);
         checkboxCompleted = (CheckBox) view.findViewById(R.id.checkbox_completed);
         priorityView = (TextView) view.findViewById(R.id.task_priority);
-        projectLayout = view.findViewById(R.id.task_project_layout);
         projectView = (TextView) view.findViewById(R.id.task_project);
+
+        View projectLayout = view.findViewById(R.id.task_project_layout);
+        View priorityLayout = view.findViewById(R.id.task_priority_layout);
 
         projectLayout.setOnClickListener(v -> {
             presenter.selectProject();
+        });
+
+        priorityLayout.setOnClickListener(v -> {
+            presenter.selectPriority();
         });
 
         return view;
@@ -112,21 +117,41 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     public void showSelectProjectDialog(List<Project> projects) {
 
         // TODO
-        ArrayAdapter<Project> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_1);
+        ArrayAdapter<Project> adapter = new ArrayAdapter<Project>(getContext(),
+                R.layout.dialog_item_project) {
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view;
+
+                if (convertView == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    view = inflater.inflate(R.layout.dialog_item_project, parent, false);
+                } else {
+                    view = convertView;
+                }
+
+                TextView text = (TextView) view.findViewById(R.id.project_name);
+                View indicator = view.findViewById(R.id.project_color);
+
+                Project item = getItem(position);
+                text.setText(item.getName());
+                indicator.setBackgroundResource(item.getColor().color());
+
+                return view;
+            }
+        };
+
         adapter.addAll(projects);
 
         new AlertDialog.Builder(getContext())
-                .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    Toast.makeText(getContext(), "^_^", Toast.LENGTH_SHORT).show();
-                })
-                .setTitle(getString(R.string.select_project))
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {})
+                .setTitle(R.string.select_project)
                 .setAdapter(adapter, (dialog, which) -> {
                     Project project = adapter.getItem(which);
                     presenter.setProject(project);
-                    setProject(project.getName());
-                }).show();
-
+                })
+                .show();
     }
 
     @Override
@@ -137,15 +162,19 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
         if (isNewTask()) {
             titleView.requestFocus();
-            setProject(getString(R.string.inbox));
-            setPriority(R.string.low);
+            presenter.setProject(DefaultTypes.PROJECT);
+            presenter.setPriority(DefaultTypes.PRIORITY);
         }
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
 
-        fab.setOnClickListener(v -> presenter.saveTask(titleView.getText().toString(),
-                descriptionView.getText().toString(), checkboxCompleted.isChecked(), 0, false));
+        fab.setOnClickListener(v -> {
+            presenter.setTitle(titleView.getText().toString());
+            presenter.setDescription(descriptionView.getText().toString());
+            presenter.setCompleted(checkboxCompleted.isChecked());
+            presenter.saveTask();
+        });
     }
 
     @Override
@@ -164,8 +193,46 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     }
 
     @Override
+    public void showSelectPriorityDialog(List<Task.Priority> priorities) {
+        ArrayAdapter<Task.Priority> adapter = new ArrayAdapter<Task.Priority>(
+                getContext(), R.layout.dialog_item_priority) {
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view;
+
+                if (convertView == null) {
+                    LayoutInflater inflater = LayoutInflater.from(getContext());
+                    view = inflater.inflate(R.layout.dialog_item_priority, parent, false);
+                } else {
+                    view = convertView;
+                }
+
+                TextView text = (TextView) view.findViewById(R.id.priority_text);
+                View indicator = view.findViewById(R.id.priority_indicator);
+
+                Task.Priority item = getItem(position);
+                text.setText(item.priorityName());
+                indicator.setBackgroundResource(item.color());
+
+                return view;
+            }
+        };
+        adapter.addAll(priorities);
+
+        new AlertDialog.Builder(getContext())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {})
+                .setTitle(R.string.select_priority)
+                .setAdapter(adapter, (dialog, which) -> {
+                    Task.Priority priority = adapter.getItem(which);
+                    presenter.setPriority(priority);
+                })
+                .show();
+    }
+
+    @Override
     public void showEmptyTaskError() {
-        Snackbar.make(titleView, getString(R.string.empty_task_message), Snackbar.LENGTH_LONG).show();
+        Snackbar.make(titleView, R.string.empty_task_message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -191,7 +258,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     @Override
     public void setPriority(@StringRes int priorityName) {
-        priorityView.setText(getString(priorityName));
+        priorityView.setText(priorityName);
     }
 
     @Override

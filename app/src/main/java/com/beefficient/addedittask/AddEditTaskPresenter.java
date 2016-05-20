@@ -3,12 +3,12 @@ package com.beefficient.addedittask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,6 +32,9 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     @Nullable
     private String taskId;
 
+    private String title;
+    private String description;
+    private boolean completed;
     private Task.Priority priority;
     private Project project;
 
@@ -83,19 +86,15 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     private void showTask(Task task) {
-        String title = task.getTitle();
-        String description = task.getDescription();
-
-        addEditTaskView.setTitle(title);
-        addEditTaskView.setDescription(description);
-        addEditTaskView.setCompleted(task.isCompleted());
-        addEditTaskView.setProject(task.getProject().getName());
-        addEditTaskView.setPriority(task.getPriority().priorityName());
+        setTitle(task.getTitle());
+        setDescription(task.getDescription());
+        setCompleted(task.isCompleted());
+        setProject(task.getProject());
+        setPriority(task.getPriority());
     }
 
     @Override
-    public void saveTask(String title, String description, boolean completed, int time,
-                         boolean withTime) {
+    public void saveTask() {
         if (title.isEmpty()) {
             addEditTaskView.showEmptyTaskError();
         } else {
@@ -109,7 +108,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
             Task task = taskBuilder
                     .setDescription(description)
                     .setProject(project)
-                    .setPriority(DefaultTypes.PRIORITY)
+                    .setPriority(priority)
                     .setCompleted(completed)
                     .build();
 
@@ -139,8 +138,33 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     @Override
+    public void setTitle(String title) {
+        this.title = title;
+        addEditTaskView.setTitle(title);
+    }
+
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+        addEditTaskView.setDescription(description);
+    }
+
+    @Override
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+        addEditTaskView.setCompleted(completed);
+    }
+
+    @Override
     public void setProject(Project project) {
         this.project = project;
+        addEditTaskView.setProject(project.getName());
+    }
+
+    @Override
+    public void setPriority(Task.Priority priority) {
+        this.priority = priority;
+        addEditTaskView.setPriority(priority.priorityName());
     }
 
     @Override
@@ -149,6 +173,11 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
                 (ArrayList<Project>) dataRepository.getProjects().toBlocking().single();
 
         addEditTaskView.showSelectProjectDialog(projects);
+    }
+
+    @Override
+    public void selectPriority() {
+        addEditTaskView.showSelectPriorityDialog(Arrays.asList(Task.Priority.values()));
     }
 
 /*    @Override

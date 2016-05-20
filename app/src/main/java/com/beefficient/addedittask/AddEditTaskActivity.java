@@ -40,9 +40,9 @@ public class AddEditTaskActivity extends AppCompatActivity {
         if (addEditTaskFragment == null) {
             if (getIntent().hasExtra(EXTRA_TASK_ID)) {
                 taskId = getIntent().getStringExtra(EXTRA_TASK_ID);
-                actionBar.setTitle(getString(R.string.edit_task));
+                actionBar.setTitle(R.string.edit_task);
             } else {
-                actionBar.setTitle(getString(R.string.add_task));
+                actionBar.setTitle(R.string.add_task);
             }
 
             addEditTaskFragment = AddEditTaskFragment.newInstance(taskId);

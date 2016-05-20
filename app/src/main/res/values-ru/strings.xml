@@ -57,4 +57,7 @@
     <string name="task_saved">Задача сохранена</string>
     <string name="very_high">Очень высокий</string>
     <string name="week">Неделя</string>
+    <string name="select_project">Выбрать проект</string>
+    <string name="select_priority">Выбрать приоритет</string>
+    <string name="cancel">Отмена</string>
 </resources>

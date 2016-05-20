@@ -11,5 +11,5 @@ public final class DefaultTypes {
     public static final Project PROJECT =
             new Project(defaultProjectTitle, Project.Color.BLACK, defaultProjectTitle);
 
-    public static Task.Priority PRIORITY = Task.Priority.LOW;
+    public static final Task.Priority PRIORITY = Task.Priority.LOW;
 }

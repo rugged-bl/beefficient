@@ -116,7 +116,7 @@ public class TasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             taskHolder.title.setText(task.getTitle());
             taskHolder.completed.setChecked(task.isCompleted());
-            taskHolder.priority.setBackgroundResource(task.getPriority().colorRes());
+            taskHolder.priority.setBackgroundResource(task.getPriority().color());
 
             // Set project
             Resources resources = taskHolder.itemView.getResources();

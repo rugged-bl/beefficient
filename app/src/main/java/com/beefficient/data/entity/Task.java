@@ -236,7 +236,7 @@ public class Task {
             this.priorityName = priorityName;
         }
 
-        public int colorRes() {
+        public int color() {
             return color;
         }
 
