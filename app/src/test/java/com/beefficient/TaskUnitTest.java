@@ -9,7 +9,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class TaskUnitTest {
-
     @Test
     public void taskBuilder() {
         Project project = new Project("Project", Project.Color.BLACK);
