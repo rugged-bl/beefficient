@@ -222,7 +222,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showFilteringPopUpMenu() {
-        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.toolbar));
+        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_item_search));
         popup.getMenuInflater().inflate(R.menu.filter_tasks, popup.getMenu());
 
         popup.setOnMenuItemClickListener(item -> {
@@ -247,7 +247,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showSortingPopUpMenu() {
         // TODO
-        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.toolbar));
+        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_item_search));
         popup.getMenuInflater().inflate(R.menu.sort_tasks, popup.getMenu());
 
         popup.setOnMenuItemClickListener(item -> {
