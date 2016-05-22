@@ -18,11 +18,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="72dp"
         android:layout_marginRight="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@id/task_completed"
-        android:layout_toRightOf="@id/task_completed"
+        android:layout_marginStart="72dp"
         android:hint="@string/title_hint"
         android:maxLines="1"
         android:scrollbars="vertical" />

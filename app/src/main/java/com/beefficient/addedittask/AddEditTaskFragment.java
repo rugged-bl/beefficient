@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -112,6 +113,16 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
         ListView paramsView = (ListView) view.findViewById(R.id.task_params);
         paramsView.setAdapter(paramsAdapter);
+        paramsView.setOnItemClickListener((parent, view1, position, id) -> {
+            TaskParam param = paramsAdapter.getItem(position);
+            if (param == projectParam) {
+                presenter.selectProject();
+            } else if (param == priorityParam) {
+                presenter.selectPriority();
+            } else if (param == dateParam) {
+                presenter.selectDate();
+            }
+        });
 
         return view;
     }

@@ -4,7 +4,6 @@
     <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="username">Username</string>
-    <string name="app_logo">App logo</string>
     <string name="login">Login</string>
     <string name="profile_photo">Profile photo</string>
     <string name="all_tasks">All tasks</string>
@@ -20,7 +19,7 @@
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="no_tasks">No tasks</string>
-    <string name="empty_task_message">Can\'t create this task</string>
+    <string name="empty_task_message">Title can\'t be empty</string>
     <string name="edit_task">Edit task</string>
     <string name="add_task">Add task</string>
     <string name="title_hint">Title</string>
