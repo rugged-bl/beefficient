@@ -10,4 +10,5 @@
     <color name="colorMediumPriority">#fbc02d</color>
     <color name="colorHighPriority">#f57c00</color>
     <color name="colorVeryHighPriority">#d32f2f</color>
+    <color name="grey">#757575</color>
 </resources>

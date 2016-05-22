@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.beefficient.BackgroundService;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements
     private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
+            Log.d(TAG, Integer.toHexString(navigationView.getItemIconTintList().getDefaultColor()));
             navigationView.setNavigationItemSelectedListener(this);
         }
     }

@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beefficient.R;
@@ -26,6 +27,7 @@ import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.beefficient.util.Objects.requireNonNull;
@@ -44,10 +46,14 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     private String editedTaskId;
 
     private TextView titleView;
-    private TextView descriptionView;
+//    private TextView descriptionView;
     private CheckBox checkboxCompleted;
-    private TextView projectView;
-    private TextView priorityView;
+
+    private final TaskParam projectParam = new TaskParam(R.string.project, R.drawable.ic_project);
+    private final TaskParam priorityParam = new TaskParam(R.string.priority, R.drawable.ic_priority);
+    private final TaskParam dateParam = new TaskParam(R.string.date, R.drawable.ic_date_range);
+
+    private TaskParamsAdapter paramsAdapter;
 
     public AddEditTaskFragment() {
     }
@@ -84,7 +90,14 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         super.onCreate(savedInstanceState);
 
         setHasOptionsMenu(true);
-//        setRetainInstance(true);
+
+        // Configure params adapter
+        ArrayList<TaskParam> params = new ArrayList<>();
+        params.add(projectParam);
+        params.add(priorityParam);
+        params.add(dateParam);
+
+        paramsAdapter = new TaskParamsAdapter(params);
     }
 
     @Nullable
@@ -92,21 +105,13 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_addedittask, container, false);
+
+        checkboxCompleted = (CheckBox) view.findViewById(R.id.task_completed);
         titleView = (TextView) view.findViewById(R.id.task_title);
-        descriptionView = (TextView) view.findViewById(R.id.task_description);
-        checkboxCompleted = (CheckBox) view.findViewById(R.id.checkbox_completed);
-        priorityView = (TextView) view.findViewById(R.id.task_priority);
-        projectView = (TextView) view.findViewById(R.id.task_project);
+//        descriptionView = (TextView) view.findViewById(R.id.task_description);
 
-        View projectLayout = view.findViewById(R.id.task_project_layout);
-        View priorityLayout = view.findViewById(R.id.task_priority_layout);
-        View dateLayout = view.findViewById(R.id.task_date_layout);
-
-        projectLayout.setOnClickListener(v -> presenter.selectProject());
-
-        priorityLayout.setOnClickListener(v -> presenter.selectPriority());
-
-        dateLayout.setOnClickListener(v -> presenter.selectDate());
+        ListView paramsView = (ListView) view.findViewById(R.id.task_params);
+        paramsView.setAdapter(paramsAdapter);
 
         return view;
     }
@@ -169,7 +174,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
         fab.setOnClickListener(v -> {
             presenter.setTitle(titleView.getText().toString());
-            presenter.setDescription(descriptionView.getText().toString());
+//            presenter.setDescription(descriptionView.getText().toString());
             presenter.setCompleted(checkboxCompleted.isChecked());
             presenter.saveTask();
         });
@@ -254,7 +259,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     @Override
     public void showDescription(String description) {
-        this.descriptionView.setText(description);
+//        this.descriptionView.setText(description);
     }
 
     @Override
@@ -264,12 +269,14 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     @Override
     public void showPriority(@StringRes int priorityName) {
-        priorityView.setText(priorityName);
+        priorityParam.setText(getString(priorityName));
+        paramsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void showProject(String name) {
-        projectView.setText(name);
+        projectParam.setText(name);
+        paramsAdapter.notifyDataSetChanged();
     }
 
     @Override
