@@ -76,8 +76,8 @@ public class TasksPresenter implements TasksContract.Presenter {
             switch (requestCode) {
                 case AddEditTaskActivity.REQUEST_ADD_TASK: {
                     if (Activity.RESULT_OK == resultCode) {
-//                        tasksView.insertTask(taskId);
                         tasksView.showSavedMessage();
+                        // TODO: scroll to added task
                     } else if (AddEditTaskActivity.RESULT_TASK_DELETED == resultCode) {
                         tasksView.showDeletedMessage();
                     }
@@ -85,10 +85,9 @@ public class TasksPresenter implements TasksContract.Presenter {
                 }
                 case AddEditTaskActivity.REQUEST_EDIT_TASK: {
                     if (Activity.RESULT_OK == resultCode) {
-//                        tasksView.updateTask(taskId);
                         tasksView.showEditedMessage();
+                        // TODO: scroll to edited task
                     } else if (AddEditTaskActivity.RESULT_TASK_DELETED == resultCode) {
-//                        tasksView.deleteTask(taskId);
                         tasksView.showDeletedMessage();
                     }
                     break;

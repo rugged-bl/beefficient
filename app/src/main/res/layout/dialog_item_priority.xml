@@ -2,13 +2,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
-             android:layout_height="match_parent">
+             android:layout_height="wrap_content">
 
+    <!-- TODO: Индикатор куда-то пропал. Нужно вернуть... -->
     <View
         android:id="@+id/priority_indicator"
         android:layout_width="@dimen/priority_indicator_width"
         android:layout_height="match_parent"
-        android:background="@color/light_blue_a700"
+        android:background="@color/accent"
         tools:background="@color/colorMediumPriority"/>
 
     <TextView

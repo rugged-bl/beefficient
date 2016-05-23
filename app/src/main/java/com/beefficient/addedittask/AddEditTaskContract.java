@@ -7,6 +7,7 @@ import com.beefficient.BaseView;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface AddEditTaskContract {
@@ -29,7 +30,7 @@ public interface AddEditTaskContract {
 
         void showTask();
 
-        void showSelectProjectDialog(List<Project> projects);
+        void showSelectProjectDialog(ArrayList<Project> projects);
 
         void showSelectPriorityDialog(List<Task.Priority> priorities);
 

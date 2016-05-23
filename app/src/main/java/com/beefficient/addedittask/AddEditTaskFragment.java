@@ -2,18 +2,16 @@ package com.beefficient.addedittask;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +28,7 @@ import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,7 +37,8 @@ import static com.beefficient.util.Objects.requireNonNull;
 /**
  * Main UI for the add task screen. Users can enter a task title and description.
  */
-public class AddEditTaskFragment extends Fragment implements AddEditTaskContract.View {
+public class AddEditTaskFragment extends Fragment implements
+        AddEditTaskContract.View, SelectProjectDialogFragment.OnProjectSelectedListener {
 
     private static final String TAG = "AddEditTaskFragment";
 
@@ -122,6 +122,8 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
                 presenter.selectPriority();
             } else if (param == dateParam) {
                 presenter.selectDate();
+            } else if (param == labelsParam) {
+
             }
         });
 
@@ -145,7 +147,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
         fab.setOnClickListener(v -> {
             presenter.setTitle(titleView.getText().toString());
-//            presenter.setDescription(descriptionView.getText().toString());
+            presenter.setDescription(descriptionView.getText().toString());
             presenter.saveTask();
         });
     }
@@ -166,50 +168,19 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     }
 
     @Override
-    public void showSelectProjectDialog(List<Project> projects) {
+    public void showSelectProjectDialog(ArrayList<Project> projects) {
 
-        // TODO
-        ArrayAdapter<Project> adapter = new ArrayAdapter<Project>(getContext(),
-                R.layout.dialog_item_project) {
+        DialogFragment dialog = SelectProjectDialogFragment.newInstance(projects);
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
 
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view;
+        Fragment prev = getFragmentManager().findFragmentByTag("project_dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
 
-                if (convertView == null) {
-                    LayoutInflater inflater = LayoutInflater.from(getContext());
-                    view = inflater.inflate(R.layout.dialog_item_project, parent, false);
-                } else {
-                    view = convertView;
-                }
-
-                TextView text = (TextView) view.findViewById(R.id.project_name);
-                AppCompatImageView color =
-                        (AppCompatImageView) view.findViewById(R.id.project_color);
-
-                Project project = getItem(position);
-                text.setText(project.getName());
-
-                // Set project color
-                Drawable drawable = DrawableCompat.wrap(color.getDrawable());
-                color.setImageDrawable(drawable);
-                DrawableCompat.setTint(drawable,
-                        ResourcesCompat.getColor(getResources(), project.getColor().color(), null));
-
-                return view;
-            }
-        };
-
-        adapter.addAll(projects);
-
-        new AlertDialog.Builder(getContext())
-                .setNegativeButton(R.string.cancel, (dialog, which) -> {})
-                .setTitle(R.string.select_project)
-                .setAdapter(adapter, (dialog, which) -> {
-                    Project project = adapter.getItem(which);
-                    presenter.setProject(project);
-                })
-                .show();
+        dialog.setTargetFragment(this, 0);
+        dialog.show(ft, "project_dialog");
     }
 
     @Override
@@ -234,6 +205,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
                 Task.Priority item = getItem(position);
                 text.setText(item.priorityName());
                 indicator.setBackgroundResource(item.color());
+//                indicator.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.profile_photo, null));
 
                 return view;
             }
@@ -306,6 +278,11 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, editedTaskId);
         getActivity().setResult(AddEditTaskActivity.RESULT_TASK_DELETED, intent);
         getActivity().finish();
+    }
+
+    @Override
+    public void onProjectSelected(Project project) {
+        presenter.setProject(project);
     }
 
     private void setTaskIdIfAny() {

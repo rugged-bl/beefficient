@@ -110,16 +110,16 @@ public class MainActivity extends AppCompatActivity implements
         switch (id) {
             case R.id.nav_overview: {
                 loadTasksFragment();
-
-                setTitle(R.string.all_tasks);
                 break;
             }
             case R.id.nav_today: {
                 // TODO: set TasksFragment with today tasks
+                loadTasksFragment();
                 break;
             }
             case R.id.nav_next_week: {
                 // TODO: set TasksFragment with next week tasks
+                loadTasksFragment();
                 break;
             }
             case R.id.nav_calendar: {
@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             case R.id.nav_task_inbox: {
                 // TODO: set TasksFragment with Inbox project tasks
+                loadTasksFragment();
                 break;
             }
             case R.id.nav_projects: {
@@ -151,5 +152,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private void loadTasksFragment() {
         setFragment(TasksFragment.newInstance());
+        setTitle(R.string.all_tasks);
     }
 }
