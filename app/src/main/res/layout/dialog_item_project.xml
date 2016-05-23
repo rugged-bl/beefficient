@@ -1,27 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="horizontal">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <View
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/project_color"
-        android:layout_width="@dimen/priority_indicator_width"
-        android:layout_height="match_parent"
-        tools:background="@color/colorMediumPriority"/>
+        android:layout_width="@dimen/project_color_size"
+        android:layout_height="@dimen/project_color_size"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/list_item_icon_padding_left"
+        android:layout_marginStart="@dimen/list_item_icon_padding_left"
+        android:contentDescription="@string/project_color"
+        android:src="@drawable/project_color"
+        tools:tint="@color/light_blue_a700"/>
 
     <TextView
         android:id="@+id/project_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="?attr/listPreferredItemPaddingRight"
+        android:layout_marginLeft="@dimen/list_item_text_padding"
+        android:layout_marginRight="?attr/listPreferredItemPaddingRight"
+        android:layout_marginStart="@dimen/list_item_text_padding"
         android:gravity="center_vertical"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
-        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        tools:text="High"/>
+        android:minHeight="?attr/listPreferredItemHeightSmall"
+        android:textAppearance="?attr/textAppearanceListItemSmall"
+        tools:text="Inbox"/>
 
-</LinearLayout>
+</RelativeLayout>

@@ -2,6 +2,7 @@ package com.beefficient.addedittask;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,7 +10,10 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,9 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,7 +30,7 @@ import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.beefficient.util.Objects.requireNonNull;
@@ -47,12 +49,14 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     private String editedTaskId;
 
     private TextView titleView;
-//    private TextView descriptionView;
-    private CheckBox checkboxCompleted;
+    private TextView descriptionView;
 
     private final TaskParam projectParam = new TaskParam(R.string.project, R.drawable.ic_project);
-    private final TaskParam priorityParam = new TaskParam(R.string.priority, R.drawable.ic_priority);
+    private final TaskParam priorityParam =
+            new TaskParam(R.string.priority, R.drawable.ic_priority);
     private final TaskParam dateParam = new TaskParam(R.string.date, R.drawable.ic_date_range);
+    private final TaskParam labelsParam = new TaskParam(R.string.labels, R.drawable.ic_label);
+    private final TaskParam remindersParam = new TaskParam(R.string.reminders, R.drawable.ic_reminder);
 
     private TaskParamsAdapter paramsAdapter;
 
@@ -93,10 +97,8 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         setHasOptionsMenu(true);
 
         // Configure params adapter
-        ArrayList<TaskParam> params = new ArrayList<>();
-        params.add(projectParam);
-        params.add(priorityParam);
-        params.add(dateParam);
+        List<TaskParam> params = Arrays.asList(
+                projectParam, priorityParam, dateParam, labelsParam, remindersParam);
 
         paramsAdapter = new TaskParamsAdapter(params);
     }
@@ -107,9 +109,8 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_addedittask, container, false);
 
-        checkboxCompleted = (CheckBox) view.findViewById(R.id.task_completed);
-        titleView = (TextView) view.findViewById(R.id.task_title);
-//        descriptionView = (TextView) view.findViewById(R.id.task_description);
+        titleView = (TextView) getActivity().findViewById(R.id.task_title);
+        descriptionView = (TextView) getActivity().findViewById(R.id.task_description);
 
         ListView paramsView = (ListView) view.findViewById(R.id.task_params);
         paramsView.setAdapter(paramsAdapter);
@@ -125,6 +126,43 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        setTaskIdIfAny();
+
+        if (isNewTask()) {
+            titleView.requestFocus();
+            presenter.setProject(DefaultTypes.PROJECT);
+            presenter.setPriority(DefaultTypes.PRIORITY);
+        }
+
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
+
+        fab.setOnClickListener(v -> {
+            presenter.setTitle(titleView.getText().toString());
+//            presenter.setDescription(descriptionView.getText().toString());
+            presenter.saveTask();
+        });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_addedittask, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_delete:
+                presenter.deleteTask();
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -146,11 +184,17 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
                 }
 
                 TextView text = (TextView) view.findViewById(R.id.project_name);
-                View indicator = view.findViewById(R.id.project_color);
+                AppCompatImageView color =
+                        (AppCompatImageView) view.findViewById(R.id.project_color);
 
-                Project item = getItem(position);
-                text.setText(item.getName());
-                indicator.setBackgroundResource(item.getColor().color());
+                Project project = getItem(position);
+                text.setText(project.getName());
+
+                // Set project color
+                Drawable drawable = DrawableCompat.wrap(color.getDrawable());
+                color.setImageDrawable(drawable);
+                DrawableCompat.setTint(drawable,
+                        ResourcesCompat.getColor(getResources(), project.getColor().color(), null));
 
                 return view;
             }
@@ -166,44 +210,6 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
                     presenter.setProject(project);
                 })
                 .show();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setTaskIdIfAny();
-
-        if (isNewTask()) {
-            titleView.requestFocus();
-            presenter.setProject(DefaultTypes.PROJECT);
-            presenter.setPriority(DefaultTypes.PRIORITY);
-        }
-
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
-
-        fab.setOnClickListener(v -> {
-            presenter.setTitle(titleView.getText().toString());
-//            presenter.setDescription(descriptionView.getText().toString());
-            presenter.setCompleted(checkboxCompleted.isChecked());
-            presenter.saveTask();
-        });
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_addedittask, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_delete:
-                presenter.deleteTask();
-                return true;
-        }
-        return false;
     }
 
     @Override
@@ -270,12 +276,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     @Override
     public void showDescription(String description) {
-//        this.descriptionView.setText(description);
-    }
-
-    @Override
-    public void showCompleted(boolean completed) {
-        checkboxCompleted.setChecked(completed);
+        this.descriptionView.setText(description);
     }
 
     @Override

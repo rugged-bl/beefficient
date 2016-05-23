@@ -20,4 +20,9 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="item_task_checkbox_margin">16dp</dimen>
     <dimen name="item_task_margin">16dp</dimen>
+    <dimen name="list_item_icon_padding_left">16dp</dimen>
+    <dimen name="list_item_text_padding">72dp</dimen>
+    <dimen name="project_color_size">24dp</dimen>
+    <dimen name="list_item_height">72dp</dimen>
+    <dimen name="list_vertical_padding">8dp</dimen>
 </resources>

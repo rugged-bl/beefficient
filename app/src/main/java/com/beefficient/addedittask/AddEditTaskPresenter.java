@@ -154,7 +154,6 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     @Override
     public void setCompleted(boolean completed) {
         this.completed = completed;
-        addEditTaskView.showCompleted(completed);
     }
 
     @Override

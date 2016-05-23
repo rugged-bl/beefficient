@@ -21,8 +21,6 @@ public interface AddEditTaskContract {
 
         void showDescription(String description);
 
-        void showCompleted(boolean completed);
-
         void showPriority(@StringRes int priorityName);
 
         void showProject(String name);

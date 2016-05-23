@@ -13,7 +13,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.beefficient.BackgroundService;
@@ -83,17 +82,18 @@ public class MainActivity extends AppCompatActivity implements
     private void initNavigationView() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
-            Log.d(TAG, Integer.toHexString(navigationView.getItemIconTintList().getDefaultColor()));
             navigationView.setNavigationItemSelectedListener(this);
         }
     }
 
 
     private void initSwipeRefreshLayout() {
-        SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        SwipeRefreshLayout swipeRefreshLayout =
+                (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(this, R.color.orange_400),
-                    ContextCompat.getColor(this, R.color.light_blue_a700));
+            swipeRefreshLayout.setColorSchemeColors(
+                    ContextCompat.getColor(this, R.color.accent),
+                    ContextCompat.getColor(this, R.color.primary));
         }
     }
 
@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements
         switch (id) {
             case R.id.nav_overview: {
                 loadTasksFragment();
+
+                setTitle(R.string.all_tasks);
                 break;
             }
             case R.id.nav_today: {
@@ -149,6 +151,5 @@ public class MainActivity extends AppCompatActivity implements
 
     private void loadTasksFragment() {
         setFragment(TasksFragment.newInstance());
-        setTitle(R.string.all_tasks);
     }
 }

@@ -4,11 +4,16 @@
     <color name="orange_600">#FB8C00</color>
     <color name="light_blue_a700">#0091EA</color>
     <color name="light_green_500">#8bc34a</color>
+    <color name="light_green_700">#689f38</color>
+
+    <color name="primary">#546E7A</color>
+    <color name="primaryDark">#455A64</color>
+    <color name="accent">#0091EA</color>
 
     <!--Priority colors-->
     <color name="colorLowPriority">#81d4fa</color>
     <color name="colorMediumPriority">#fbc02d</color>
     <color name="colorHighPriority">#f57c00</color>
-    <color name="colorVeryHighPriority">#d32f2f</color>
+    <color name="colorVeryHighPriority">#FF3D00</color>
     <color name="grey">#757575</color>
 </resources>

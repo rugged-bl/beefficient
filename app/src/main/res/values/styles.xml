@@ -2,9 +2,9 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/orange_400</item>
-        <item name="colorPrimaryDark">@color/orange_600</item>
-        <item name="colorAccent">@color/light_blue_a700</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primaryDark</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -30,6 +30,10 @@
     <style name="TextAppearance.AppTheme.SectionHeader" parent="TextAppearance.AppCompat.Body2">
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TaskEditText" parent="AppTheme.AppBarOverlay">
+        <item name="colorAccent">#40C4FF</item>
     </style>
 
     <!--<style name="TextAppearance.AppTheme.CompletedTask" parent="TextAppearance.AppCompat.Subhead"/>-->

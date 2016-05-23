@@ -62,4 +62,6 @@
     <string name="date">Date</string>
     <string name="select">Select</string>
     <string name="icon">Icon</string>
+    <string name="project_color">Project color</string>
+    <string name="reminders">Reminders</string>
 </resources>
