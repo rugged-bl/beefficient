@@ -2,11 +2,13 @@ package com.beefficient.addedittask;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -21,7 +23,7 @@ import static com.beefficient.util.Objects.requireNonNull;
  * Listens to user actions from the UI ({@link AddEditTaskFragment}), retrieves the data and updates
  * the UI as required.
  */
-public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
+public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Serializable {
 
     @NonNull
     private final DataSource dataRepository;
@@ -71,10 +73,13 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         subscriptions.clear();
     }
 
+    // TODO: убрать задержку при отображении названия и описания
     private void openTask() {
         if (null == taskId || taskId.isEmpty()) {
             return;
         }
+
+        Log.d("AddEditTaskPresenter", "openTask");
 
         Subscription subscription = dataRepository
                 .getTask(taskId)
@@ -86,6 +91,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     private void showTask(Task task) {
+        Log.d("AddEditTaskPresenter", "showTask");
         setTitle(task.getTitle());
         setDescription(task.getDescription());
         setCompleted(task.isCompleted());

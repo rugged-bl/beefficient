@@ -16,9 +16,11 @@ public class Task {
 
     private String id;
 
+    @NonNull
     private String title;
     @Nullable
     private String description;
+    @NonNull
     private Priority priority;
     private boolean completed;
     private boolean withTime;
@@ -26,7 +28,7 @@ public class Task {
 
     private List<Label> labelList;
 
-    public Task(String title) {
+    public Task(@NonNull String title) {
         this.title = title;
         this.priority = Priority.LOW;
     }
@@ -37,9 +39,11 @@ public class Task {
 
         private String id;
 
+        @NonNull
         private String title;
         @Nullable
         private String description;
+        @NonNull
         private Priority priority = Priority.LOW;
         private boolean completed;
         private boolean withTime;
@@ -70,7 +74,7 @@ public class Task {
          *
          * @param title title
          */
-        public Builder(String title) {
+        public Builder(@NonNull String title) {
             id = UUID.randomUUID().toString();
             this.title = title;
         }
@@ -81,7 +85,7 @@ public class Task {
          * @param title title
          * @param id unique id
          */
-        public Builder(String title, String id) {
+        public Builder(@NonNull String title, String id) {
             this.id = id;
             this.title = title;
         }
@@ -96,7 +100,7 @@ public class Task {
             return this;
         }
 
-        public Builder setTitle(String title) {
+        public Builder setTitle(@NonNull String title) {
             this.title = title;
             return this;
         }
@@ -111,7 +115,7 @@ public class Task {
             return this;
         }
 
-        public Builder setPriority(Priority priority) {
+        public Builder setPriority(@NonNull Priority priority) {
             this.priority = priority;
             return this;
         }
@@ -170,6 +174,7 @@ public class Task {
         return id;
     }
 
+    @NonNull
     public String getTitle() {
         return title;
     }
@@ -183,6 +188,7 @@ public class Task {
         return completed;
     }
 
+    @NonNull
     public Priority getPriority() {
         return priority;
     }

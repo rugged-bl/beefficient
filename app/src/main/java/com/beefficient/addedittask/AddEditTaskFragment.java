@@ -76,13 +76,11 @@ public class AddEditTaskFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        presenter.subscribe();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        presenter.unsubscribe();
     }
 
     @Override
@@ -94,6 +92,7 @@ public class AddEditTaskFragment extends Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setRetainInstance(true);
         setHasOptionsMenu(true);
 
         // Configure params adapter
@@ -134,6 +133,8 @@ public class AddEditTaskFragment extends Fragment implements
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        Log.d(TAG, "onActivityCreated");
+
         setTaskIdIfAny();
 
         if (isNewTask()) {
@@ -150,6 +151,14 @@ public class AddEditTaskFragment extends Fragment implements
             presenter.setDescription(descriptionView.getText().toString());
             presenter.saveTask();
         });
+
+        presenter.subscribe();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.unsubscribe();
     }
 
     @Override

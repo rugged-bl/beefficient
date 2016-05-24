@@ -63,4 +63,6 @@
     <string name="select">Выбрать</string>
     <string name="app_logo"></string>
     <string name="icon">Иконка</string>
+    <string name="project_color">Цвет проекта</string>
+    <string name="reminders">Напоминания</string>
 </resources>
