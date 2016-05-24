@@ -152,12 +152,14 @@ public class AddEditTaskFragment extends Fragment implements
             presenter.saveTask();
         });
 
+        // TODO: переместить в более подходящее место
         presenter.subscribe();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        // TODO: переместить в более подходящее место
         presenter.unsubscribe();
     }
 
