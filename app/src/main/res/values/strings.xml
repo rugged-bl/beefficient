@@ -19,7 +19,7 @@
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="no_tasks">No tasks</string>
-    <string name="empty_task_message">Title can\'t be empty</string>
+    <string name="empty_title_message">Title can\'t be empty</string>
     <string name="edit_task">Edit task</string>
     <string name="add_task">Add task</string>
     <string name="title_hint">Title</string>

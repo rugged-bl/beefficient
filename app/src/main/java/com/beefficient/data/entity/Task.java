@@ -6,11 +6,12 @@ import android.support.annotation.Nullable;
 import com.beefficient.R;
 import com.beefficient.util.Objects;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Task {
+public class Task implements Serializable {
     private Project project;
     private String projectId;
 

@@ -150,9 +150,9 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showEditTask(String taskId) {
+    public void showEditTask(Task task) {
         Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
-        intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, taskId);
+        intent.putExtra(AddEditTaskActivity.EXTRA_TASK, task);
         startActivityForResult(intent, AddEditTaskActivity.REQUEST_EDIT_TASK);
     }
 

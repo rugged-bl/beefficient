@@ -67,16 +67,17 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void result(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "result: " + requestCode + " " + resultCode + " " + data);
-        String taskId = null;
+        Task task = null;
         if (data != null) {
-            taskId = data.getStringExtra(AddEditTaskActivity.EXTRA_TASK_ID);
+            task = (Task) data.getSerializableExtra(AddEditTaskActivity.EXTRA_TASK);
         }
 
-        if (taskId != null) {
+        if (task != null) {
             switch (requestCode) {
                 case AddEditTaskActivity.REQUEST_ADD_TASK: {
                     if (Activity.RESULT_OK == resultCode) {
                         tasksView.showSavedMessage();
+//                        tasksView.scrollToTask(task);
                         // TODO: scroll to added task
                     } else if (AddEditTaskActivity.RESULT_TASK_DELETED == resultCode) {
                         tasksView.showDeletedMessage();
@@ -87,6 +88,7 @@ public class TasksPresenter implements TasksContract.Presenter {
                     if (Activity.RESULT_OK == resultCode) {
                         tasksView.showEditedMessage();
                         // TODO: scroll to edited task
+//                        tasksView.scrollToTask(task);
                     } else if (AddEditTaskActivity.RESULT_TASK_DELETED == resultCode) {
                         tasksView.showDeletedMessage();
                     }
@@ -232,7 +234,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void editTask(@NonNull Task task) {
         requireNonNull(task, "task cannot be null");
-        tasksView.showEditTask(task.getId());
+        tasksView.showEditTask(task);
     }
 
     @Override

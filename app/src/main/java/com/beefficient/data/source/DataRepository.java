@@ -144,7 +144,7 @@ public class DataRepository implements DataSource {
     public Observable<Project> getProject(@NonNull String projectId) {
         requireNonNull(projectId);
 
-        final Project cachedProject = getProjectWithId(projectId);
+        final Project cachedProject = getCachedProject(projectId);
 
         // Respond immediately with cache if available
         if (cachedProject != null) {
@@ -240,7 +240,7 @@ public class DataRepository implements DataSource {
     @Override
     public void completeTask(@NonNull String taskId) {
         requireNonNull(taskId);
-        Task taskWithId = getTaskWithId(taskId);
+        Task taskWithId = getCachedTask(taskId);
         if (taskWithId != null) {
             completeTask(taskWithId);
         }
@@ -264,7 +264,7 @@ public class DataRepository implements DataSource {
     @Override
     public void activateTask(@NonNull String taskId) {
         requireNonNull(taskId);
-        Task taskWithId = getTaskWithId(taskId);
+        Task taskWithId = getCachedTask(taskId);
         if (taskWithId != null) {
             activateTask(taskWithId);
         }
@@ -290,7 +290,7 @@ public class DataRepository implements DataSource {
     public Observable<Task> getTask(@NonNull final String taskId) {
         requireNonNull(taskId);
 
-        final Task cachedTask = getTaskWithId(taskId);
+        final Task cachedTask = getCachedTask(taskId);
 
         // Respond immediately with cache if available
         if (cachedTask != null) {
@@ -327,10 +327,10 @@ public class DataRepository implements DataSource {
 
     @Override
     public void deleteTask(@NonNull String taskId) {
-        Task task = getTaskWithId(taskId);
+        Task task = getCachedTask(taskId);
 
         if (task != null) {
-            Project project = getProjectWithId(task.getProjectId());
+            Project project = getCachedProject(task.getProjectId());
             if (project != null) {
                 ArrayList<Task> taskList = project.getTaskList();
                 for (int i = taskList.size() - 1; i >= 0; i--) {
@@ -349,7 +349,7 @@ public class DataRepository implements DataSource {
     }
 
     @Nullable
-    private Task getTaskWithId(@NonNull String id) {
+    private Task getCachedTask(@NonNull String id) {
         requireNonNull(id);
         if (cachedTasks == null || cachedTasks.isEmpty()) {
             return null;
@@ -359,7 +359,7 @@ public class DataRepository implements DataSource {
     }
 
     @Nullable
-    private Project getProjectWithId(@NonNull String id) {
+    private Project getCachedProject(@NonNull String id) {
         requireNonNull(id);
         if (cachedProjects == null || cachedProjects.isEmpty()) {
             return null;

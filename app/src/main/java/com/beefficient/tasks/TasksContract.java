@@ -19,7 +19,7 @@ public interface TasksContract {
 
         void showAddTask();
 
-        void showEditTask(String taskId);
+        void showEditTask(Task task);
 
         void showTaskMarkedComplete();
 

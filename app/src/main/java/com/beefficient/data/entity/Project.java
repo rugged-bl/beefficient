@@ -4,10 +4,11 @@ import android.support.annotation.NonNull;
 
 import com.beefficient.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Project {
+public class Project implements Serializable {
     private ArrayList<Task> taskList;
 
     private final String id;

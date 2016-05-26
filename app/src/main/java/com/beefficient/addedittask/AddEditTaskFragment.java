@@ -23,8 +23,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.beefficient.Injection;
 import com.beefficient.R;
-import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 
@@ -34,19 +34,14 @@ import java.util.List;
 
 import static com.beefficient.util.Objects.requireNonNull;
 
-/**
- * Main UI for the add task screen. Users can enter a task title and description.
- */
 public class AddEditTaskFragment extends Fragment implements
         AddEditTaskContract.View, SelectProjectDialogFragment.OnProjectSelectedListener {
 
     private static final String TAG = "AddEditTaskFragment";
 
-    public static final String ARGUMENT_EDIT_TASK_ID = "EDIT_TASK_ID";
+    public static final String ARGUMENT_EDIT_TASK = "EDIT_TASK";
 
     private AddEditTaskContract.Presenter presenter;
-
-    private String editedTaskId;
 
     private TextView titleView;
     private TextView descriptionView;
@@ -56,31 +51,22 @@ public class AddEditTaskFragment extends Fragment implements
             new TaskParam(R.string.priority, R.drawable.ic_priority);
     private final TaskParam dateParam = new TaskParam(R.string.date, R.drawable.ic_date_range);
     private final TaskParam labelsParam = new TaskParam(R.string.labels, R.drawable.ic_label);
-    private final TaskParam remindersParam = new TaskParam(R.string.reminders, R.drawable.ic_reminder);
+    private final TaskParam remindersParam =
+            new TaskParam(R.string.reminders, R.drawable.ic_reminder);
 
     private TaskParamsAdapter paramsAdapter;
 
     public AddEditTaskFragment() {
     }
 
-    public static AddEditTaskFragment newInstance(String taskId) {
+    public static AddEditTaskFragment newInstance(Task task) {
         AddEditTaskFragment fragment = new AddEditTaskFragment();
 
         Bundle args = new Bundle();
-        args.putString(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId);
+        args.putSerializable(AddEditTaskFragment.ARGUMENT_EDIT_TASK, task);
         fragment.setArguments(args);
 
         return fragment;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override
@@ -94,6 +80,20 @@ public class AddEditTaskFragment extends Fragment implements
 
         setRetainInstance(true);
         setHasOptionsMenu(true);
+
+        if (presenter == null) {
+            Bundle args = getArguments();
+            Task task = null;
+
+            if (args != null && args.containsKey(ARGUMENT_EDIT_TASK)) {
+                task = (Task) args.getSerializable(ARGUMENT_EDIT_TASK);
+            }
+
+            new AddEditTaskPresenter(task,
+                    Injection.provideDataRepository(getContext().getApplicationContext()), this);
+        }
+
+        presenter.subscribe();
 
         // Configure params adapter
         List<TaskParam> params = Arrays.asList(
@@ -126,22 +126,18 @@ public class AddEditTaskFragment extends Fragment implements
             }
         });
 
+        if (presenter.isNewTask()) {
+            titleView.requestFocus();
+        } else {
+            presenter.showTask();
+        }
+
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Log.d(TAG, "onActivityCreated");
-
-        setTaskIdIfAny();
-
-        if (isNewTask()) {
-            titleView.requestFocus();
-            presenter.setProject(DefaultTypes.PROJECT);
-            presenter.setPriority(DefaultTypes.PRIORITY);
-        }
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
@@ -152,14 +148,12 @@ public class AddEditTaskFragment extends Fragment implements
             presenter.saveTask();
         });
 
-        // TODO: переместить в более подходящее место
-        presenter.subscribe();
+        Log.d(TAG, "onActivityCreated: " + presenter);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // TODO: переместить в более подходящее место
         presenter.unsubscribe();
     }
 
@@ -242,8 +236,8 @@ public class AddEditTaskFragment extends Fragment implements
     }
 
     @Override
-    public void showEmptyTaskError() {
-        Snackbar.make(titleView, R.string.empty_task_message, Snackbar.LENGTH_LONG).show();
+    public void showEmptyTitleError() {
+        Snackbar.make(titleView, R.string.empty_title_message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -253,32 +247,31 @@ public class AddEditTaskFragment extends Fragment implements
     }
 
     @Override
-    public void showTitle(String title) {
+    public void setTitle(String title) {
         this.titleView.setText(title);
     }
 
     @Override
-    public void showDescription(String description) {
+    public void setDescription(String description) {
         this.descriptionView.setText(description);
     }
 
     @Override
-    public void showPriority(@StringRes int priorityName) {
+    public void setPriority(@StringRes int priorityName) {
         priorityParam.setText(getString(priorityName));
         paramsAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void showProject(String name) {
+    public void setProject(String name) {
         projectParam.setText(name);
         paramsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void showTask() {
-        Log.d(TAG, "showTask");
         Intent intent = new Intent();
-        intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, editedTaskId);
+        intent.putExtra(AddEditTaskActivity.EXTRA_TASK, presenter.getTask());
         getActivity().setResult(Activity.RESULT_OK, intent);
         getActivity().finish();
     }
@@ -286,7 +279,7 @@ public class AddEditTaskFragment extends Fragment implements
     @Override
     public void showTaskDeleted() {
         Intent intent = new Intent();
-        intent.putExtra(AddEditTaskActivity.EXTRA_TASK_ID, editedTaskId);
+        intent.putExtra(AddEditTaskActivity.EXTRA_TASK, presenter.getTask());
         getActivity().setResult(AddEditTaskActivity.RESULT_TASK_DELETED, intent);
         getActivity().finish();
     }
@@ -294,15 +287,5 @@ public class AddEditTaskFragment extends Fragment implements
     @Override
     public void onProjectSelected(Project project) {
         presenter.setProject(project);
-    }
-
-    private void setTaskIdIfAny() {
-        if (getArguments() != null && getArguments().containsKey(ARGUMENT_EDIT_TASK_ID)) {
-            editedTaskId = getArguments().getString(ARGUMENT_EDIT_TASK_ID);
-        }
-    }
-
-    private boolean isNewTask() {
-        return editedTaskId == null;
     }
 }

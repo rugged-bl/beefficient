@@ -18,7 +18,7 @@
     <string name="sort">Сортировка</string>
     <string name="search">Поиск</string>
     <string name="no_tasks">Нет задач</string>
-    <string name="empty_task_message">Заголовок задачи не может быть пустым</string>
+    <string name="empty_title_message">Заголовок задачи не может быть пустым</string>
     <string name="edit_task">Правка задачи</string>
     <string name="add_task">Новая задача</string>
     <string name="title_hint">Название</string>

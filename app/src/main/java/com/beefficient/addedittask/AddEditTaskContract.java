@@ -14,17 +14,17 @@ public interface AddEditTaskContract {
 
     interface View extends BaseView<Presenter> {
 
-        void showEmptyTaskError();
+        void showEmptyTitleError();
 
         void showTasksList();
 
-        void showTitle(String title);
+        void setTitle(String title);
 
-        void showDescription(String description);
+        void setDescription(String description);
 
-        void showPriority(@StringRes int priorityName);
+        void setPriority(@StringRes int priorityName);
 
-        void showProject(String name);
+        void setProject(String name);
 
         void showTaskDeleted();
 
@@ -39,11 +39,17 @@ public interface AddEditTaskContract {
 
     interface Presenter extends BasePresenter {
 
+        Task getTask();
+
+        boolean isNewTask();
+
         void saveTask();
 
-        void populateTask();
+//        void populateTask();
 
         void deleteTask();
+
+        void showTask();
 
         void setTitle(String title);
 

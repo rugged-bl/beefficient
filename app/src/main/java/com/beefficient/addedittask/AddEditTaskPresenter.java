@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.beefficient.data.entity.DefaultTypes;
 import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
@@ -12,9 +13,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.beefficient.util.Objects.requireNonNull;
@@ -29,10 +27,10 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
     private final DataSource dataRepository;
 
     @NonNull
-    private final AddEditTaskContract.View addEditTaskView;
+    private final AddEditTaskContract.View view;
 
     @Nullable
-    private final String taskId;
+    private Task task;
 
     private String title;
     private String description;
@@ -45,27 +43,26 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
     /**
      * Creates a presenter for the add/edit view.
      *
-     * @param taskId          ID of the task to edit or null for a new task
+     * @param task          The task to edit or null for a new task
      * @param dataRepository  a repository of data for tasks
-     * @param addEditTaskView the add/edit view
+     * @param view the add/edit view
      */
-    public AddEditTaskPresenter(@Nullable String taskId, @NonNull DataSource dataRepository,
-                                @NonNull AddEditTaskContract.View addEditTaskView) {
-        this.taskId = taskId;
+    public AddEditTaskPresenter(@Nullable Task task, @NonNull DataSource dataRepository,
+                                @NonNull AddEditTaskContract.View view) {
+        setTask(task);
         this.dataRepository = requireNonNull(dataRepository);
-        this.addEditTaskView = requireNonNull(addEditTaskView);
+        this.view = requireNonNull(view);
 
         subscriptions = new CompositeSubscription();
 
-        this.addEditTaskView.setPresenter(this);
+        this.view.setPresenter(this);
     }
 
     @Override
     public void subscribe() {
-        if (taskId != null) {
-            populateTask();
-            openTask();
-        }
+//        if (task != null) {
+//            populateTask();
+//        }
     }
 
     @Override
@@ -73,47 +70,27 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
         subscriptions.clear();
     }
 
-    // TODO: убрать задержку при отображении названия и описания
-    private void openTask() {
-        if (null == taskId || taskId.isEmpty()) {
-            return;
-        }
-
-        Log.d("AddEditTaskPresenter", "openTask");
-
-        Subscription subscription = dataRepository
-                .getTask(taskId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::showTask);
-
-        subscriptions.add(subscription);
+    @Nullable
+    public Task getTask() {
+        return task;
     }
 
-    private void showTask(Task task) {
-        Log.d("AddEditTaskPresenter", "showTask");
-        setTitle(task.getTitle());
-        setDescription(task.getDescription());
-        setCompleted(task.isCompleted());
-        setProject(task.getProject());
-        setPriority(task.getPriority());
-    }
-    
     @Override
     public void saveTask() {
         if (title.isEmpty()) {
-            addEditTaskView.showEmptyTaskError();
+            view.showEmptyTitleError();
         } else {
             Task.Builder taskBuilder;
             if (isNewTask()) {
                 taskBuilder = new Task.Builder(title);
             } else {
-                assert taskId != null;
-                dataRepository.deleteTask(taskId);
-                taskBuilder = new Task.Builder(title, taskId);
+                // TODO
+                dataRepository.deleteTask(task.getId());
+                taskBuilder = new Task.Builder(task);
             }
 
             Task task = taskBuilder
+                    .setTitle(title)
                     .setDescription(description)
                     .setProject(project)
                     .setPriority(priority)
@@ -121,40 +98,58 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
                     .build();
 
             dataRepository.saveTask(task);
-            addEditTaskView.showTask();
+            view.showTask();
         }
-    }
-
-    private boolean isNewTask() {
-        return taskId == null;
     }
 
     @Override
-    public void populateTask() {
-        if (taskId == null) {
-            throw new RuntimeException("populateTask() was called but task is new.");
-        }
-        dataRepository.getTask(taskId);
+    public boolean isNewTask() {
+        return task == null;
+    }
+//
+//    @Override
+//    public void populateTask() {
+//        Log.d("AddEditTaskPresenter", "populateTask: ");
+//        if (task == null) {
+//            throw new RuntimeException("populateTask() was called but task is new.");
+//        }
+//
+//        Subscription subscription = dataRepository
+//                .getTask(task.getId())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(this::setTask);
+//
+//        subscriptions.add(subscription);
+//    }
+
+    @Override
+    public void showTask() {
+        Log.d("AddEditTaskPresenter", "showTask: ");
+        view.setTitle(title);
+        view.setDescription(description);
+        view.setProject(project.getName());
+        view.setPriority(priority.priorityName());
     }
 
     @Override
     public void deleteTask() {
-        if (taskId != null) {
-            dataRepository.deleteTask(taskId);
+        if (task != null) {
+            dataRepository.deleteTask(task.getId());
         }
-        addEditTaskView.showTaskDeleted();
+        view.showTaskDeleted();
     }
 
     @Override
     public void setTitle(String title) {
         this.title = title;
-        addEditTaskView.showTitle(title);
+        view.setTitle(title);
     }
 
     @Override
     public void setDescription(String description) {
         this.description = description;
-        addEditTaskView.showDescription(description);
+        view.setDescription(description);
     }
 
     @Override
@@ -165,13 +160,13 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
     @Override
     public void setProject(Project project) {
         this.project = project;
-        addEditTaskView.showProject(project.getName());
+        view.setProject(project.getName());
     }
 
     @Override
     public void setPriority(Task.Priority priority) {
         this.priority = priority;
-        addEditTaskView.showPriority(priority.priorityName());
+        view.setPriority(priority.priorityName());
     }
 
     @Override
@@ -179,33 +174,30 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
         ArrayList<Project> projects =
                 (ArrayList<Project>) dataRepository.getProjects().toBlocking().single();
 
-        addEditTaskView.showSelectProjectDialog(projects);
+        view.showSelectProjectDialog(projects);
     }
 
     @Override
     public void selectPriority() {
-        addEditTaskView.showSelectPriorityDialog(Arrays.asList(Task.Priority.values()));
+        view.showSelectPriorityDialog(Arrays.asList(Task.Priority.values()));
     }
 
     @Override
     public void selectDate() {
-        addEditTaskView.showSelectDateDialog();
+        view.showSelectDateDialog();
     }
 
-/*    @Override
-    public void onTaskLoaded(Task task) {
-        // The view may not be able to handle UI updates anymore
-        if (addEditTaskView.isActive()) {
-            addEditTaskView.showTitle(task.getTitle());
-            addEditTaskView.showDescription(task.getDescription());
+    private void setTask(Task task) {
+        this.task = task;
+        if (task == null) {
+            project = DefaultTypes.PROJECT;
+            priority = DefaultTypes.PRIORITY;
+        } else {
+            title = task.getTitle();
+            description = task.getDescription();
+            completed = task.isCompleted();
+            priority = task.getPriority();
+            project = task.getProject();
         }
     }
-
-    @Override
-    public void onDataNotAvailable() {
-        // The view may not be able to handle UI updates anymore
-        if (addEditTaskView.isActive()) {
-            addEditTaskView.showEmptyTaskError();
-        }
-    }*/
 }
