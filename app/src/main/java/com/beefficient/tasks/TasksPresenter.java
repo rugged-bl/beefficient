@@ -264,6 +264,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     public void deleteAllData() {
         dataRepository.deleteAllTasks();
         dataRepository.deleteAllProjects();
+        loadTasks(false, false);
     }
 
     /**
@@ -276,6 +277,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void setFiltering(TasksFilterType requestType) {
         currentFiltering = requestType;
+        loadTasks(false, false);
     }
 
     @Override
@@ -292,6 +294,7 @@ public class TasksPresenter implements TasksContract.Presenter {
     @Override
     public void setSorting(TasksSortType requestType) {
         currentSorting = requestType;
+        loadTasks(false, false);
     }
 
     @Override
