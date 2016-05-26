@@ -1,6 +1,8 @@
 package com.beefficient.addedittask;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +33,7 @@ import com.beefficient.data.entity.Task;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.beefficient.util.Objects.requireNonNull;
@@ -49,7 +53,7 @@ public class AddEditTaskFragment extends Fragment implements
     private final TaskParam projectParam = new TaskParam(R.string.project, R.drawable.ic_project);
     private final TaskParam priorityParam =
             new TaskParam(R.string.priority, R.drawable.ic_priority);
-    private final TaskParam dateParam = new TaskParam(R.string.date, R.drawable.ic_date_range);
+    private final TaskParam dateParam = new TaskParam(R.string.due_date, R.drawable.ic_date_range);
     private final TaskParam labelsParam = new TaskParam(R.string.labels, R.drawable.ic_label);
     private final TaskParam remindersParam =
             new TaskParam(R.string.reminders, R.drawable.ic_reminder);
@@ -128,10 +132,9 @@ public class AddEditTaskFragment extends Fragment implements
 
         if (presenter.isNewTask()) {
             titleView.requestFocus();
-        } else {
-            presenter.showTask();
         }
 
+        presenter.showTask();
         return view;
     }
 
@@ -228,11 +231,24 @@ public class AddEditTaskFragment extends Fragment implements
     }
 
     @Override
-    public void showSelectDateDialog() {
-//        new AlertDialog.Builder(getContext())
-//                .setNegativeButton(R.string.cancel, (dialog, which) -> {})
-//                .setPositiveButton(R.string.select, (dialog, which) -> {})
-//                .setView();
+    public void showSelectDateDialog(Calendar calendar) {
+        new DatePickerDialog(getContext(), (view, year, monthOfYear, dayOfMonth) -> {
+            calendar.set(year, monthOfYear, dayOfMonth);
+            showSelectTimeDialog(calendar);
+        },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    private void showSelectTimeDialog(Calendar calendar) {
+        new TimePickerDialog(getContext(), (view, hourOfDay, minute) -> {
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+            presenter.setDueDate(calendar);
+        },
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE), true).show();
     }
 
     @Override
@@ -265,6 +281,20 @@ public class AddEditTaskFragment extends Fragment implements
     @Override
     public void setProject(String name) {
         projectParam.setText(name);
+        paramsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setDueDate(long dueDate) {
+        String dueDateText;
+        if (dueDate == 0) {
+            dueDateText = getString(R.string.date_not_set);
+        } else {
+            dueDateText = (String) DateUtils.getRelativeDateTimeString(getContext(), dueDate,
+                    DateUtils.DAY_IN_MILLIS, DateUtils.DAY_IN_MILLIS, 0);
+        }
+
+        dateParam.setText(dueDateText);
         paramsAdapter.notifyDataSetChanged();
     }
 

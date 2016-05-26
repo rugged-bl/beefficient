@@ -8,6 +8,7 @@ import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public interface AddEditTaskContract {
@@ -26,6 +27,8 @@ public interface AddEditTaskContract {
 
         void setProject(String name);
 
+        void setDueDate(long dueDate);
+
         void showTaskDeleted();
 
         void showTask();
@@ -34,7 +37,7 @@ public interface AddEditTaskContract {
 
         void showSelectPriorityDialog(List<Task.Priority> priorities);
 
-        void showSelectDateDialog();
+        void showSelectDateDialog(Calendar calendar);
     }
 
     interface Presenter extends BasePresenter {
@@ -60,6 +63,8 @@ public interface AddEditTaskContract {
         void setProject(Project item);
 
         void setPriority(Task.Priority priority);
+
+        void setDueDate(Calendar calendar);
 
         void selectProject();
 

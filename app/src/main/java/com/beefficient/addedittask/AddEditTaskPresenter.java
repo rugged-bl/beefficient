@@ -2,6 +2,7 @@ package com.beefficient.addedittask;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.beefficient.data.entity.DefaultTypes;
@@ -12,6 +13,8 @@ import com.beefficient.data.source.DataSource;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import rx.subscriptions.CompositeSubscription;
 
@@ -37,6 +40,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
     private boolean completed;
     private Task.Priority priority;
     private Project project;
+    private long time;
 
     private final CompositeSubscription subscriptions;
 
@@ -91,6 +95,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
 
             Task task = taskBuilder
                     .setTitle(title)
+                    .setTime(time)
                     .setDescription(description)
                     .setProject(project)
                     .setPriority(priority)
@@ -130,6 +135,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
         view.setDescription(description);
         view.setProject(project.getName());
         view.setPriority(priority.priorityName());
+        view.setDueDate(time);
     }
 
     @Override
@@ -170,6 +176,12 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
     }
 
     @Override
+    public void setDueDate(Calendar calendar) {
+        time = calendar.getTimeInMillis();
+        view.setDueDate(time);
+    }
+
+    @Override
     public void selectProject() {
         ArrayList<Project> projects =
                 (ArrayList<Project>) dataRepository.getProjects().toBlocking().single();
@@ -184,20 +196,24 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
 
     @Override
     public void selectDate() {
-        view.showSelectDateDialog();
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTimeInMillis(time);
+        view.showSelectDateDialog(calendar);
     }
 
-    private void setTask(Task task) {
+    private void setTask(@Nullable Task task) {
         this.task = task;
         if (task == null) {
             project = DefaultTypes.PROJECT;
             priority = DefaultTypes.PRIORITY;
+            time = System.currentTimeMillis();
         } else {
             title = task.getTitle();
             description = task.getDescription();
             completed = task.isCompleted();
             priority = task.getPriority();
             project = task.getProject();
+            time = task.getTime();
         }
     }
 }

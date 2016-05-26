@@ -222,51 +222,36 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showFilteringPopUpMenu() {
-        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_item_search));
-        popup.getMenuInflater().inflate(R.menu.filter_tasks, popup.getMenu());
-
-        popup.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.active:
-                    presenter.setFiltering(TasksFilterType.ACTIVE_TASKS);
-                    break;
-                case R.id.completed:
-                    presenter.setFiltering(TasksFilterType.COMPLETED_TASKS);
-                    break;
-                default:
-                    presenter.setFiltering(TasksFilterType.ALL_TASKS);
-                    break;
-            }
-            presenter.loadTasks(false);
-            return true;
-        });
-
-        popup.show();
+//        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_item_search));
+//        popup.getMenuInflater().inflate(R.menu.filter_tasks, popup.getMenu());
+//
+//        popup.setOnMenuItemClickListener(item -> {
+//            switch (item.getItemId()) {
+//
+//            }
+//            presenter.loadTasks(false);
+//            return true;
+//        });
+//
+//        popup.show();
+        showSnackbar("Filter");
     }
 
     @Override
     public void showSortingPopUpMenu() {
-        // TODO
-        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_item_search));
-        popup.getMenuInflater().inflate(R.menu.sort_tasks, popup.getMenu());
-
-        popup.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.projects:
-                    presenter.setSorting(TasksSortType.PROJECTS);
-                    break;
-                case R.id.date:
-                    presenter.setSorting(TasksSortType.DATE);
-                    break;
-                default:
-                    presenter.setSorting(TasksSortType.PROJECTS);
-                    break;
-            }
-            presenter.loadTasks(false);
-            return true;
-        });
-
-        popup.show();
+//        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_item_search));
+//        popup.getMenuInflater().inflate(R.menu.sort_tasks, popup.getMenu());
+//
+//        popup.setOnMenuItemClickListener(item -> {
+//            switch (item.getItemId()) {
+//
+//            }
+//            presenter.loadTasks(false);
+//            return true;
+//        });
+//
+//        popup.show();
+        showSnackbar("Sort");
     }
 
     @Override
@@ -283,16 +268,32 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_item_sortby_projects:
+                presenter.setSorting(TasksSortType.PROJECTS);
+                break;
+            case R.id.menu_item_sortby_date:
+                presenter.setSorting(TasksSortType.DATE);
+                break;
+            case R.id.menu_item_active_tasks:
+                presenter.setFiltering(TasksFilterType.ACTIVE_TASKS);
+                break;
+            case R.id.menu_item_completed_tasks:
+                presenter.setFiltering(TasksFilterType.COMPLETED_TASKS);
+                break;
+            case R.id.menu_item_all_tasks:
+                presenter.setFiltering(TasksFilterType.ALL_TASKS);
+                break;
             case R.id.menu_item_search: {
+                // TODO: show SearchView in toolbar
                 break;
             }
-            case R.id.menu_filter:
+            case R.id.menu_item_filter:
                 showFilteringPopUpMenu();
                 break;
-            case R.id.menu_clear:
+            case R.id.menu_item_clear:
                 presenter.clearCompletedTasks();
                 break;
-            case R.id.menu_sort: {
+            case R.id.menu_item_sort: {
                 showSortingPopUpMenu();
                 break;
             }
