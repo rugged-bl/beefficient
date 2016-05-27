@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
@@ -25,8 +24,6 @@ public class SelectProjectDialogFragment extends AppCompatDialogFragment {
 
     private static final String ARGUMENT_PROJECTS = "PROJECTS";
 
-    private ArrayList<Project> projects;
-
     public static SelectProjectDialogFragment newInstance(ArrayList<Project> projects) {
         SelectProjectDialogFragment f = new SelectProjectDialogFragment();
 
@@ -38,19 +35,15 @@ public class SelectProjectDialogFragment extends AppCompatDialogFragment {
     }
 
     @SuppressWarnings("unchecked")
+    @NonNull
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
+        ArrayList<Project> projects = null;
         Bundle bundle = getArguments();
         if (bundle != null) {
             projects = (ArrayList<Project>) bundle.getSerializable(ARGUMENT_PROJECTS);
         }
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         ArrayAdapter<Project> adapter = new ArrayAdapter<Project>(getContext(),
                 R.layout.dialog_item_project) {

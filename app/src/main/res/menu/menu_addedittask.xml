@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/menu_item_complete_task"
+        android:title="@string/complete_task"/>
+    <item
+        android:id="@+id/menu_item_clear_date"
+        android:title="@string/menu_clear_date" />
+    <item
         android:id="@+id/menu_item_delete"
-        android:title="@string/menu_delete_task" />
+        android:title="@string/menu_delete_task"/>
 </menu>

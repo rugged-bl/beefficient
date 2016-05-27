@@ -8,7 +8,6 @@ import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public interface AddEditTaskContract {
 
@@ -34,7 +33,7 @@ public interface AddEditTaskContract {
 
         void showSelectProjectDialog(ArrayList<Project> projects);
 
-        void showSelectPriorityDialog(List<Task.Priority> priorities);
+        void showSelectPriorityDialog(ArrayList<Task.Priority> priorities);
 
         void showSelectDateDialog(
                 int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute);
@@ -71,5 +70,7 @@ public interface AddEditTaskContract {
         void selectPriority();
 
         void selectDate();
+
+        void clearDueDate();
     }
 }

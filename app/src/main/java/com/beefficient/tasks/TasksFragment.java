@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -221,40 +220,6 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void showFilteringPopUpMenu() {
-//        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_item_search));
-//        popup.getMenuInflater().inflate(R.menu.filter_tasks, popup.getMenu());
-//
-//        popup.setOnMenuItemClickListener(item -> {
-//            switch (item.getItemId()) {
-//
-//            }
-//            presenter.loadTasks(false);
-//            return true;
-//        });
-//
-//        popup.show();
-        showSnackbar("Filter");
-    }
-
-    @Override
-    public void showSortingPopUpMenu() {
-//        PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_item_search));
-//        popup.getMenuInflater().inflate(R.menu.sort_tasks, popup.getMenu());
-//
-//        popup.setOnMenuItemClickListener(item -> {
-//            switch (item.getItemId()) {
-//
-//            }
-//            presenter.loadTasks(false);
-//            return true;
-//        });
-//
-//        popup.show();
-        showSnackbar("Sort");
-    }
-
-    @Override
     public void showEditedMessage() {
         showSnackbar(getString(R.string.task_edited));
         tasksAdapter.notifyDataSetChanged();
@@ -287,18 +252,11 @@ public class TasksFragment extends Fragment implements TasksContract.View {
                 // TODO: show SearchView in toolbar
                 break;
             }
-            case R.id.menu_item_filter:
-                showFilteringPopUpMenu();
-                break;
             case R.id.menu_item_clear:
                 presenter.clearCompletedTasks();
                 break;
-            case R.id.menu_item_sort: {
-                showSortingPopUpMenu();
-                break;
-            }
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 }

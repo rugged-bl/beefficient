@@ -12,8 +12,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,7 +35,8 @@ import java.util.List;
 import static com.beefficient.util.Objects.requireNonNull;
 
 public class AddEditTaskFragment extends Fragment implements
-        AddEditTaskContract.View, SelectProjectDialogFragment.OnProjectSelectedListener {
+        AddEditTaskContract.View, SelectProjectDialogFragment.OnProjectSelectedListener,
+        SelectPriorityDialogFragment.OnPrioritySelectedListener {
 
     private static final String TAG = "AddEditTaskFragment";
 
@@ -115,6 +113,7 @@ public class AddEditTaskFragment extends Fragment implements
         descriptionView = (TextView) getActivity().findViewById(R.id.task_description);
 
         ListView paramsView = (ListView) view.findViewById(R.id.task_params);
+        Log.d(TAG, "onCreateView: " + paramsView.getAdapter());
         paramsView.setAdapter(paramsAdapter);
         paramsView.setOnItemClickListener((parent, view1, position, id) -> {
             TaskParam param = paramsAdapter.getItem(position);
@@ -170,62 +169,36 @@ public class AddEditTaskFragment extends Fragment implements
             case R.id.menu_item_delete:
                 presenter.deleteTask();
                 return true;
+            case R.id.menu_item_complete_task:
+                presenter.setCompleted(true);
+                return true;
+            case R.id.menu_item_clear_date:
+                presenter.clearDueDate();
+                return true;
         }
         return false;
     }
 
     @Override
     public void showSelectProjectDialog(ArrayList<Project> projects) {
-
         DialogFragment dialog = SelectProjectDialogFragment.newInstance(projects);
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-
-        Fragment prev = getFragmentManager().findFragmentByTag("project_dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
+//        FragmentTransaction ft = getFragmentManager().beginTransaction();
+//
+//        Fragment prev = getFragmentManager().findFragmentByTag("project_dialog");
+//        if (prev != null) {
+//            ft.remove(prev);
+//        }
+//        ft.addToBackStack(null);
 
         dialog.setTargetFragment(this, 0);
-        dialog.show(ft, "project_dialog");
+        dialog.show(getFragmentManager(), "select_project_dialog");
     }
 
     @Override
-    public void showSelectPriorityDialog(List<Task.Priority> priorities) {
-        ArrayAdapter<Task.Priority> adapter = new ArrayAdapter<Task.Priority>(
-                getContext(), R.layout.dialog_item_priority) {
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view;
-
-                if (convertView == null) {
-                    LayoutInflater inflater = LayoutInflater.from(getContext());
-                    view = inflater.inflate(R.layout.dialog_item_priority, parent, false);
-                } else {
-                    view = convertView;
-                }
-
-                TextView text = (TextView) view.findViewById(R.id.priority_text);
-                View indicator = view.findViewById(R.id.priority_indicator);
-
-                Task.Priority item = getItem(position);
-                text.setText(item.priorityName());
-                indicator.setBackgroundResource(item.color());
-
-                return view;
-            }
-        };
-        adapter.addAll(priorities);
-
-        new AlertDialog.Builder(getContext())
-                .setNegativeButton(R.string.cancel, (dialog, which) -> {})
-                .setTitle(R.string.select_priority)
-                .setAdapter(adapter, (dialog, which) -> {
-                    Task.Priority priority = adapter.getItem(which);
-                    presenter.setPriority(priority);
-                })
-                .show();
+    public void showSelectPriorityDialog(ArrayList<Task.Priority> priorities) {
+        DialogFragment dialog = SelectPriorityDialogFragment.newInstance(priorities);
+        dialog.setTargetFragment(this, 0);
+        dialog.show(getFragmentManager(), "select_priority_dialog");
     }
 
     @Override
@@ -240,9 +213,8 @@ public class AddEditTaskFragment extends Fragment implements
 
     private void showSelectTimeDialog(int year, int monthOfYear, int dayOfMonth, int hourOfDay,
                                       int minute) {
-        new TimePickerDialog(getContext(), (view, pickedHourOfDay, pickedMinute) -> {
-            presenter.setDueDate(year, monthOfYear, dayOfMonth, pickedHourOfDay, pickedMinute);
-        },
+        new TimePickerDialog(getContext(), (view, pickedHourOfDay, pickedMinute) ->
+                presenter.setDueDate(year, monthOfYear, dayOfMonth, pickedHourOfDay, pickedMinute),
                 hourOfDay, minute, true).show();
     }
 
@@ -312,5 +284,10 @@ public class AddEditTaskFragment extends Fragment implements
     @Override
     public void onProjectSelected(Project project) {
         presenter.setProject(project);
+    }
+
+    @Override
+    public void onPrioritySelected(Task.Priority priority) {
+        presenter.setPriority(priority);
     }
 }

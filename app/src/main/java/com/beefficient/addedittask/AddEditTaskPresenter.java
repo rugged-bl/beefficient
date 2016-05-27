@@ -47,9 +47,9 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
     /**
      * Creates a presenter for the add/edit view.
      *
-     * @param task          The task to edit or null for a new task
-     * @param dataRepository  a repository of data for tasks
-     * @param view the add/edit view
+     * @param task              the task to edit or null for a new task
+     * @param dataRepository    a repository of data for tasks
+     * @param view              the add/edit view
      */
     public AddEditTaskPresenter(@Nullable Task task, @NonNull DataSource dataRepository,
                                 @NonNull AddEditTaskContract.View view) {
@@ -183,8 +183,14 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
 
     @Override
     public void setDueDate(int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute) {
-        DateTime dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+        DateTime dateTime = new DateTime(year, monthOfYear + 1, dayOfMonth, hourOfDay, minute);
         time = dateTime.getMillis();
+        view.setDueDate(time);
+    }
+
+    @Override
+    public void clearDueDate() {
+        time = 0;
         view.setDueDate(time);
     }
 
@@ -198,13 +204,13 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
 
     @Override
     public void selectPriority() {
-        view.showSelectPriorityDialog(Arrays.asList(Task.Priority.values()));
+        view.showSelectPriorityDialog(new ArrayList<>(Arrays.asList(Task.Priority.values())));
     }
 
     @Override
     public void selectDate() {
         DateTime dateTime = new DateTime((time == 0) ? System.currentTimeMillis() : time);
-        view.showSelectDateDialog(dateTime.getYear(), dateTime.getMonthOfYear(),
+        view.showSelectDateDialog(dateTime.getYear(), dateTime.getMonthOfYear() - 1,
                 dateTime.getDayOfMonth(), dateTime.getHourOfDay(), dateTime.getMinuteOfHour());
     }
 

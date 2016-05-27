@@ -28,7 +28,7 @@
     <string name="task_marked_complete">Task marked complete</string>
     <string name="task_marked_active">Task marked active</string>
     <string name="no_data">No data</string>
-    <string name="menu_delete_task">Delete task</string>
+    <string name="menu_delete_task">Delete</string>
     <string name="light_blue">Light blue</string>
     <string name="black">Black</string>
     <string name="orange">Orange</string>
@@ -66,4 +66,7 @@
     <string name="reminders">Reminders</string>
     <string name="due_date">Due date</string>
     <string name="date_not_set">Not set</string>
+    <string name="complete_task">Complete</string>
+    <string name="menu_clear_date">Clear date</string>
+    <string name="no_projects">No projects</string>
 </resources>

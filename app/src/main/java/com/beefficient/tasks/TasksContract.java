@@ -40,10 +40,6 @@ public interface TasksContract {
         void showDeletedMessage();
 
         void showEditedMessage();
-
-        void showFilteringPopUpMenu();
-
-        void showSortingPopUpMenu();
     }
 
     interface Presenter extends BasePresenter {

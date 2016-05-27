@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.beefficient.BackgroundService;
 import com.beefficient.R;
+import com.beefficient.projects.ProjectsFragment;
 import com.beefficient.tasks.TasksFragment;
 
 public class MainActivity extends AppCompatActivity implements
@@ -153,5 +154,10 @@ public class MainActivity extends AppCompatActivity implements
     private void loadTasksFragment() {
         setFragment(TasksFragment.newInstance());
         setTitle(R.string.all_tasks);
+    }
+
+    private void loadProjectsFragment() {
+        setFragment(ProjectsFragment.newInstance());
+        setTitle(R.string.projects);
     }
 }

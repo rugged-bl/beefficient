@@ -27,7 +27,7 @@
     <string name="task_marked_complete">Задача помечена как выполненная</string>
     <string name="task_marked_active">Задача помечена как активная</string>
     <string name="no_data">Нет данных</string>
-    <string name="menu_delete_task">Удалить задачу</string>
+    <string name="menu_delete_task">Удалить</string>
     <string name="black">Чёрный</string>
     <string name="green">Зелёный</string>
     <string name="light_blue">Светло-голубой</string>
@@ -67,4 +67,6 @@
     <string name="reminders">Напоминания</string>
     <string name="due_date">Срок выполнения</string>
     <string name="date_not_set">Не установлен</string>
+    <string name="complete_task">Выполнить</string>
+    <string name="menu_clear_date">Очистить дату</string>
 </resources>
