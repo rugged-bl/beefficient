@@ -33,7 +33,6 @@ import com.beefficient.data.entity.Task;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import static com.beefficient.util.Objects.requireNonNull;
@@ -213,7 +212,6 @@ public class AddEditTaskFragment extends Fragment implements
                 Task.Priority item = getItem(position);
                 text.setText(item.priorityName());
                 indicator.setBackgroundResource(item.color());
-//                indicator.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.profile_photo, null));
 
                 return view;
             }
@@ -231,24 +229,21 @@ public class AddEditTaskFragment extends Fragment implements
     }
 
     @Override
-    public void showSelectDateDialog(Calendar calendar) {
-        new DatePickerDialog(getContext(), (view, year, monthOfYear, dayOfMonth) -> {
-            calendar.set(year, monthOfYear, dayOfMonth);
-            showSelectTimeDialog(calendar);
-        },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)).show();
+    public void showSelectDateDialog(int year, int monthOfYear, int dayOfMonth, int hourOfDay,
+                                     int minute) {
+        new DatePickerDialog(getContext(),
+                (view, pickedYear, pickedMonthOfYear, pickedDayOfMonth) ->
+                        showSelectTimeDialog(pickedYear, pickedMonthOfYear, pickedDayOfMonth,
+                                hourOfDay, minute),
+                year, monthOfYear, dayOfMonth).show();
     }
 
-    private void showSelectTimeDialog(Calendar calendar) {
-        new TimePickerDialog(getContext(), (view, hourOfDay, minute) -> {
-            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            calendar.set(Calendar.MINUTE, minute);
-            presenter.setDueDate(calendar);
+    private void showSelectTimeDialog(int year, int monthOfYear, int dayOfMonth, int hourOfDay,
+                                      int minute) {
+        new TimePickerDialog(getContext(), (view, pickedHourOfDay, pickedMinute) -> {
+            presenter.setDueDate(year, monthOfYear, dayOfMonth, pickedHourOfDay, pickedMinute);
         },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE), true).show();
+                hourOfDay, minute, true).show();
     }
 
     @Override

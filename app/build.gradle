@@ -88,7 +88,7 @@ dependencies {
 //    compile "com.tbruyelle.rxpermissions:rxpermissions:$rxPermissionsVersion@aar"
     compile "com.squareup.sqlbrite:sqlbrite:$sqlbriteVersion"
     // Time
-//    compile "joda-time:joda-time:$jodaTimeVersion"
+    compile "joda-time:joda-time:$jodaTimeVersion"
 //    compile "org.ocpsoft.prettytime:prettytime-nlp:$prettyTimeNlpVersion"
 
     compile 'de.hdodenhof:circleimageview:2.0.0'

@@ -9,7 +9,7 @@ public final class DefaultTypes {
     private static final String defaultProjectTitle = Application.getContext().getString(R.string.inbox);
 
     public static final Project PROJECT =
-            new Project(defaultProjectTitle, Project.Color.BLACK, defaultProjectTitle);
+            new Project(defaultProjectTitle, Project.Color.BLACK, "Inbox");
 
     public static final Task.Priority PRIORITY = Task.Priority.LOW;
 }

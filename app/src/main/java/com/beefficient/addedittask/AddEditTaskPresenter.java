@@ -2,7 +2,6 @@ package com.beefficient.addedittask;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.beefficient.data.entity.DefaultTypes;
@@ -10,11 +9,11 @@ import com.beefficient.data.entity.Project;
 import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 
+import org.joda.time.DateTime;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import rx.subscriptions.CompositeSubscription;
 
@@ -41,6 +40,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
     private Task.Priority priority;
     private Project project;
     private long time;
+    private boolean withTime;
 
     private final CompositeSubscription subscriptions;
 
@@ -176,8 +176,15 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
     }
 
     @Override
-    public void setDueDate(Calendar calendar) {
-        time = calendar.getTimeInMillis();
+    public void setWithTime(boolean withTime) {
+        this.withTime = withTime;
+
+    }
+
+    @Override
+    public void setDueDate(int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute) {
+        DateTime dateTime = new DateTime(year, monthOfYear, dayOfMonth, hourOfDay, minute);
+        time = dateTime.getMillis();
         view.setDueDate(time);
     }
 
@@ -196,9 +203,9 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
 
     @Override
     public void selectDate() {
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.setTimeInMillis(time);
-        view.showSelectDateDialog(calendar);
+        DateTime dateTime = new DateTime((time == 0) ? System.currentTimeMillis() : time);
+        view.showSelectDateDialog(dateTime.getYear(), dateTime.getMonthOfYear(),
+                dateTime.getDayOfMonth(), dateTime.getHourOfDay(), dateTime.getMinuteOfHour());
     }
 
     private void setTask(@Nullable Task task) {
@@ -206,7 +213,6 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
         if (task == null) {
             project = DefaultTypes.PROJECT;
             priority = DefaultTypes.PRIORITY;
-            time = System.currentTimeMillis();
         } else {
             title = task.getTitle();
             description = task.getDescription();
