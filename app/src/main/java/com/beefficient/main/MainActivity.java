@@ -98,12 +98,6 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void setFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-    }
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -134,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements
             }
             case R.id.nav_projects: {
                 // TODO: set ProjectsFragment (dialog?)
+                loadProjectsFragment();
                 break;
             }
             case R.id.nav_labels: {
@@ -149,6 +144,12 @@ public class MainActivity extends AppCompatActivity implements
         appBarLayout.setExpanded(true);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
     }
 
     private void loadTasksFragment() {

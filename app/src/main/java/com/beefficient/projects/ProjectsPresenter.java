@@ -31,11 +31,21 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
 
     @Override
     public void subscribe() {
-
+        loadProjects(false);
     }
 
     @Override
     public void unsubscribe() {
+        subscriptions.clear();
+    }
 
+    @Override
+    public void loadProjects(boolean force) {
+        // TODO
+    }
+
+    @Override
+    public void addNewProject() {
+        view.showAddProject();
     }
 }

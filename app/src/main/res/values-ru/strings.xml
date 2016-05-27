@@ -69,4 +69,7 @@
     <string name="date_not_set">Не установлен</string>
     <string name="complete_task">Выполнить</string>
     <string name="menu_clear_date">Очистить дату</string>
+    <string name="no_projects">Нет проектов</string>
+    <string name="clear_time">Очистить</string>
+    <string name="time">Время</string>
 </resources>

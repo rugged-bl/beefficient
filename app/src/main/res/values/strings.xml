@@ -69,4 +69,6 @@
     <string name="complete_task">Complete</string>
     <string name="menu_clear_date">Clear date</string>
     <string name="no_projects">No projects</string>
+    <string name="time">Time</string>
+    <string name="clear_time">Clear</string>
 </resources>

@@ -3,6 +3,7 @@ package com.beefficient.addedittask;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -204,18 +206,43 @@ public class AddEditTaskFragment extends Fragment implements
     @Override
     public void showSelectDateDialog(int year, int monthOfYear, int dayOfMonth, int hourOfDay,
                                      int minute) {
-        new DatePickerDialog(getContext(),
-                (view, pickedYear, pickedMonthOfYear, pickedDayOfMonth) ->
-                        showSelectTimeDialog(pickedYear, pickedMonthOfYear, pickedDayOfMonth,
-                                hourOfDay, minute),
-                year, monthOfYear, dayOfMonth).show();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                (view, pickedYear, pickedMonthOfYear, pickedDayOfMonth) -> {
+                    presenter.setDueDate(pickedYear, pickedMonthOfYear, pickedDayOfMonth,
+                            hourOfDay, minute);
+                },
+                year, monthOfYear, dayOfMonth);
+
+
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getText(R.string.time),
+                (dialog, which) -> {
+                    DatePicker datePicker = datePickerDialog.getDatePicker();
+                    int pickedYear = datePicker.getYear();
+                    int pickedMonthOfYear = datePicker.getMonth();
+                    int pickedDayOfMonth = datePicker.getDayOfMonth();
+
+                    showSelectTimeDialog(pickedYear, pickedMonthOfYear, pickedDayOfMonth,
+                            hourOfDay, minute);
+                });
+        datePickerDialog.show();
     }
 
     private void showSelectTimeDialog(int year, int monthOfYear, int dayOfMonth, int hourOfDay,
                                       int minute) {
-        new TimePickerDialog(getContext(), (view, pickedHourOfDay, pickedMinute) ->
-                presenter.setDueDate(year, monthOfYear, dayOfMonth, pickedHourOfDay, pickedMinute),
-                hourOfDay, minute, true).show();
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                (view, pickedHourOfDay, pickedMinute) -> {
+                    presenter.setDueDate(year, monthOfYear, dayOfMonth, pickedHourOfDay,
+                            pickedMinute);
+                    presenter.setWithTime(true);
+                },
+                hourOfDay, minute, true);
+
+        timePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getText(R.string.clear_time),
+                (dialog, which) -> {
+                    presenter.setDueDate(year, monthOfYear, dayOfMonth, 0, 0);
+                    presenter.setWithTime(false);
+                });
+        timePickerDialog.show();
     }
 
     @Override

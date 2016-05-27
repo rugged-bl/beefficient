@@ -34,7 +34,6 @@ public class SelectPriorityDialogFragment extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         ArrayList<Task.Priority> priorities = null;
         Bundle bundle = getArguments();
         if (bundle != null) {

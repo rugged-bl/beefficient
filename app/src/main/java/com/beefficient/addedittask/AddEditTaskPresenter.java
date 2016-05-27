@@ -10,6 +10,7 @@ import com.beefficient.data.entity.Task;
 import com.beefficient.data.source.DataSource;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
             Task task = taskBuilder
                     .setTitle(title)
                     .setTime(time)
+                    .setWithTime(withTime)
                     .setDescription(description)
                     .setProject(project)
                     .setPriority(priority)
@@ -209,9 +211,22 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
 
     @Override
     public void selectDate() {
-        DateTime dateTime = new DateTime((time == 0) ? System.currentTimeMillis() : time);
+        DateTime dateTime = new DateTime((time == 0) ? (DateTimeUtils.currentTimeMillis()) : time);
+
+        int hourOfDay;
+        int minuteOfHour;
+
+        if (!withTime) {
+            DateTime now = new DateTime();
+            hourOfDay = now.getHourOfDay();
+            minuteOfHour = now.getMinuteOfHour();
+        } else {
+            hourOfDay = dateTime.getHourOfDay();
+            minuteOfHour = dateTime.getMinuteOfHour();
+        }
+
         view.showSelectDateDialog(dateTime.getYear(), dateTime.getMonthOfYear() - 1,
-                dateTime.getDayOfMonth(), dateTime.getHourOfDay(), dateTime.getMinuteOfHour());
+                dateTime.getDayOfMonth(), hourOfDay, minuteOfHour);
     }
 
     private void setTask(@Nullable Task task) {
