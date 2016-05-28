@@ -35,8 +35,8 @@ public interface AddEditTaskContract {
 
         void showSelectPriorityDialog(ArrayList<Task.Priority> priorities);
 
-        void showSelectDateDialog(
-                int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute);
+        void showSelectDateDialog(int year, int monthOfYear, int dayOfMonth, int hourOfDay,
+                                  int minute, boolean withTime);
     }
 
     interface Presenter extends BasePresenter {

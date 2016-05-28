@@ -184,14 +184,6 @@ public class AddEditTaskFragment extends Fragment implements
     @Override
     public void showSelectProjectDialog(ArrayList<Project> projects) {
         DialogFragment dialog = SelectProjectDialogFragment.newInstance(projects);
-//        FragmentTransaction ft = getFragmentManager().beginTransaction();
-//
-//        Fragment prev = getFragmentManager().findFragmentByTag("project_dialog");
-//        if (prev != null) {
-//            ft.remove(prev);
-//        }
-//        ft.addToBackStack(null);
-
         dialog.setTargetFragment(this, 0);
         dialog.show(getFragmentManager(), "select_project_dialog");
     }
@@ -205,11 +197,15 @@ public class AddEditTaskFragment extends Fragment implements
 
     @Override
     public void showSelectDateDialog(int year, int monthOfYear, int dayOfMonth, int hourOfDay,
-                                     int minute) {
+                                     int minute, boolean withTime) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                 (view, pickedYear, pickedMonthOfYear, pickedDayOfMonth) -> {
-                    presenter.setDueDate(pickedYear, pickedMonthOfYear, pickedDayOfMonth,
-                            hourOfDay, minute);
+                    if (withTime) {
+                        presenter.setDueDate(pickedYear, pickedMonthOfYear, pickedDayOfMonth,
+                                hourOfDay, minute);
+                    } else {
+                        presenter.setDueDate(pickedYear, pickedMonthOfYear, pickedDayOfMonth, 0, 0);
+                    }
                 },
                 year, monthOfYear, dayOfMonth);
 

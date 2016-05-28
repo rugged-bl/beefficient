@@ -226,7 +226,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
         }
 
         view.showSelectDateDialog(dateTime.getYear(), dateTime.getMonthOfYear() - 1,
-                dateTime.getDayOfMonth(), hourOfDay, minuteOfHour);
+                dateTime.getDayOfMonth(), hourOfDay, minuteOfHour, withTime);
     }
 
     private void setTask(@Nullable Task task) {
