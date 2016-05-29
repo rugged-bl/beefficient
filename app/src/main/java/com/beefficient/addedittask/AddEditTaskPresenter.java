@@ -241,6 +241,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter, Seri
             priority = task.getPriority();
             project = task.getProject();
             time = task.getTime();
+            withTime = task.isWithTime();
         }
     }
 }
