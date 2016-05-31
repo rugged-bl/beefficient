@@ -5,7 +5,7 @@ apply plugin: 'me.tatarka.retrolambda'
 ext {
     // Versions of dependencies
     supportVersion = '23.4.0'
-    playServicesVersion = '9.0.0'
+    playServicesVersion = '9.0.1'
 
     retrofitVersion = '2.0.2'
 
@@ -15,7 +15,7 @@ ext {
     rxBindingVersion = '0.4.0'
     sqlbriteVersion = '0.6.3'
 
-    jodaTimeVersion = '2.9.3'
+    jodaTimeVersion = '2.9.4'
 //    prettyTimeNlpVersion = '4.0.0.Final'
 }
 
@@ -31,8 +31,6 @@ android {
         versionName '0.0.1'
 
         vectorDrawables.useSupportLibrary = true
-
-//        buildConfigField("boolean", "TEST_FIELD", "false")
     }
 
     buildTypes {
@@ -40,7 +38,6 @@ android {
             applicationIdSuffix '.d'
             debuggable true
             minifyEnabled false
-//            buildConfigField("boolean", "TEST_FIELD", "true")
         }
         release {
             debuggable false
@@ -74,18 +71,18 @@ dependencies {
     compile "com.android.support:design:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
     // Firebase
-//    compile "com.google.firebase:firebase-database:$playServicesVersion"
-//    compile "com.google.firebase:firebase-auth:$playServicesVersion"
-//    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+    compile "com.google.firebase:firebase-database:$playServicesVersion"
+    compile "com.google.firebase:firebase-auth:$playServicesVersion"
+    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
     // Retrofit
-//    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
-//    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-//    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
     // Rx
     compile "io.reactivex:rxjava:$rxJavaVersion"
     compile "io.reactivex:rxandroid:$rxAndroidVersion"
-//    compile "com.jakewharton.rxbinding:rxbinding:$rxBindingVersion"
-//    compile "com.tbruyelle.rxpermissions:rxpermissions:$rxPermissionsVersion@aar"
+    compile "com.jakewharton.rxbinding:rxbinding:$rxBindingVersion"
+    compile "com.tbruyelle.rxpermissions:rxpermissions:$rxPermissionsVersion@aar"
     compile "com.squareup.sqlbrite:sqlbrite:$sqlbriteVersion"
     // Time
     compile "joda-time:joda-time:$jodaTimeVersion"
