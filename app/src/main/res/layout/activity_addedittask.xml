@@ -14,34 +14,28 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-            <!-- TODO: сделать, чтобы тулбар прятался -->
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+        <!-- TODO: сделать, чтобы тулбар прятался -->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?colorPrimary"
+            android:minHeight="?actionBarSize"
+            app:contentInsetStart="@dimen/toolbar_inset_start"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?colorPrimary"
-                android:minHeight="?actionBarSize"
-                app:contentInsetStart="@dimen/toolbar_inset_start"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="32dp"
+                android:layout_marginTop="?actionBarSize"
+                android:focusableInTouchMode="true">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="32dp"
-                    android:layout_marginTop="?actionBarSize"
-                    android:focusableInTouchMode="true">
+                <include layout="@layout/addedittask_edittext"/>
+            </RelativeLayout>
 
-                    <include layout="@layout/addedittask_edittext"/>
-                </RelativeLayout>
-
-            </android.support.v7.widget.Toolbar>
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_edit_task_done"
@@ -52,5 +46,11 @@
         app:layout_anchor="@+id/app_bar_layout"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_done"/>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>
